@@ -36,10 +36,10 @@ export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => 
   };
 
   return (
-    <div className="bg-slate-900/95 border-t border-slate-800 px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+    <div className="bg-slate-900/95 border-t border-slate-800 px-2.5 py-1.5 flex flex-wrap items-center justify-between gap-1.5">
       {/* Dados Poliédricos */}
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <div className="flex items-center gap-1 text-amber-400 text-xs font-semibold mr-1">
+      <div className="flex items-center gap-1 flex-wrap">
+        <div className="flex items-center gap-1 text-amber-400 text-xs font-semibold mr-0.5">
           <Dices className="w-4 h-4" />
           <span className="hidden sm:inline">Dados:</span>
         </div>
@@ -49,7 +49,7 @@ export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => 
             key={sides}
             disabled={isCoolingDown}
             onClick={() => handleQuickRoll(sides)}
-            className={`px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold border transition cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`px-2 py-1 rounded-lg font-mono text-xs font-bold border transition cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed ${
               sides === 20
                 ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500 hover:text-slate-950'
                 : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700 hover:border-slate-500'

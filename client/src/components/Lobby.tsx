@@ -157,11 +157,11 @@ export const Lobby: React.FC<LobbyProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 relative flex items-center justify-center p-4 overflow-y-auto">
+    <div className="h-screen w-full bg-slate-950 relative overflow-y-auto overflow-x-hidden">
       {/* Fundo decorativo */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(217,119,6,0.16),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(59,130,246,0.12),_transparent_55%)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(217,119,6,0.16),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(59,130,246,0.12),_transparent_55%)] pointer-events-none" />
       <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        className="fixed inset-0 opacity-[0.04] pointer-events-none"
         style={{
           backgroundImage:
             'linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)',
@@ -169,7 +169,8 @@ export const Lobby: React.FC<LobbyProps> = ({
         }}
       />
 
-      <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch my-4">
+      <div className="relative z-10 min-h-full w-full flex items-center justify-center p-3 sm:p-5">
+        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch my-2">
         {/* Painel Esquerdo: Apresentação + Como Jogar Online */}
         <div className="lg:col-span-2 bg-slate-900/75 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between backdrop-blur-md shadow-2xl space-y-5">
           <div>
@@ -651,6 +652,7 @@ export const Lobby: React.FC<LobbyProps> = ({
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

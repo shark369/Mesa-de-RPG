@@ -1516,7 +1516,7 @@ export const DmPanel: React.FC<DmPanelProps> = ({
         )}
 
         {section === 'notes' && (
-          <div className="space-y-2 h-full flex flex-col">
+          <div className="space-y-2 flex flex-col">
             <div className="text-xs text-purple-300 bg-purple-500/10 border border-purple-500/30 rounded-xl p-2.5">
               🔒 <strong>Área Privada do Mestre:</strong> Estas anotações nunca são enviadas para os jogadores.
             </div>
@@ -1524,9 +1524,9 @@ export const DmPanel: React.FC<DmPanelProps> = ({
               value={notesDraft}
               onChange={(e) => setNotesDraft(e.target.value)}
               onBlur={() => onUpdateDmNotes(notesDraft)}
-              rows={14}
+              rows={10}
               placeholder="Escreva segredos da trama, CDs de armadilhas, tesouros..."
-              className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 font-mono leading-relaxed focus:outline-none focus:border-amber-500"
+              className="w-full min-h-[180px] resize-y bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 font-mono leading-relaxed focus:outline-none focus:border-amber-500"
             />
             <button
               onClick={() => onUpdateDmNotes(notesDraft)}

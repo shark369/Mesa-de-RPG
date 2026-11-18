@@ -13,7 +13,9 @@ import {
   Users,
   Globe,
   X,
-  RefreshCw
+  RefreshCw,
+  PanelRightClose,
+  PanelRightOpen
 } from 'lucide-react';
 import {
   CharacterSheet,
@@ -50,6 +52,7 @@ export function App() {
   const [userName, setUserName] = useState('');
 
   const [rightTab, setRightTab] = useState<RightTab>('chat');
+  const [showSidebar, setShowSidebar] = useState(true);
   const [showBuilder, setShowBuilder] = useState(false);
   const [showBestiary, setShowBestiary] = useState(false);
   const [pings, setPings] = useState<MapPing[]>([]);
@@ -458,22 +461,25 @@ export function App() {
     });
   };
 
-  const handleAddToInitiative = (token: Token) => {
+  const handleAddToInitiative = (input: Token | Token[]) => {
     if (!roomState || role !== 'dm') return;
-    const initRoll = rollDie(20);
+    const list = Array.isArray(input) ? input : [input];
+    if (list.length === 0) return;
+    const replaceIds = new Set(list.map((t) => t.id));
+    const added = list.map((token, idx) => ({
+      id: `init-${token.id}-${Date.now()}-${idx}`,
+      name: token.name,
+      roll: rollDie(20),
+      hp: token.hp,
+      maxHp: token.maxHp,
+      ac: token.ac,
+      isNpc: token.type !== 'pc',
+      hidden: token.hidden,
+      tokenId: token.id
+    }));
     const nextEntries = [
-      ...roomState.initiative.entries.filter((e) => e.tokenId !== token.id),
-      {
-        id: `init-${token.id}-${Date.now()}`,
-        name: token.name,
-        roll: initRoll,
-        hp: token.hp,
-        maxHp: token.maxHp,
-        ac: token.ac,
-        isNpc: token.type !== 'pc',
-        hidden: token.hidden,
-        tokenId: token.id
-      }
+      ...roomState.initiative.entries.filter((e) => !e.tokenId || !replaceIds.has(e.tokenId)),
+      ...added
     ].sort((a, b) => b.roll - a.roll);
 
     socketRef.current?.emit('initiative:update', {
@@ -523,19 +529,19 @@ export function App() {
   return (
     <div className="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden">
       {/* Cabeçalho Superior */}
-      <header className="h-12 shrink-0 bg-slate-900/95 border-b border-slate-800 px-3 flex items-center justify-between gap-2 z-20">
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="font-fantasy font-bold text-amber-400 text-base tracking-wide hidden sm:inline">
+      <header className="min-h-12 shrink-0 bg-slate-900/95 border-b border-slate-800 px-2.5 sm:px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 z-20">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
+          <span className="font-fantasy font-bold text-amber-400 text-base tracking-wide hidden sm:inline shrink-0">
             Aetheria VTT
           </span>
-          <div className="h-4 w-px bg-slate-800 hidden sm:block" />
-          <span className="text-xs font-semibold text-slate-200 truncate max-w-[180px] sm:max-w-xs">
+          <div className="h-4 w-px bg-slate-800 hidden sm:block shrink-0" />
+          <span className="text-xs font-semibold text-slate-200 truncate max-w-[110px] sm:max-w-[180px] md:max-w-xs">
             {roomState.name}
           </span>
 
           <button
             onClick={handleCopyCode}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/50 text-xs font-mono text-amber-300 transition cursor-pointer"
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/50 text-xs font-mono text-amber-300 transition cursor-pointer whitespace-nowrap shrink-0"
             title="Copiar código da sala para enviar aos amigos"
           >
             <span>{roomState.id}</span>
@@ -551,12 +557,12 @@ export function App() {
               fetchNetworkInfo();
               setShowInviteModal(true);
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/40 hover:bg-emerald-500/25 text-xs font-semibold text-emerald-300 transition cursor-pointer"
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/40 hover:bg-emerald-500/25 text-xs font-semibold text-emerald-300 transition cursor-pointer whitespace-nowrap shrink-0"
             title="Abrir links de convite e link público na internet para jogar com amigos"
           >
-            <Globe className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">
-              {networkInfo?.tunnel?.status === 'connected' ? 'Link Online' : 'Convidar / Online'}
+            <Globe className="w-3.5 h-3.5 shrink-0" />
+            <span>
+              {networkInfo?.tunnel?.status === 'connected' ? 'Online' : 'Convidar'}
             </span>
             {networkInfo?.tunnel?.status === 'connected' && (
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -564,36 +570,62 @@ export function App() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Jogadores Online */}
           <div
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300"
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 whitespace-nowrap shrink-0"
             title={onlineUsers.map((u) => `${u.name} (${u.role === 'dm' ? 'Mestre' : 'Jogador'})`).join(', ')}
           >
-            <Users className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{onlineUsers.length} online</span>
+            <Users className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span>
+              {onlineUsers.length}
+              <span className="hidden sm:inline"> online</span>
+            </span>
           </div>
 
           {/* Indicador de Visão (Mestre vs Jogador) */}
           <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold ${
+            className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg border text-xs font-bold whitespace-nowrap shrink-0 ${
               role === 'dm'
                 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
                 : 'bg-sky-500/15 border-sky-500/40 text-sky-300'
             }`}
           >
-            {role === 'dm' ? <Crown className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
-            <span>{role === 'dm' ? 'Visão do Mestre' : `Jogador: ${userName}`}</span>
+            {role === 'dm' ? (
+              <Crown className="w-3.5 h-3.5 shrink-0" />
+            ) : (
+              <Shield className="w-3.5 h-3.5 shrink-0" />
+            )}
+            <span className="max-w-[110px] sm:max-w-[180px] truncate">
+              {role === 'dm' ? 'Mestre' : userName}
+            </span>
           </div>
 
+          <button
+            onClick={() => setShowSidebar((v) => !v)}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-xs font-semibold transition cursor-pointer whitespace-nowrap shrink-0 ${
+              showSidebar
+                ? 'bg-slate-800 border-slate-700 text-amber-300 hover:bg-slate-700'
+                : 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25'
+            }`}
+            title={showSidebar ? 'Ocultar painel lateral para ampliar o mapa' : 'Mostrar painel lateral (Chat, Fichas, Combate, Mestre)'}
+          >
+            {showSidebar ? (
+              <PanelRightClose className="w-3.5 h-3.5 shrink-0" />
+            ) : (
+              <PanelRightOpen className="w-3.5 h-3.5 shrink-0" />
+            )}
+            <span className="hidden sm:inline">{showSidebar ? 'Ocultar Menu' : 'Menu'}</span>
+          </button>
+
           <div
-            className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-rose-500'}`}
+            className={`w-2 h-2 rounded-full shrink-0 ${connected ? 'bg-emerald-400' : 'bg-rose-500'}`}
             title={connected ? 'Conectado em tempo real' : 'Reconectando...'}
           />
 
           <button
             onClick={handleLeaveRoom}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition cursor-pointer"
+            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition cursor-pointer shrink-0"
             title="Sair da Mesa"
           >
             <LogOut className="w-4 h-4" />
@@ -602,7 +634,7 @@ export function App() {
       </header>
 
       {/* Área Principal */}
-      <div className="flex-1 flex flex-col lg:flex-row min-h-0">
+      <div className="flex-1 flex flex-col md:flex-row min-h-0">
         {/* Coluna Esquerda: Tabuleiro + Barra de Dados */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0 relative">
           <div className="flex-1 min-h-0 relative">
@@ -619,6 +651,9 @@ export function App() {
               }
               onUpdateToken={(id, patch) =>
                 socketRef.current?.emit('token:update', { id, patch })
+              }
+              onUpdateTokens={(updates) =>
+                socketRef.current?.emit('token:updateMany', { updates })
               }
               onDeleteToken={(id) => socketRef.current?.emit('token:delete', { id })}
               onToggleFogCells={(cells, covered) =>
@@ -657,7 +692,8 @@ export function App() {
         </div>
 
         {/* Barra Lateral Direita */}
-        <aside className="w-full lg:w-[390px] xl:w-[420px] h-[44vh] lg:h-full shrink-0 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col bg-slate-900/80">
+        {showSidebar && (
+          <aside className="w-full md:w-[330px] lg:w-[385px] xl:w-[420px] h-[46vh] md:h-full shrink-0 border-t md:border-t-0 md:border-l border-slate-800 flex flex-col bg-slate-900/80 min-h-0">
           {/* Navegação da Sidebar */}
           <div className="grid grid-flow-col auto-cols-fr border-b border-slate-800 bg-slate-950/80 text-xs">
             <SidebarTabBtn
@@ -798,7 +834,8 @@ export function App() {
               />
             )}
           </div>
-        </aside>
+          </aside>
+        )}
       </div>
 
       {/* Modal de Criação de Personagem */}
@@ -1037,7 +1074,7 @@ function SidebarTabBtn({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center gap-1.5 py-2.5 px-2 font-semibold border-b-2 transition cursor-pointer ${
+      className={`flex items-center justify-center gap-1 py-2.5 px-1.5 font-semibold border-b-2 transition cursor-pointer min-w-0 ${
         active
           ? 'border-amber-500 text-amber-300 bg-slate-900/60'
           : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30'

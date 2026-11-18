@@ -300,7 +300,7 @@ export const BestiaryBookModal: React.FC<BestiaryBookModalProps> = ({
         {/* Páginas Abertas (Esquerda: Índice / Direita: Página da Criatura) */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-0 overflow-hidden">
           {/* PÁGINA ESQUERDA: Busca & Índice do Livro */}
-          <div className="md:col-span-5 border-b md:border-b-0 md:border-r border-amber-500/20 bg-slate-950/70 flex flex-col min-h-0">
+          <div className="md:col-span-5 max-h-[45%] md:max-h-none border-b md:border-b-0 md:border-r border-amber-500/20 bg-slate-950/70 flex flex-col min-h-0">
             <div className="p-3 border-b border-slate-800 space-y-2">
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />

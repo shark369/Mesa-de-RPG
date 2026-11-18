@@ -877,6 +877,45 @@ io.on('connection', (socket) => {
     broadcastRoomState(roomId);
   });
 
+  socket.on('token:updateMany', ({ updates }) => {
+    const { roomId, role, user } = socket.data;
+    const room = rooms.get(roomId);
+    if (!room || !Array.isArray(updates) || updates.length === 0) return;
+
+    let changed = false;
+    for (const item of updates) {
+      if (!item || !item.id || !item.patch) continue;
+      const idx = room.tokens.findIndex((t) => t.id === item.id);
+      if (idx === -1) continue;
+
+      const existing = room.tokens[idx];
+      if (role !== 'dm') {
+        if (!existing.ownerName || existing.ownerName !== user?.name) continue;
+        const safePatch = { ...item.patch };
+        delete safePatch.hidden;
+        delete safePatch.ownerName;
+        room.tokens[idx] = { ...existing, ...safePatch };
+      } else {
+        room.tokens[idx] = { ...existing, ...item.patch };
+      }
+
+      const updatedToken = room.tokens[idx];
+      if (room.initiative?.entries?.length) {
+        room.initiative.entries = room.initiative.entries.map((e) =>
+          e.tokenId === item.id
+            ? { ...e, hp: updatedToken.hp, maxHp: updatedToken.maxHp, ac: updatedToken.ac }
+            : e
+        );
+      }
+      changed = true;
+    }
+
+    if (!changed) return;
+    syncActiveScene(room);
+    scheduleSave();
+    broadcastRoomState(roomId);
+  });
+
   socket.on('token:delete', ({ id }) => {
     const { roomId, role, user } = socket.data;
     const room = rooms.get(roomId);

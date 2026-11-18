@@ -18,7 +18,9 @@ import {
   Eraser,
   CircleDot,
   Flame,
-  RotateCw
+  RotateCw,
+  Users,
+  X
 } from 'lucide-react';
 import { MapConfig, MapDrawing, MapPing, Role, Token } from '../types/rpg';
 import { DND_CONDITIONS, PRESET_MAPS } from '../data/dnd5e';
@@ -34,9 +36,10 @@ interface TabletopCanvasProps {
   userName: string;
   onMoveToken: (id: string, x: number, y: number) => void;
   onUpdateToken: (id: string, patch: Partial<Token>) => void;
+  onUpdateTokens?: (updates: { id: string; patch: Partial<Token> }[]) => void;
   onDeleteToken: (id: string) => void;
   onToggleFogCells: (cells: string[], covered: boolean) => void;
-  onAddToInitiative: (token: Token) => void;
+  onAddToInitiative: (token: Token | Token[]) => void;
   onAddDrawing: (drawing: MapDrawing) => void;
   onClearDrawings: () => void;
   onPing: (x: number, y: number, color: string) => void;
@@ -55,6 +58,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   userName,
   onMoveToken,
   onUpdateToken,
+  onUpdateTokens,
   onDeleteToken,
   onToggleFogCells,
   onAddToInitiative,
@@ -77,13 +81,22 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   const [activeStroke, setActiveStroke] = useState<{ x: number; y: number }[] | null>(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 40, y: 40 });
-  const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
+  const [selectedTokenIds, setSelectedTokenIds] = useState<string[]>([]);
 
   // Estados de interação com ponteiro
-  const [draggingToken, setDraggingToken] = useState<{
-    id: string;
-    currentX: number;
-    currentY: number;
+  const [groupDrag, setGroupDrag] = useState<{
+    anchorId: string;
+    startCol: number;
+    startRow: number;
+    deltaX: number;
+    deltaY: number;
+    items: { id: string; origX: number; origY: number; size: number }[];
+  } | null>(null);
+  const [selectionBox, setSelectionBox] = useState<{
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
   } | null>(null);
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
@@ -96,7 +109,8 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   const isPaintingFogRef = useRef(false);
   const paintedCellsRef = useRef<Set<string>>(new Set());
 
-  const selectedToken = tokens.find((t) => t.id === selectedTokenId) || null;
+  const selectedTokens = tokens.filter((t) => selectedTokenIds.includes(t.id));
+  const selectedToken = selectedTokens.length === 1 ? selectedTokens[0] : null;
 
   const yScale = viewMode === '3d' ? 0.68 : 1;
 
@@ -153,6 +167,38 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
     },
     [pan, zoom, yScale, map.gridSize]
   );
+
+  // Retorna IDs dos tokens cuja área no grid intersecta a caixa de seleção
+  const getTokenIdsInBox = useCallback(
+    (box: { startX: number; startY: number; endX: number; endY: number }) => {
+      const minX = Math.min(box.startX, box.endX);
+      const maxX = Math.max(box.startX, box.endX);
+      const minY = Math.min(box.startY, box.endY);
+      const maxY = Math.max(box.startY, box.endY);
+      return tokens
+        .filter((t) => {
+          const tx1 = t.x * map.gridSize;
+          const ty1 = t.y * map.gridSize;
+          const tx2 = tx1 + t.size * map.gridSize;
+          const ty2 = ty1 + t.size * map.gridSize;
+          return tx2 >= minX && tx1 <= maxX && ty2 >= minY && ty1 <= maxY;
+        })
+        .map((t) => t.id);
+    },
+    [tokens, map.gridSize]
+  );
+
+  // Limpa seleção ao pressionar Esc
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') {
+        setSelectedTokenIds([]);
+        setSelectionBox(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   // Desenho principal do tabuleiro
   useEffect(() => {
@@ -263,10 +309,19 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
           ? [...tokens].sort((a, b) => a.y - b.y)
           : tokens;
 
+      const marqueeIds =
+        selectionBox &&
+        (Math.abs(selectionBox.endX - selectionBox.startX) > 6 ||
+          Math.abs(selectionBox.endY - selectionBox.startY) > 6)
+          ? getTokenIdsInBox(selectionBox)
+          : [];
+
       for (const token of orderedTokens) {
-        const isDragging = draggingToken?.id === token.id;
-        const drawCol = isDragging ? draggingToken.currentX : token.x;
-        const drawRow = isDragging ? draggingToken.currentY : token.y;
+        const dragItem = groupDrag?.items.find((it) => it.id === token.id);
+        const drawCol = dragItem ? dragItem.origX + groupDrag!.deltaX : token.x;
+        const drawRow = dragItem ? dragItem.origY + groupDrag!.deltaY : token.y;
+        const isTokenSelected =
+          selectedTokenIds.includes(token.id) || marqueeIds.includes(token.id);
         const sizePx = token.size * map.gridSize;
         const cx = drawCol * map.gridSize + sizePx / 2;
         const cy = drawRow * map.gridSize + sizePx / 2;
@@ -302,7 +357,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
 
         const baseColor = token.hidden
           ? '#c084fc'
-          : selectedTokenId === token.id
+          : isTokenSelected
           ? '#fbbf24'
           : token.color || '#3b82f6';
 
@@ -328,7 +383,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
           ctx.arc(cx, cy - 8, radius, 0, Math.PI * 2);
           ctx.fillStyle = '#1e293b';
           ctx.fill();
-          ctx.lineWidth = selectedTokenId === token.id ? 3.5 : 2.5;
+          ctx.lineWidth = isTokenSelected ? 3.5 : 2.5;
           ctx.strokeStyle = baseColor;
           ctx.stroke();
 
@@ -393,7 +448,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
 
             ctx.beginPath();
             ctx.roundRect(stX, stY, stW, stH, [stW * 0.42, stW * 0.42, 6, 6]);
-            ctx.lineWidth = selectedTokenId === token.id ? 3 : 2;
+            ctx.lineWidth = isTokenSelected ? 3 : 2;
             if (token.hidden) ctx.setLineDash([5, 3]);
             ctx.strokeStyle = baseColor;
             ctx.stroke();
@@ -472,10 +527,10 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
         // Borda colorida
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.lineWidth = selectedTokenId === token.id ? 4 : 2.5;
+        ctx.lineWidth = isTokenSelected ? 4 : 2.5;
         if (token.hidden) {
           ctx.setLineDash([5, 4]);
-          ctx.strokeStyle = '#c084fc';
+          ctx.strokeStyle = isTokenSelected ? '#fbbf24' : '#c084fc';
         } else {
           ctx.strokeStyle = baseColor;
         }
@@ -652,6 +707,24 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
         ctx.restore();
       }
 
+      // Caixa de Seleção em Área (Botão Esquerdo do Mestre)
+      if (selectionBox) {
+        const rx = Math.min(selectionBox.startX, selectionBox.endX);
+        const ry = Math.min(selectionBox.startY, selectionBox.endY);
+        const rw = Math.abs(selectionBox.endX - selectionBox.startX);
+        const rh = Math.abs(selectionBox.endY - selectionBox.startY);
+        if (rw > 4 || rh > 4) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(251, 191, 36, 0.14)';
+          ctx.fillRect(rx, ry, rw, rh);
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = Math.max(1.5, 2 / zoom);
+          ctx.setLineDash([6 / zoom, 4 / zoom]);
+          ctx.strokeRect(rx, ry, rw, rh);
+          ctx.restore();
+        }
+      }
+
       ctx.restore();
       animId = requestAnimationFrame(render);
     };
@@ -672,8 +745,10 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
     role,
     zoom,
     pan,
-    draggingToken,
-    selectedTokenId,
+    groupDrag,
+    selectionBox,
+    selectedTokenIds,
+    getTokenIdsInBox,
     measureLine,
     tool,
     aoePos,
@@ -687,7 +762,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    // Botão direito ou botão do meio sempre faz Pan
+    // Botão direito (ou do meio / ferramenta Mão) move exclusivamente o mapa
     if (e.button === 1 || e.button === 2 || tool === 'pan') {
       setIsPanning(true);
       panStartRef.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
@@ -728,23 +803,54 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
       return;
     }
 
-    // Selecionar / Arrastar token
+    // Selecionar / Arrastar token ou grupo de tokens
     const clickedToken = [...tokens].reverse().find((t) => {
       return col >= t.x && col < t.x + t.size && row >= t.y && row < t.y + t.size;
     });
 
     if (clickedToken) {
-      setSelectedTokenId(clickedToken.id);
+      if (role === 'dm' && e.shiftKey) {
+        setSelectedTokenIds((prev) =>
+          prev.includes(clickedToken.id)
+            ? prev.filter((id) => id !== clickedToken.id)
+            : [...prev, clickedToken.id]
+        );
+        return;
+      }
+
+      const activeSelection =
+        role === 'dm' && selectedTokenIds.includes(clickedToken.id) && selectedTokenIds.length > 1
+          ? selectedTokenIds
+          : [clickedToken.id];
+
+      setSelectedTokenIds(activeSelection);
+
       if (canControlToken(clickedToken)) {
-        setDraggingToken({
-          id: clickedToken.id,
-          currentX: clickedToken.x,
-          currentY: clickedToken.y
+        const dragTokens = tokens.filter(
+          (t) => activeSelection.includes(t.id) && canControlToken(t)
+        );
+        setGroupDrag({
+          anchorId: clickedToken.id,
+          startCol: col,
+          startRow: row,
+          deltaX: 0,
+          deltaY: 0,
+          items: dragTokens.map((t) => ({
+            id: t.id,
+            origX: t.x,
+            origY: t.y,
+            size: t.size
+          }))
         });
       }
+    } else if (role === 'dm') {
+      // Para o Mestre, clique esquerdo + arrastar no vazio desenha área de seleção de grupo
+      if (!e.shiftKey) {
+        setSelectedTokenIds([]);
+      }
+      setSelectionBox({ startX: wx, startY: wy, endX: wx, endY: wy });
     } else {
-      setSelectedTokenId(null);
-      // Arrastar vazio com clique simples também pode fazer pan suave se quiser
+      setSelectedTokenIds([]);
       setIsPanning(true);
       panStartRef.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
     }
@@ -793,11 +899,28 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
       return;
     }
 
-    if (draggingToken) {
-      const clampedX = Math.max(0, Math.min(map.cols - 1, col));
-      const clampedY = Math.max(0, Math.min(map.rows - 1, row));
-      if (clampedX !== draggingToken.currentX || clampedY !== draggingToken.currentY) {
-        setDraggingToken((prev) => (prev ? { ...prev, currentX: clampedX, currentY: clampedY } : null));
+    if (selectionBox) {
+      setSelectionBox((prev) => (prev ? { ...prev, endX: wx, endY: wy } : null));
+      return;
+    }
+
+    if (groupDrag) {
+      const rawDx = col - groupDrag.startCol;
+      const rawDy = row - groupDrag.startRow;
+      let minDx = -Infinity;
+      let maxDx = Infinity;
+      let minDy = -Infinity;
+      let maxDy = Infinity;
+      for (const item of groupDrag.items) {
+        minDx = Math.max(minDx, -item.origX);
+        maxDx = Math.min(maxDx, Math.max(0, map.cols - item.size) - item.origX);
+        minDy = Math.max(minDy, -item.origY);
+        maxDy = Math.min(maxDy, Math.max(0, map.rows - item.size) - item.origY);
+      }
+      const clampedDx = Math.max(minDx, Math.min(maxDx, rawDx));
+      const clampedDy = Math.max(minDy, Math.min(maxDy, rawDy));
+      if (clampedDx !== groupDrag.deltaX || clampedDy !== groupDrag.deltaY) {
+        setGroupDrag((prev) => (prev ? { ...prev, deltaX: clampedDx, deltaY: clampedDy } : null));
       }
     }
   };
@@ -824,12 +947,29 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
     if (measureLine) {
       setMeasureLine(null);
     }
-    if (draggingToken) {
-      const token = tokens.find((t) => t.id === draggingToken.id);
-      if (token && (token.x !== draggingToken.currentX || token.y !== draggingToken.currentY)) {
-        onMoveToken(token.id, draggingToken.currentX, draggingToken.currentY);
+    if (selectionBox) {
+      const draggedDist =
+        Math.abs(selectionBox.endX - selectionBox.startX) +
+        Math.abs(selectionBox.endY - selectionBox.startY);
+      if (draggedDist > 10) {
+        const hitIds = getTokenIdsInBox(selectionBox);
+        setSelectedTokenIds((prev) => Array.from(new Set([...prev, ...hitIds])));
       }
-      setDraggingToken(null);
+      setSelectionBox(null);
+    }
+    if (groupDrag) {
+      if (groupDrag.deltaX !== 0 || groupDrag.deltaY !== 0) {
+        const updates = groupDrag.items.map((item) => ({
+          id: item.id,
+          patch: { x: item.origX + groupDrag.deltaX, y: item.origY + groupDrag.deltaY }
+        }));
+        if (updates.length > 1 && onUpdateTokens) {
+          onUpdateTokens(updates);
+        } else {
+          updates.forEach((u) => onMoveToken(u.id, u.patch.x!, u.patch.y!));
+        }
+      }
+      setGroupDrag(null);
     }
   };
 
@@ -859,196 +999,135 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
         }`}
       />
 
-      {/* Barra de Ferramentas Flutuante (Esquerda) */}
-      <div className="absolute top-3 left-3 flex flex-col gap-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 p-1.5 rounded-xl shadow-xl">
-        <ToolButton
-          active={tool === 'select'}
-          onClick={() => setTool('select')}
-          title="Selecionar / Mover Tokens"
-          icon={<MousePointer className="w-4 h-4" />}
-        />
-        <ToolButton
-          active={tool === 'pan'}
-          onClick={() => setTool('pan')}
-          title="Mover Câmera (ou Botão Direito)"
-          icon={<Hand className="w-4 h-4" />}
-        />
-        <ToolButton
-          active={tool === 'measure'}
-          onClick={() => setTool('measure')}
-          title="Medir Distância (Régua 1,5m)"
-          icon={<Ruler className="w-4 h-4" />}
-        />
-        <ToolButton
-          active={tool === 'draw'}
-          onClick={() => setTool('draw')}
-          title="Desenhar no Mapa"
-          icon={<Pencil className="w-4 h-4" />}
-        />
-        <ToolButton
-          active={tool === 'aoe'}
-          onClick={() => setTool('aoe')}
-          title="Template de Área de Magia (AoE)"
-          icon={<Flame className="w-4 h-4 text-orange-400" />}
-        />
-        <ToolButton
-          active={tool === 'ping'}
-          onClick={() => setTool('ping')}
-          title="Ping no Mapa (ou Alt+Clique)"
-          icon={<CircleDot className="w-4 h-4 text-amber-400" />}
-        />
+      {/* Barra de Ferramentas Flutuante + Sub-barras / Inspetor (Sem Colisão ou Corte) */}
+      <div className="pointer-events-none absolute inset-x-2.5 top-2.5 bottom-14 z-10 flex items-start gap-2">
+        <div className="pointer-events-auto shrink-0 max-h-full flex flex-col flex-wrap content-start gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 p-1.5 rounded-xl shadow-xl">
+          <ToolButton
+            active={tool === 'select'}
+            onClick={() => setTool('select')}
+            title={
+              role === 'dm'
+                ? 'Selecionar / Arrastar área para grupo de NPCs (Botão Esquerdo)'
+                : 'Selecionar / Mover Token'
+            }
+            icon={<MousePointer className="w-4 h-4" />}
+          />
+          <ToolButton
+            active={tool === 'pan'}
+            onClick={() => setTool('pan')}
+            title="Mover Câmera (ou Arraste com Botão Direito)"
+            icon={<Hand className="w-4 h-4" />}
+          />
+          <ToolButton
+            active={tool === 'measure'}
+            onClick={() => setTool('measure')}
+            title="Medir Distância (Régua 1,5m)"
+            icon={<Ruler className="w-4 h-4" />}
+          />
+          <ToolButton
+            active={tool === 'draw'}
+            onClick={() => setTool('draw')}
+            title="Desenhar no Mapa"
+            icon={<Pencil className="w-4 h-4" />}
+          />
+          <ToolButton
+            active={tool === 'aoe'}
+            onClick={() => setTool('aoe')}
+            title="Template de Área de Magia (AoE)"
+            icon={<Flame className="w-4 h-4 text-orange-400" />}
+          />
+          <ToolButton
+            active={tool === 'ping'}
+            onClick={() => setTool('ping')}
+            title="Ping no Mapa (ou Alt+Clique)"
+            icon={<CircleDot className="w-4 h-4 text-amber-400" />}
+          />
 
-        {role === 'dm' && (
-          <>
-            <div className="h-px bg-slate-700 my-0.5" />
-            <ToolButton
-              active={tool === 'fog-reveal'}
-              onClick={() => setTool('fog-reveal')}
-              title="Mestre: Revelar Névoa de Guerra"
-              icon={<Eye className="w-4 h-4 text-emerald-400" />}
-            />
-            <ToolButton
-              active={tool === 'fog-cover'}
-              onClick={() => setTool('fog-cover')}
-              title="Mestre: Cobrir com Névoa de Guerra"
-              icon={<EyeOff className="w-4 h-4 text-purple-400" />}
-            />
-            <ToolButton
-              active={false}
-              onClick={onClearDrawings}
-              title="Mestre: Limpar Todos os Desenhos"
-              icon={<Eraser className="w-4 h-4 text-rose-400" />}
-            />
-          </>
-        )}
-      </div>
-
-      {/* Sub-barra de opções para Desenho ou AoE */}
-      {tool === 'draw' && (
-        <div className="absolute top-3 left-16 flex items-center gap-1.5 bg-slate-900/95 border border-slate-700 px-2.5 py-1.5 rounded-xl shadow-xl text-xs">
-          <span className="text-slate-400">Cor:</span>
-          {['#f59e0b', '#ef4444', '#3b82f6', '#22c55e', '#a855f7', '#ffffff'].map((c) => (
-            <button
-              key={c}
-              onClick={() => setDrawColor(c)}
-              className={`w-4 h-4 rounded-full border cursor-pointer ${
-                drawColor === c ? 'border-white scale-110' : 'border-slate-700'
-              }`}
-              style={{ backgroundColor: c }}
-            />
-          ))}
+          {role === 'dm' && (
+            <>
+              <ToolButton
+                active={tool === 'fog-reveal'}
+                onClick={() => setTool('fog-reveal')}
+                title="Mestre: Revelar Névoa de Guerra"
+                icon={<Eye className="w-4 h-4 text-emerald-400" />}
+                dmAccent
+              />
+              <ToolButton
+                active={tool === 'fog-cover'}
+                onClick={() => setTool('fog-cover')}
+                title="Mestre: Cobrir com Névoa de Guerra"
+                icon={<EyeOff className="w-4 h-4 text-purple-400" />}
+                dmAccent
+              />
+              <ToolButton
+                active={false}
+                onClick={onClearDrawings}
+                title="Mestre: Limpar Todos os Desenhos"
+                icon={<Eraser className="w-4 h-4 text-rose-400" />}
+                dmAccent
+              />
+            </>
+          )}
         </div>
-      )}
 
-      {tool === 'aoe' && (
-        <div className="absolute top-3 left-16 flex flex-wrap items-center gap-1.5 bg-slate-900/95 border border-orange-500/40 px-2.5 py-1.5 rounded-xl shadow-xl text-xs">
-          {(
-            [
-              ['sphere', 'Esfera'],
-              ['cone', 'Cone'],
-              ['cube', 'Cubo'],
-              ['line', 'Linha']
-            ] as const
-          ).map(([sh, lbl]) => (
-            <button
-              key={sh}
-              onClick={() => setAoeShape(sh)}
-              className={`px-2 py-0.5 rounded font-semibold cursor-pointer ${
-                aoeShape === sh
-                  ? 'bg-orange-500 text-slate-950'
-                  : 'bg-slate-800 text-slate-300'
-              }`}
-            >
-              {lbl}
-            </button>
-          ))}
-          <select
-            value={aoeMeters}
-            onChange={(e) => setAoeMeters(parseFloat(e.target.value))}
-            className="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-orange-200 font-mono"
-          >
-            <option value={1.5}>1,5m (5ft)</option>
-            <option value={3}>3m (10ft)</option>
-            <option value={4.5}>4,5m (15ft)</option>
-            <option value={6}>6m (20ft)</option>
-            <option value={9}>9m (30ft)</option>
-            <option value={18}>18m (60ft)</option>
-          </select>
-        </div>
-      )}
+        <div className="flex-1 min-w-0 max-h-full flex flex-col items-start gap-2 overflow-hidden">
+          {/* Sub-barra de opções para Desenho ou AoE */}
+          {tool === 'draw' && (
+            <div className="pointer-events-auto flex flex-wrap items-center gap-1.5 bg-slate-900/95 border border-slate-700 px-2.5 py-1.5 rounded-xl shadow-xl text-xs">
+              <span className="text-slate-400">Cor:</span>
+              {['#f59e0b', '#ef4444', '#3b82f6', '#22c55e', '#a855f7', '#ffffff'].map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setDrawColor(c)}
+                  className={`w-4 h-4 rounded-full border cursor-pointer ${
+                    drawColor === c ? 'border-white scale-110' : 'border-slate-700'
+                  }`}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          )}
 
-      {/* Controles de Zoom (Canto Inferior Esquerdo) */}
-      <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-2 py-1 rounded-xl shadow-xl text-xs">
-        <button
-          onClick={() => setZoom((z) => Math.max(0.2, +(z - 0.1).toFixed(2)))}
-          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
-          title="Diminuir Zoom"
-        >
-          <ZoomOut className="w-3.5 h-3.5" />
-        </button>
-        <span className="px-2 font-mono text-slate-300">{Math.round(zoom * 100)}%</span>
-        <button
-          onClick={() => setZoom((z) => Math.min(2.5, +(z + 0.1).toFixed(2)))}
-          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
-          title="Aumentar Zoom"
-        >
-          <ZoomIn className="w-3.5 h-3.5" />
-        </button>
-        <button
-          onClick={fitMapToScreen}
-          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
-          title="Ajustar e Centralizar Mapa na Tela"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-        </button>
-        <div className="w-px h-4 bg-slate-700 mx-0.5" />
-        <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
-          {(['2d', '3d'] as const).map((vm) => (
-            <button
-              key={vm}
-              onClick={() => setViewMode(vm)}
-              className={`px-2 py-0.5 rounded-md font-bold uppercase text-[11px] cursor-pointer transition ${
-                viewMode === vm
-                  ? 'bg-amber-500 text-slate-950'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title={vm === '2d' ? 'Visão Clássica de Topo (2D)' : 'Visão em Perspectiva c/ Modelos 3D'}
-            >
-              {vm}
-            </button>
-          ))}
-        </div>
-        {viewMode === '3d' && (
-          <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
-            <button
-              onClick={() => setModelStyle3d('model')}
-              className={`px-1.5 py-0.5 rounded-md font-semibold text-[10px] cursor-pointer transition ${
-                modelStyle3d === 'model'
-                  ? 'bg-sky-500 text-slate-950'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Exibir bonecos 3D modelados para cada criatura"
-            >
-              Boneco 3D
-            </button>
-            <button
-              onClick={() => setModelStyle3d('standee')}
-              className={`px-1.5 py-0.5 rounded-md font-semibold text-[10px] cursor-pointer transition ${
-                modelStyle3d === 'standee'
-                  ? 'bg-sky-500 text-slate-950'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Exibir miniaturas com arte 2D/retrato"
-            >
-              Arte 2D
-            </button>
-          </div>
-        )}
-      </div>
+          {tool === 'aoe' && (
+            <div className="pointer-events-auto flex flex-wrap items-center gap-1.5 bg-slate-900/95 border border-orange-500/40 px-2.5 py-1.5 rounded-xl shadow-xl text-xs max-w-full">
+              {(
+                [
+                  ['sphere', 'Esfera'],
+                  ['cone', 'Cone'],
+                  ['cube', 'Cubo'],
+                  ['line', 'Linha']
+                ] as const
+              ).map(([sh, lbl]) => (
+                <button
+                  key={sh}
+                  onClick={() => setAoeShape(sh)}
+                  className={`px-2 py-0.5 rounded font-semibold cursor-pointer ${
+                    aoeShape === sh
+                      ? 'bg-orange-500 text-slate-950'
+                      : 'bg-slate-800 text-slate-300'
+                  }`}
+                >
+                  {lbl}
+                </button>
+              ))}
+              <select
+                value={aoeMeters}
+                onChange={(e) => setAoeMeters(parseFloat(e.target.value))}
+                className="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-orange-200 font-mono"
+              >
+                <option value={1.5}>1,5m (5ft)</option>
+                <option value={3}>3m (10ft)</option>
+                <option value={4.5}>4,5m (15ft)</option>
+                <option value={6}>6m (20ft)</option>
+                <option value={9}>9m (30ft)</option>
+                <option value={18}>18m (60ft)</option>
+              </select>
+            </div>
+          )}
 
-      {/* Inspetor Rápido do Token Selecionado */}
-      {selectedToken && (
-        <div className="absolute top-3 left-16 bg-slate-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl p-3 shadow-2xl w-64 text-xs">
+          {/* Inspetor Rápido do Token Selecionado */}
+          {selectedToken && (
+            <div className="pointer-events-auto bg-slate-900/95 backdrop-blur-md border border-amber-500/40 rounded-xl p-3 shadow-2xl w-full max-w-[260px] max-h-full overflow-y-auto text-xs">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2 font-semibold text-slate-100 truncate">
               <span className="text-lg">{selectedToken.avatar}</span>
@@ -1225,7 +1304,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
               <button
                 onClick={() => {
                   onDeleteToken(selectedToken.id);
-                  setSelectedTokenId(null);
+                  setSelectedTokenIds([]);
                 }}
                 className="p-1.5 rounded-lg bg-red-500/15 text-red-400 hover:bg-red-500/30 cursor-pointer"
                 title="Remover Token"
@@ -1236,6 +1315,163 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
           </div>
         </div>
       )}
+
+          {/* Inspetor de Seleção em Grupo (Mestre) */}
+          {selectedTokens.length > 1 && (
+            <div className="pointer-events-auto bg-slate-900/95 backdrop-blur-md border border-amber-500/45 rounded-xl p-3 shadow-2xl w-full max-w-[280px] max-h-full overflow-y-auto text-xs space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 font-bold text-amber-300">
+                  <Users className="w-4 h-4 shrink-0" />
+                  <span>Grupo ({selectedTokens.length} tokens)</span>
+                </div>
+                <button
+                  onClick={() => setSelectedTokenIds([])}
+                  className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+                  title="Limpar seleção (Esc)"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="text-[11px] text-slate-300 bg-slate-950/70 border border-slate-800 rounded-lg px-2 py-1.5">
+                Arraste qualquer token destacado com o <strong>botão esquerdo</strong> para mover o grupo junto.
+              </div>
+
+              <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+                {selectedTokens.map((t) => (
+                  <span
+                    key={t.id}
+                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-200 max-w-[125px] truncate"
+                  >
+                    <span>{t.avatar}</span>
+                    <span className="truncate">{t.name}</span>
+                  </span>
+                ))}
+              </div>
+
+              {role === 'dm' && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {selectedTokens.some((t) => t.type === 'pc') &&
+                    selectedTokens.some((t) => t.type !== 'pc') && (
+                      <button
+                        onClick={() =>
+                          setSelectedTokenIds(
+                            selectedTokens.filter((t) => t.type !== 'pc').map((t) => t.id)
+                          )
+                        }
+                        className="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 text-[11px] font-semibold cursor-pointer"
+                        title="Remover jogadores da seleção e manter apenas NPCs/Monstros"
+                      >
+                        Só NPCs ({selectedTokens.filter((t) => t.type !== 'pc').length})
+                      </button>
+                    )}
+
+                  <button
+                    onClick={() => {
+                      const shouldHide = selectedTokens.some((t) => !t.hidden);
+                      if (onUpdateTokens) {
+                        onUpdateTokens(
+                          selectedTokens.map((t) => ({ id: t.id, patch: { hidden: shouldHide } }))
+                        );
+                      } else {
+                        selectedTokens.forEach((t) => onUpdateToken(t.id, { hidden: shouldHide }));
+                      }
+                    }}
+                    className="flex-1 flex items-center justify-center gap-1 py-1 px-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 text-[11px] font-semibold cursor-pointer"
+                  >
+                    {selectedTokens.some((t) => !t.hidden) ? (
+                      <>
+                        <EyeOff className="w-3 h-3" /> Ocultar todos
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-3 h-3" /> Revelar todos
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => onAddToInitiative(selectedTokens)}
+                    className="flex items-center justify-center gap-1 py-1 px-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-[11px] font-semibold cursor-pointer"
+                    title="Adicionar todos à iniciativa"
+                  >
+                    <Swords className="w-3 h-3" /> Init
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Controles de Zoom (Canto Inferior Esquerdo) */}
+      <div className="absolute bottom-2.5 left-2.5 z-10 max-w-[calc(100%-1.25rem)] flex flex-wrap items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-2 py-1 rounded-xl shadow-xl text-xs">
+        <button
+          onClick={() => setZoom((z) => Math.max(0.2, +(z - 0.1).toFixed(2)))}
+          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
+          title="Diminuir Zoom"
+        >
+          <ZoomOut className="w-3.5 h-3.5" />
+        </button>
+        <span className="px-1.5 font-mono text-slate-300">{Math.round(zoom * 100)}%</span>
+        <button
+          onClick={() => setZoom((z) => Math.min(2.5, +(z + 0.1).toFixed(2)))}
+          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
+          title="Aumentar Zoom"
+        >
+          <ZoomIn className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={fitMapToScreen}
+          className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
+          title="Ajustar e Centralizar Mapa na Tela"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+        <div className="w-px h-4 bg-slate-700 mx-0.5" />
+        <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+          {(['2d', '3d'] as const).map((vm) => (
+            <button
+              key={vm}
+              onClick={() => setViewMode(vm)}
+              className={`px-2 py-0.5 rounded-md font-bold uppercase text-[11px] cursor-pointer transition ${
+                viewMode === vm
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title={vm === '2d' ? 'Visão Clássica de Topo (2D)' : 'Visão em Perspectiva c/ Modelos 3D'}
+            >
+              {vm}
+            </button>
+          ))}
+        </div>
+        {viewMode === '3d' && (
+          <div className="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+            <button
+              onClick={() => setModelStyle3d('model')}
+              className={`px-1.5 py-0.5 rounded-md font-semibold text-[10px] cursor-pointer transition ${
+                modelStyle3d === 'model'
+                  ? 'bg-sky-500 text-slate-950'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Exibir bonecos 3D modelados para cada criatura"
+            >
+              Boneco 3D
+            </button>
+            <button
+              onClick={() => setModelStyle3d('standee')}
+              className={`px-1.5 py-0.5 rounded-md font-semibold text-[10px] cursor-pointer transition ${
+                modelStyle3d === 'standee'
+                  ? 'bg-sky-500 text-slate-950'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Exibir miniaturas com arte 2D/retrato"
+            >
+              Arte 2D
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -1244,20 +1480,24 @@ function ToolButton({
   active,
   onClick,
   title,
-  icon
+  icon,
+  dmAccent = false
 }: {
   active: boolean;
   onClick: () => void;
   title: string;
   icon: React.ReactNode;
+  dmAccent?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
       title={title}
-      className={`p-2 rounded-lg transition cursor-pointer ${
+      className={`w-8 h-8 flex items-center justify-center rounded-lg transition cursor-pointer ${
         active
           ? 'bg-amber-500 text-slate-950 shadow'
+          : dmAccent
+          ? 'bg-slate-950/70 border border-slate-700/70 text-slate-300 hover:bg-slate-800 hover:text-white'
           : 'text-slate-300 hover:bg-slate-800 hover:text-white'
       }`}
     >
