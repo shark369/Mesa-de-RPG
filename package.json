@@ -1,0 +1,16 @@
+{
+  "name": "aetheria-vtt",
+  "version": "1.0.0",
+  "description": "Virtual Tabletop RPG (D&D 5e) com visão Mestre/Jogador, dados, criador de fichas e importação de NPCs",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n SERVER,CLIENT -c blue,magenta \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start",
+    "start:prod": "npm run build && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

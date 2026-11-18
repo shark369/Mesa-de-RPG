@@ -1,0 +1,4929 @@
+{
+  "aguia-gigante": {
+    "slug": "aguia-gigante",
+    "name": "Águia Gigante",
+    "nameEn": "Giant Eagle",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Neutro e Bom",
+    "cr": "1",
+    "xp": 200,
+    "ac": 13,
+    "hp": 26,
+    "hpFormula": "4d10 + 4",
+    "speed": "3 m, voo 24 m",
+    "avatar": "🦅",
+    "abilities": {
+      "str": 16,
+      "dex": 17,
+      "con": 13,
+      "int": 8,
+      "wis": 14,
+      "cha": 10
+    },
+    "skills": {
+      "Percepção": 4
+    },
+    "senses": "Percepção passiva 14",
+    "languages": "Águia Gigante, entende Comum e Auran mas não fala",
+    "specialAbilities": [
+      {
+        "name": "Visão Aguçada",
+        "desc": "A águia tem vantagem em testes de Sabedoria (Percepção) relacionados à visão."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiataque",
+        "desc": "A águia realiza dois ataques: um com seu bico e um com suas garras."
+      },
+      {
+        "name": "Bico",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para atingir, alcance 1,5 m, um alvo. Acerto: 6 (1d6 + 3) de dano perfurante."
+      },
+      {
+        "name": "Garras",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para atingir, alcance 1,5 m, um alvo. Acerto: 10 (2d6 + 3) de dano cortante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Bico",
+        "attackBonus": 5,
+        "damageFormula": "1d6+3",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Garras",
+        "attackBonus": 5,
+        "damageFormula": "2d6+3",
+        "damageType": "Cortante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 304)."
+  },
+  "aranha-gigante": {
+    "slug": "aranha-gigante",
+    "name": "Aranha Gigante",
+    "nameEn": "Giant Spider",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Unaligned",
+    "cr": "1",
+    "xp": 200,
+    "ac": 14,
+    "hp": 26,
+    "hpFormula": "4d10 + 4",
+    "speed": "30 ft., escalada 30 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Giant%20Spider.webp",
+    "avatar": "🐺",
+    "abilities": {
+      "str": 14,
+      "dex": 16,
+      "con": 12,
+      "int": 2,
+      "wis": 11,
+      "cha": 4
+    },
+    "savingThrows": {},
+    "skills": {
+      "Perception": 4,
+      "Stealth": 7
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Darkvision 60 ft., passive Perception 14",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Spider Climb",
+        "desc": "A aranha pode escalar superfícies difíceis, inclusive pelos tetos, sem precisar fazer um teste de habilidade."
+      },
+      {
+        "name": "Web Walker",
+        "desc": "A aranha ignora restrições de movimento causadas por teias e sabe a localização de qualquer outra criatura em contato com a mesma teia."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo: +5, alcance 1,5 m (5 ft). 7 (1d8 + 3) de dano perfurante mais 7 (2d6) de dano de veneno."
+      },
+      {
+        "name": "Web (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 13, uma criatura que a aranha possa ver a até 18 m (60 ft). Falha: O alvo fica com a condição Contido até a teia ser destruída (CA 10; PV 5; Vulnerabilidade a dano de fogo; Imunidade a dano de veneno e psíquico)."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-w0g3wo",
+        "name": "Bite",
+        "attackBonus": 5,
+        "damageFormula": "1d8+3",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "cobra-constritora": {
+    "slug": "cobra-constritora",
+    "name": "Cobra Constritora",
+    "nameEn": "Constrictor Snake",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 12,
+    "hp": 13,
+    "hpFormula": "2d10 + 2",
+    "speed": "9 m, natação 9 m",
+    "avatar": "🐍",
+    "abilities": {
+      "str": 15,
+      "dex": 14,
+      "con": 12,
+      "int": 1,
+      "wis": 10,
+      "cha": 3
+    },
+    "senses": "Percepção às Cegas 3 m, Percepção passiva 10",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +4, alcance 1,5 m. Acerto: 5 (1d6 + 2) perfurante."
+      },
+      {
+        "name": "Constrição",
+        "desc": "Ataque Corpo a Corpo: +4, alcance 1,5 m. Acerto: 6 (1d8 + 2) concussão e alvo fica Agarrado/Impedido (CD 14)."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 4,
+        "damageFormula": "1d6+2",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Constrição",
+        "attackBonus": 4,
+        "damageFormula": "1d8+2",
+        "damageType": "Concussão"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 305)."
+  },
+  "diabrete": {
+    "slug": "diabrete",
+    "name": "Diabrete",
+    "nameEn": "Imp",
+    "source": "both",
+    "size": "Miúdo",
+    "type": "fiend",
+    "alignment": "Leal e Mau",
+    "cr": "1",
+    "xp": 200,
+    "ac": 13,
+    "hp": 10,
+    "hpFormula": "3d4 + 3",
+    "speed": "6 m, voo 12 m",
+    "avatar": "👿",
+    "abilities": {
+      "str": 6,
+      "dex": 17,
+      "con": 13,
+      "int": 11,
+      "wis": 12,
+      "cha": 14
+    },
+    "skills": {
+      "Enganação": 4,
+      "Intuição": 3,
+      "Persuasão": 4,
+      "Furtividade": 5
+    },
+    "damageResistances": "Frio; concussão, cortante e perfurante de ataques não-mágicos sem prata",
+    "damageImmunities": "Fogo, Veneno",
+    "conditionImmunities": "Envenenado",
+    "senses": "Visão no Escuro 36 m, Percepção passiva 11",
+    "languages": "Infernal, Comum",
+    "specialAbilities": [
+      {
+        "name": "Metamorfo",
+        "desc": "Transforma-se em rato, corvo ou aranha mantendo suas estatísticas (exceto deslocamento)."
+      },
+      {
+        "name": "Visão Diabólica",
+        "desc": "Escuridão mágica não impede a visão no escuro."
+      },
+      {
+        "name": "Resistência à Magia",
+        "desc": "Vantagem em salvaguardas contra magias e efeitos mágicos."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Ferrão (Mordida em forma de besta)",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 5 (1d4 + 3) perfurante + 10 (3d6) veneno (CD 11 CON metade)."
+      },
+      {
+        "name": "Invisibilidade",
+        "desc": "Fica magicamente invisível até atacar ou perder a concentração."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Ferrão",
+        "attackBonus": 5,
+        "damageFormula": "1d4+3",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Veneno do Ferrão (CD 11 CON)",
+        "attackBonus": 0,
+        "damageFormula": "3d6",
+        "damageType": "Veneno"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 306) — Familiar de Bruxo."
+  },
+  "leao": {
+    "slug": "leao",
+    "name": "Leão",
+    "nameEn": "Lion",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1",
+    "xp": 200,
+    "ac": 12,
+    "hp": 26,
+    "hpFormula": "4d10 + 4",
+    "speed": "15 m",
+    "avatar": "🦁",
+    "abilities": {
+      "str": 17,
+      "dex": 15,
+      "con": 13,
+      "int": 3,
+      "wis": 12,
+      "cha": 8
+    },
+    "skills": {
+      "Percepção": 3,
+      "Furtividade": 6
+    },
+    "senses": "Percepção passiva 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Táticas de Matilha",
+        "desc": "Vantagem em ataques se um aliado estiver a até 1,5 m do alvo."
+      },
+      {
+        "name": "Bote",
+        "desc": "Se mover 6 m em linha reta e acertar Garras, alvo faz CD 13 FOR ou fica Caído; bônus de Mordida."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 7 (1d8 + 3) perfurante."
+      },
+      {
+        "name": "Garras",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 6 (1d6 + 3) cortante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 5,
+        "damageFormula": "1d8+3",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Garras",
+        "attackBonus": 5,
+        "damageFormula": "1d6+3",
+        "damageType": "Cortante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 308)."
+  },
+  "lobo": {
+    "slug": "lobo",
+    "name": "Lobo",
+    "nameEn": "Wolf",
+    "source": "both",
+    "size": "Médio",
+    "type": "beast",
+    "alignment": "Unaligned",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 12,
+    "hp": 11,
+    "hpFormula": "2d8 + 2",
+    "speed": "40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Wolf.webp",
+    "avatar": "🐺",
+    "abilities": {
+      "str": 14,
+      "dex": 15,
+      "con": 12,
+      "int": 3,
+      "wis": 12,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {
+      "Perception": 5,
+      "Stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Darkvision 60 ft., passive Perception 15",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Pack Tactics",
+        "desc": "O lobo tem Vantagem em jogadas de ataque contra uma criatura se pelo menos um dos aliados do lobo estiver a até 1,5 m (5 ft) da criatura e o aliado não estiver com a condição Incapacitado."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo: +4, alcance 1,5 m (5 ft). 5 (1d6 + 2) de dano perfurante. Se o alvo for uma criatura Média ou menor, ele fica com a condição Caído."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-4d434c",
+        "name": "Bite",
+        "attackBonus": 4,
+        "damageFormula": "1d6+2",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "pantera": {
+    "slug": "pantera",
+    "name": "Pantera",
+    "nameEn": "Panther",
+    "source": "both",
+    "size": "Médio",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 12,
+    "hp": 13,
+    "hpFormula": "3d8",
+    "speed": "15 m, escalada 12 m",
+    "avatar": "🐆",
+    "abilities": {
+      "str": 14,
+      "dex": 15,
+      "con": 10,
+      "int": 3,
+      "wis": 14,
+      "cha": 7
+    },
+    "skills": {
+      "Percepção": 4,
+      "Furtividade": 6
+    },
+    "senses": "Percepção passiva 14",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Faro Aguçado",
+        "desc": "Vantagem em Percepção relacionada ao olfato."
+      },
+      {
+        "name": "Bote",
+        "desc": "Se mover 6 m em linha reta e acertar Garras, CD 12 FOR ou fica Caído; bônus de Mordida."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 5 (1d6 + 2) perfurante."
+      },
+      {
+        "name": "Garras",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 4 (1d4 + 2) cortante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 4,
+        "damageFormula": "1d6+2",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Garras",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "Cortante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 309)."
+  },
+  "pseudodragao": {
+    "slug": "pseudodragao",
+    "name": "Pseudodragão",
+    "nameEn": "Pseudodragon",
+    "source": "both",
+    "size": "Miúdo",
+    "type": "dragon",
+    "alignment": "Neutro e Bom",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 13,
+    "hp": 7,
+    "hpFormula": "2d4 + 2",
+    "speed": "4,5 m, voo 18 m",
+    "avatar": "🐲",
+    "abilities": {
+      "str": 6,
+      "dex": 15,
+      "con": 13,
+      "int": 10,
+      "wis": 12,
+      "cha": 10
+    },
+    "skills": {
+      "Percepção": 3,
+      "Furtividade": 4
+    },
+    "senses": "Percepção às Cegas 3 m, Visão no Escuro 18 m, Percepção passiva 13",
+    "languages": "Entende Comum e Dracônico, mas não fala (telepatia limitada)",
+    "specialAbilities": [
+      {
+        "name": "Sentidos Aguçados",
+        "desc": "Vantagem em testes de Sabedoria (Percepção) de visão, audição ou olfato."
+      },
+      {
+        "name": "Resistência à Magia",
+        "desc": "Vantagem em salvaguardas contra magias."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 4 (1d4 + 2) perfurante."
+      },
+      {
+        "name": "Ferrão",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 4 (1d4 + 2) perfurante + CD 11 CON ou Envenenado por 1h (Inconsciente se falhar por 5+)."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Ferrão (CD 11 CON)",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "Perfurante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 309)."
+  },
+  "quasit": {
+    "slug": "quasit",
+    "name": "Quasit",
+    "nameEn": "Quasit",
+    "source": "both",
+    "size": "Miúdo",
+    "type": "fiend",
+    "alignment": "Caótico e Mau",
+    "cr": "1",
+    "xp": 200,
+    "ac": 13,
+    "hp": 7,
+    "hpFormula": "3d4",
+    "speed": "12 m",
+    "avatar": "👹",
+    "abilities": {
+      "str": 5,
+      "dex": 17,
+      "con": 10,
+      "int": 7,
+      "wis": 10,
+      "cha": 10
+    },
+    "skills": {
+      "Furtividade": 5
+    },
+    "damageResistances": "Frio, Fogo, Elétrico; armas não-mágicas",
+    "damageImmunities": "Veneno",
+    "conditionImmunities": "Envenenado",
+    "senses": "Visão no Escuro 36 m, Percepção passiva 10",
+    "languages": "Abissal, Comum",
+    "specialAbilities": [
+      {
+        "name": "Metamorfo",
+        "desc": "Pode transformar-se em morcego, centopeia ou sapo."
+      },
+      {
+        "name": "Resistência à Magia",
+        "desc": "Vantagem em salvaguardas contra magias."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Garras (Mordida em forma de besta)",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 5 (1d4 + 3) perfurante + 5 (2d4) veneno (CD 10 CON)."
+      },
+      {
+        "name": "Assustar (1/Dia)",
+        "desc": "Uma criatura a 6 m faz CD 10 SAB ou fica Amedrontada por 1 minuto."
+      },
+      {
+        "name": "Invisibilidade",
+        "desc": "Fica magicamente invisível até atacar ou perder concentração."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Garras",
+        "attackBonus": 4,
+        "damageFormula": "1d4+3",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Veneno (CD 10 CON)",
+        "attackBonus": 0,
+        "damageFormula": "2d4",
+        "damageType": "Veneno"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 310)."
+  },
+  "urso-marrom": {
+    "slug": "urso-marrom",
+    "name": "Urso Marrom",
+    "nameEn": "Brown Bear",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1",
+    "xp": 200,
+    "ac": 11,
+    "hp": 34,
+    "hpFormula": "4d10 + 12",
+    "speed": "12 m, escalada 9 m",
+    "avatar": "🐻",
+    "abilities": {
+      "str": 19,
+      "dex": 10,
+      "con": 16,
+      "int": 2,
+      "wis": 13,
+      "cha": 7
+    },
+    "skills": {
+      "Percepção": 3
+    },
+    "senses": "Percepção passiva 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Faro Aguçado",
+        "desc": "Vantagem em testes de Sabedoria (Percepção) relacionados ao olfato."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiataque",
+        "desc": "O urso realiza dois ataques: um com a mordida e um com as garras."
+      },
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 8 (1d8 + 4) perfurante."
+      },
+      {
+        "name": "Garras",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 11 (2d6 + 4) cortante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 5,
+        "damageFormula": "1d8+4",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Garras",
+        "attackBonus": 5,
+        "damageFormula": "2d6+4",
+        "damageType": "Cortante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 311)."
+  },
+  "urso-negro": {
+    "slug": "urso-negro",
+    "name": "Urso Negro",
+    "nameEn": "Black Bear",
+    "source": "both",
+    "size": "Médio",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1/2",
+    "xp": 100,
+    "ac": 11,
+    "hp": 19,
+    "hpFormula": "3d8 + 6",
+    "speed": "12 m, escalada 9 m",
+    "avatar": "🐻",
+    "abilities": {
+      "str": 15,
+      "dex": 10,
+      "con": 14,
+      "int": 2,
+      "wis": 12,
+      "cha": 7
+    },
+    "skills": {
+      "Percepção": 3
+    },
+    "senses": "Percepção passiva 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Faro Aguçado",
+        "desc": "Vantagem em Percepção relacionada ao olfato."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiataque",
+        "desc": "Realiza dois ataques: um com a mordida e um com as garras."
+      },
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +3. Acerto: 5 (1d6 + 2) perfurante."
+      },
+      {
+        "name": "Garras",
+        "desc": "Ataque Corpo a Corpo: +3. Acerto: 7 (2d4 + 2) cortante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 3,
+        "damageFormula": "1d6+2",
+        "damageType": "Perfurante"
+      },
+      {
+        "id": "atk-2",
+        "name": "Garras",
+        "attackBonus": 3,
+        "damageFormula": "2d4+2",
+        "damageType": "Cortante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 311)."
+  },
+  "zumbi": {
+    "slug": "zumbi",
+    "name": "Zumbi",
+    "nameEn": "Zombie",
+    "source": "both",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "Neutral Evil",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 8,
+    "hp": 15,
+    "hpFormula": "2d8 + 6",
+    "speed": "20 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Zombie.webp",
+    "avatar": "💀",
+    "abilities": {
+      "str": 13,
+      "dex": 6,
+      "con": 16,
+      "int": 3,
+      "wis": 6,
+      "cha": 5
+    },
+    "savingThrows": {
+      "WIS": 0
+    },
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "poison",
+    "conditionImmunities": "exhaustion; poisoned",
+    "senses": "Darkvision 60 ft., passive Perception 8",
+    "languages": "understands Common plus one other language but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Undead Fortitude",
+        "desc": "Se o dano reduzir o zumbi a 0 Pontos de Vida, ele faz uma salvaguarda de Constituição (CD 5 mais o dano sofrido), a menos que o dano seja radiante ou de um Acerto Crítico. Em caso de sucesso, o zumbi cai para 1 Ponto de Vida em vez disso."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Slam",
+        "desc": "Ataque Corpo a Corpo: +3, alcance 1,5 m (5 ft). 5 (1d8 + 1) de dano de concussão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-vvzne5",
+        "name": "Slam",
+        "attackBonus": 3,
+        "damageFormula": "1d8+1",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "cavalo-de-montaria": {
+    "slug": "cavalo-de-montaria",
+    "name": "Cavalo de Montaria",
+    "nameEn": "Riding Horse",
+    "source": "both",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 10,
+    "hp": 13,
+    "hpFormula": "2d10 + 2",
+    "speed": "18 m",
+    "avatar": "🐎",
+    "abilities": {
+      "str": 16,
+      "dex": 10,
+      "con": 12,
+      "int": 2,
+      "wis": 11,
+      "cha": 7
+    },
+    "senses": "Percepção passiva 10",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Cascos",
+        "desc": "Ataque Corpo a Corpo: +5. Acerto: 8 (2d4 + 3) concussão."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Cascos",
+        "attackBonus": 5,
+        "damageFormula": "2d4+3",
+        "damageType": "Concussão"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 305)."
+  },
+  "mastim": {
+    "slug": "mastim",
+    "name": "Mastim",
+    "nameEn": "Mastiff",
+    "source": "both",
+    "size": "Médio",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "1/8",
+    "xp": 25,
+    "ac": 12,
+    "hp": 5,
+    "hpFormula": "1d8 + 1",
+    "speed": "12 m",
+    "avatar": "🐕",
+    "abilities": {
+      "str": 13,
+      "dex": 14,
+      "con": 12,
+      "int": 3,
+      "wis": 12,
+      "cha": 7
+    },
+    "skills": {
+      "Percepção": 3
+    },
+    "senses": "Percepção passiva 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Audição e Faro Aguçados",
+        "desc": "Vantagem em Percepção relacionada a audição ou olfato."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +3. Acerto: 4 (1d6 + 1) perfurante; CD 11 FOR ou fica Caído."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida (CD 11 FOR ou Caído)",
+        "attackBonus": 3,
+        "damageFormula": "1d6+1",
+        "damageType": "Perfurante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 308)."
+  },
+  "corvo": {
+    "slug": "corvo",
+    "name": "Corvo",
+    "nameEn": "Raven",
+    "source": "pdf",
+    "size": "Miúdo",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "0",
+    "xp": 10,
+    "ac": 12,
+    "hp": 1,
+    "hpFormula": "1d4 - 1",
+    "speed": "3 m, voo 15 m",
+    "avatar": "🐦‍⬛",
+    "abilities": {
+      "str": 2,
+      "dex": 14,
+      "con": 8,
+      "int": 2,
+      "wis": 12,
+      "cha": 6
+    },
+    "skills": {
+      "Percepção": 3
+    },
+    "senses": "Percepção passiva 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Mimetismo",
+        "desc": "Pode imitar sons simples que ouviu (CD 10 Intuição para perceber)."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bico",
+        "desc": "Ataque Corpo a Corpo: +4. Acerto: 1 perfurante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Bico",
+        "attackBonus": 4,
+        "damageFormula": "1",
+        "damageType": "Perfurante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 305) — Familiar."
+  },
+  "morcego": {
+    "slug": "morcego",
+    "name": "Morcego",
+    "nameEn": "Bat",
+    "source": "both",
+    "size": "Miúdo",
+    "type": "beast",
+    "alignment": "Imparcial",
+    "cr": "0",
+    "xp": 10,
+    "ac": 12,
+    "hp": 1,
+    "hpFormula": "1d4 - 1",
+    "speed": "1,5 m, voo 9 m",
+    "avatar": "🦇",
+    "abilities": {
+      "str": 2,
+      "dex": 15,
+      "con": 8,
+      "int": 2,
+      "wis": 12,
+      "cha": 4
+    },
+    "senses": "Percepção às Cegas 18 m, Percepção passiva 11",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Ecolocalização",
+        "desc": "Não pode usar Percepção às Cegas enquanto Surdo."
+      },
+      {
+        "name": "Audição Aguçada",
+        "desc": "Vantagem em Percepção relacionada à audição."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Mordida",
+        "desc": "Ataque Corpo a Corpo: +0. Acerto: 1 perfurante."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-1",
+        "name": "Mordida",
+        "attackBonus": 0,
+        "damageFormula": "1",
+        "damageType": "Perfurante"
+      }
+    ],
+    "notes": "Apêndice D do Livro do Jogador (p. 308) — Familiar."
+  },
+  "aboleth": {
+    "slug": "aboleth",
+    "name": "Aboleth",
+    "nameEn": "Aboleth",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "aberration",
+    "alignment": "Lawful Evil",
+    "cr": "10",
+    "xp": 5900,
+    "ac": 17,
+    "hp": 150,
+    "hpFormula": "20d10 + 40",
+    "speed": "10 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Aboleth.webp",
+    "avatar": "🐙",
+    "abilities": {
+      "str": 21,
+      "dex": 9,
+      "con": 15,
+      "int": 18,
+      "wis": 15,
+      "cha": 18
+    },
+    "savingThrows": {
+      "DEX": 3,
+      "CON": 6,
+      "INT": 8,
+      "WIS": 6
+    },
+    "skills": {
+      "History": 12,
+      "Perception": 10
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Darkvision 120 ft., passive Perception 20",
+    "languages": "Deep Speech; telepathy 120 ft.",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O aboleth pode respirar ar e água."
+      },
+      {
+        "name": "Eldritch Restoration",
+        "desc": "Se destruído, o aboleth ganha um novo corpo em 5d10 dias, revivendo com todos os seus Pontos de Vida no Reino Distante ou em outro local escolhido pelo Mestre."
+      },
+      {
+        "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+        "desc": "Se o aboleth falhar em uma salvaguarda, ele pode escolher ter sucesso."
+      },
+      {
+        "name": "Mucus Cloud",
+        "desc": "Enquanto estiver submerso, o aboleth é envolto por muco. Salvaguarda de Constituição: CD 14, cada criatura em uma Emanação de 1,5 m (5 ft) originada do aboleth ao final do turno do aboleth. Falha: O alvo é amaldiçoado. Até a maldição acabar, a pele do alvo fica viscosa, o alvo pode respirar ar e água, e ele não pode recuperar Pontos de Vida a menos que esteja submerso.\nEnquanto a criatura amaldiçoada estiver fora de um corpo d'água, a criatura sofre 6 (1d12) de dano de ácido ao final de cada 10 minutos, a menos que umidade seja aplicada à sua pele antes que esses minutos tenham passado."
+      },
+      {
+        "name": "Probing Telepathy",
+        "desc": "Se uma criatura que o aboleth possa ver se comunicar telepaticamente com ele, o aboleth descobre os maiores desejos da criatura."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O aboleth realiza dois ataques de Tentáculo e usa Consumir Memórias ou Dominar Mente, se disponível."
+      },
+      {
+        "name": "Tentacle",
+        "desc": "Ataque Corpo a Corpo: +9, alcance 4,5 m (15 ft). 12 (2d6 + 5) de dano de concussão. Se o alvo for uma criatura Grande ou menor, ele fica com a condição Imobilizado (CD 14 para escapar) por um de quatro tentáculos."
+      },
+      {
+        "name": "Consume Memories",
+        "desc": "Salvaguarda de Inteligência: CD 16, uma criatura a até 9 m (30 ft) que esteja Enfeitiçada ou Imobilizada pelo aboleth. Falha: 10 (3d6) de dano psíquico. Sucesso: Metade do dano. Falha ou Sucesso: O aboleth ganha as memórias do alvo se o alvo for um Humanoide e for reduzido a 0 Pontos de Vida por esta ação."
+      },
+      {
+        "name": "Dominate Mind (2/Day)",
+        "desc": "Salvaguarda de Sabedoria: CD 16, uma criatura que o aboleth possa ver a até 9 m (30 ft). Falha: O alvo fica com a condição Enfeitiçado até o aboleth morrer ou estar em um plano de existência diferente do alvo. Enquanto Enfeitiçado, o alvo age como um aliado do aboleth e está sob seu controle enquanto estiver a até 18 m (60 ft) dele. Além disso, o aboleth e o alvo podem se comunicar telepaticamente entre si por qualquer distância.\nO alvo repete a salvaguarda sempre que sofrer dano, bem como após cada 24 horas que passar a pelo menos 1 milha de distância do aboleth, encerrando o efeito sobre si mesmo em caso de sucesso."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Lash",
+        "desc": "O aboleth realiza um ataque de Tentáculo."
+      },
+      {
+        "name": "Psychic Drain",
+        "desc": "Se o aboleth mantiver pelo menos uma criatura com a condição Enfeitiçado ou Imobilizado, ele usa Consumir Memórias e recupera 5 (1d10) Pontos de Vida."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-t4b9xu",
+        "name": "Tentacle",
+        "attackBonus": 9,
+        "damageFormula": "2d6+5",
+        "damageType": "concussão"
+      },
+      {
+        "id": "atk-5mzzfa",
+        "name": "Consume Memories",
+        "attackBonus": 0,
+        "damageFormula": "3d6",
+        "damageType": "psíquico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "abocanhador-matraqueante": {
+    "slug": "abocanhador-matraqueante",
+    "name": "Abocanhador Matraqueante",
+    "nameEn": "Gibbering Mouther",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "aberration",
+    "alignment": "Chaotic Neutral",
+    "cr": "2",
+    "xp": 450,
+    "ac": 9,
+    "hp": 52,
+    "hpFormula": "7d8 + 21",
+    "speed": "20 ft., natação 20 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Gibbering%20Mouther.webp",
+    "avatar": "🐙",
+    "abilities": {
+      "str": 10,
+      "dex": 8,
+      "con": 16,
+      "int": 3,
+      "wis": 10,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "prone",
+    "senses": "Darkvision 60 ft., passive Perception 10",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Aberrant Ground",
+        "desc": "O chão em uma Emanação de 3 m (10 ft) originada do abocanhador é Terreno Difícil."
+      },
+      {
+        "name": "Gibbering",
+        "desc": "A boca balbucia incoerentemente enquanto não estiver com a condição Incapacitado. Salvaguarda de Sabedoria: CD 10, qualquer criatura que comece seu turno a até 6 m (20 ft) da boca enquanto ela balbucia. Falha: O alvo rola 1d8 para determinar o que faz durante o turno atual: - 1-4: O alvo não faz nada. - 5-6: O alvo não realiza ação nem Ação Bônus e usa todo o seu movimento para se mover em uma direção aleatória. - 7-8: O alvo faz um ataque corpo a corpo contra uma criatura determinada aleatoriamente dentro do seu alcance, ou não faz nada se não puder fazer esse ataque."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo: +2, alcance 1,5 m (5 ft). 7 (2d6) de dano perfurante. Se o alvo for uma criatura Média ou menor, ele fica com a condição Caído. O alvo morre se for reduzido a 0 Pontos de Vida por este ataque. O corpo dele é então absorvido pelo devorador, deixando para trás apenas o equipamento."
+      },
+      {
+        "name": "Blinding Spittle (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 10, cada criatura em uma Esfera de 3 m (10 ft) de raio centrada em um ponto a até 9 m (30 ft). Falha: 7 (2d6) de dano radiante, e o alvo fica com a condição Cego até o fim do próximo turno da boca."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-vfq146",
+        "name": "Bite",
+        "attackBonus": 2,
+        "damageFormula": "2d6",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-jrqto9",
+        "name": "Blinding Spittle (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "2d6",
+        "damageType": "Radiante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "arqueiro-infernal": {
+    "slug": "arqueiro-infernal",
+    "name": "Arqueiro Infernal",
+    "nameEn": "Hellbug Archer",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "monstrosity",
+    "alignment": "unaligned",
+    "cr": "7",
+    "xp": 2900,
+    "ac": 15,
+    "hp": 130,
+    "hpFormula": "20d8 + 40",
+    "speed": "40 ft., voo 40 ft., escavação 10 ft.",
+    "tokenUrl": "",
+    "avatar": "🦁",
+    "abilities": {
+      "str": 13,
+      "dex": 18,
+      "con": 14,
+      "int": 2,
+      "wis": 14,
+      "cha": 5
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "fire; piercing and slashing from nonmagical weapons that aren't adamantine",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "blindsight 120 ft., tremorsense 120 ft., passive Perception 12",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Flyby",
+        "desc": "O hellbug não provoca ataques de oportunidade quando voa para fora do alcance de um inimigo."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O hellbug faz dois ataques. Ele pode usar Cuspir no lugar de qualquer ataque corpo a corpo."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 6 (1d8 + 2) de dano perfurante."
+      },
+      {
+        "name": "Spit",
+        "desc": "O hellbug expele uma bola combustível de muco que explode em um ponto que ele possa ver a até 18 m (60 ft) dele. Cada criatura em uma esfera de 1,5 m (5 ft) de raio centrada nesse ponto deve fazer uma salvaguarda de Destreza CD 15. Em uma falha, o alvo sofre 14 (4d6) de dano de fogo e, se for Grande ou menor, é derrubado, ficando com a condição Caído. Em um sucesso, o alvo sofre metade do dano de fogo, mas não fica com a condição Caído."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-z69dmg",
+        "name": "Claw",
+        "attackBonus": 5,
+        "damageFormula": "1d8+2",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-x5l9ma",
+        "name": "Spit",
+        "attackBonus": 0,
+        "damageFormula": "4d6",
+        "damageType": "fogo"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "bruxo-da-rainha-corvo": {
+    "slug": "bruxo-da-rainha-corvo",
+    "name": "Bruxo da Rainha Corvo",
+    "nameEn": "Warlock, Raven Queen",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "humanoid (goliath)",
+    "alignment": "Imparcial",
+    "cr": "4",
+    "xp": 1100,
+    "ac": 14,
+    "hp": 91,
+    "hpFormula": "14d8 + 28",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "👹",
+    "abilities": {
+      "str": 11,
+      "dex": 15,
+      "con": 14,
+      "int": 11,
+      "wis": 14,
+      "cha": 17
+    },
+    "savingThrows": {
+      "wis": 4,
+      "cha": 5
+    },
+    "skills": {
+      "athletics": 2,
+      "perception": 7,
+      "survival": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 30 ft., passive Perception 17",
+    "languages": "Common, Giant",
+    "specialAbilities": [
+      {
+        "name": "Sentinel Raven",
+        "desc": "$54"
+      },
+      {
+        "name": "Soul of the Raven",
+        "desc": "O bruxo tem a capacidade de se fundir com seu espírito corvo. Como uma ação bônus, quando o corvo está empoleirado no ombro do bruxo, o corpo do bruxo se funde com a forma do corvo. Enquanto fundido, o bruxo se torna Minúsculo, substituindo seu Movimento pelo do corvo, e o bruxo só pode usar sua ação para realizar as ações Disparada, Desengajar, Esquivar, Ajudar, Esconder ou Procurar. Durante esse tempo, ele recebe os benefícios de ter o corvo empoleirado em seu ombro. Como uma ação, o bruxo e o corvo voltam ao normal."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O bruxo é um conjurador de 6º nível. Sua habilidade de conjuração é Carisma (CD de resistência de magia 13, +5 para acertar com ataques de magia). Ele recupera seus espaços de magia gastos quando termina um descanso curto ou longo. Ele conhece as seguintes magias de bruxo: Truques (à vontade): Arte Druídica, Raio Místico, Orientação, Prestidigitação Arcana, Acudir os Moribundos, Badalar Fúnebre; 1º-3º nível (2 espaços de 3º nível): Vitalidade Vazia, Danação, Fome de Hadar, Santuário, Falar com Mortos, Arma Espiritual, Toque Vampírico"
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O bruxo faz dois ataques com seu Raio Místico ou sua adaga."
+      },
+      {
+        "name": "Eldritch Blast",
+        "desc": "Ataque Mágico à Distância: +5 para acertar, alcance 90 m (300 ft), um alvo. Acerto: 9 (1d10 + 3) de dano de força. Se o alvo for uma criatura, ele deve ser bem-sucedido em uma salvaguarda de Força CD 13 ou ser empurrado 3 m (10 ft) para longe do bruxo em linha reta."
+      },
+      {
+        "name": "Dagger",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 4 (1d4 + 2) de dano perfurante."
+      }
+    ],
+    "reactions": [
+      {
+        "name": "Stone's Endurance (Recharges after a Short or Long Rest)",
+        "desc": "O bruxo pode se concentrar para ocasionalmente ignorar ferimentos. Quando o bruxo sofre dano, ele pode reduzir o dano em 8 (1d12 + 2)."
+      }
+    ],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-71l4i4",
+        "name": "Eldritch Blast",
+        "attackBonus": 5,
+        "damageFormula": "1d10+3",
+        "damageType": "Energia"
+      },
+      {
+        "id": "atk-bo2eby",
+        "name": "Dagger",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "caranguejo-elmo": {
+    "slug": "caranguejo-elmo",
+    "name": "Caranguejo-Elmo",
+    "nameEn": "Helmet Crab",
+    "source": "pocketdm",
+    "size": "Pequeno",
+    "type": "beast",
+    "alignment": "unaligned",
+    "cr": "3",
+    "xp": 700,
+    "ac": 14,
+    "hp": 93,
+    "hpFormula": "17d6 + 34",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "🐺",
+    "abilities": {
+      "str": 16,
+      "dex": 14,
+      "con": 15,
+      "int": 2,
+      "wis": 10,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "passive Perception 10",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O caranguejo faz dois ataques de garra."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 7 (1d8 + 3) de dano cortante mais 5 (2d4) de dano ácido."
+      },
+      {
+        "name": "Corroding Claw (Recharge 6)",
+        "desc": "O caranguejo corrói um objeto metálico ferroso não mágico que possa tocar. Se o objeto não estiver sendo vestido ou carregado, o toque destrói um cubo de 0,3 m (1 ft) dele. Se o objeto estiver sendo vestido ou carregado por uma criatura, a criatura pode fazer uma salvaguarda de Destreza CD 12 para evitar o toque do caranguejo."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-eb28hg",
+        "name": "Claw",
+        "attackBonus": 5,
+        "damageFormula": "1d8+3",
+        "damageType": "cortante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "clerigo-do-dominio-da-forja": {
+    "slug": "clerigo-do-dominio-da-forja",
+    "name": "Clérigo do Domínio da Forja",
+    "nameEn": "Forge Domain Cleric",
+    "source": "pocketdm",
+    "size": "Pequeno",
+    "type": "humanoid (gnome)",
+    "alignment": "neutral",
+    "cr": "6",
+    "xp": 2300,
+    "ac": 19,
+    "hp": 71,
+    "hpFormula": "13d6 + 26",
+    "speed": "25 ft.",
+    "tokenUrl": "",
+    "avatar": "👹",
+    "abilities": {
+      "str": 16,
+      "dex": 9,
+      "con": 14,
+      "int": 11,
+      "wis": 17,
+      "cha": 9
+    },
+    "savingThrows": {
+      "wis": 6,
+      "cha": 2
+    },
+    "skills": {
+      "history": 3,
+      "perception": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "fire",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 16",
+    "languages": "Common and Gnomish",
+    "specialAbilities": [
+      {
+        "name": "Spellcasting",
+        "desc": "O clérigo é um conjurador de 6º nível. Sua habilidade de conjuração é Sabedoria (CD de resistência de magia 14, +6 para acertar com ataques de magia). Ele tem as seguintes magias de clérigo preparadas: Truques (à vontade): Orientação, Reparar, Chama Sagrada, Taumaturgia 1º nível (4 espaços): Criar ou Destruir Água, Curar Ferimentos, Destruição Cauterizante, Escudo 2º nível (3 espaços): Esquentar Metal, Arma Mágica, Silêncio, Arma Espiritual 3º nível (3 espaços): Arma Elemental, Proteção contra Energia, Guardiões Espirituais"
+      },
+      {
+        "name": "Artificer's Lore",
+        "desc": "Sempre que o clérigo fizer um teste de Inteligência (História) relacionado a itens mágicos, objetos alquímicos ou dispositivos tecnológicos, ele pode adicionar o dobro de seu bônus de proficiência, em vez de qualquer bônus de proficiência que normalmente se aplicaria."
+      },
+      {
+        "name": "Blessing of the Forge",
+        "desc": "Os ataques com o grande martelo do clérigo são mágicos, concedendo ao clérigo +1 nas jogadas de ataque e de dano."
+      },
+      {
+        "name": "Gnome Cunning",
+        "desc": "O clérigo tem vantagem em todas as salvaguardas de Inteligência, Sabedoria e Carisma contra magia."
+      },
+      {
+        "name": "Soul of the Forge",
+        "desc": "O domínio da forja do clérigo concede a ele várias habilidades especiais: o clérigo recebe um bônus de +1 na CA enquanto estiver usando armadura média ou pesada. O clérigo ganha Resistência a dano de fogo. Quando o clérigo acerta um constructo com um ataque, ele causa 6 de dano de força adicional."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Great Hammer",
+        "desc": "Ataque com Arma Corpo a Corpo: +7 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 10 (1d12 + 4) de dano de concussão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-iwtib8",
+        "name": "Great Hammer",
+        "attackBonus": 7,
+        "damageFormula": "1d12+4",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dolgrim": {
+    "slug": "dolgrim",
+    "name": "Dolgrim",
+    "nameEn": "Dolgrim",
+    "source": "pocketdm",
+    "size": "Pequeno",
+    "type": "aberration",
+    "alignment": "chaotic evil",
+    "cr": "1",
+    "xp": 200,
+    "ac": 15,
+    "hp": 44,
+    "hpFormula": "8d6 + 16",
+    "speed": "25 ft.",
+    "tokenUrl": "",
+    "avatar": "🐙",
+    "abilities": {
+      "str": 15,
+      "dex": 14,
+      "con": 14,
+      "int": 10,
+      "wis": 10,
+      "cha": 8
+    },
+    "savingThrows": {},
+    "skills": {
+      "athletics": 4,
+      "perception": 2,
+      "stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 12",
+    "languages": "Common, Goblin",
+    "specialAbilities": [
+      {
+        "name": "Dual Consciousness",
+        "desc": "O dolgrim tem vantagem em testes de Sabedoria (Percepção) e em salvaguardas contra ficar enfeitiçado, amedrontado, atordoado e inconsciente."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dolgrim faz dois ataques: um com sua estrela da manhã e um com sua besta leve."
+      },
+      {
+        "name": "Morningstar",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 6 (1d8 + 2) de dano contundente."
+      },
+      {
+        "name": "Light Crossbow",
+        "desc": "Ataque à Distância com Arma: +4 para acertar, distância 24/96 m (80/320 ft), um alvo. Acerto: 6 (1d8 + 2) de dano perfurante."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-fyutli",
+        "name": "Morningstar",
+        "attackBonus": 4,
+        "damageFormula": "1d8+2",
+        "damageType": "Concussão"
+      },
+      {
+        "id": "atk-f4gjko",
+        "name": "Light Crossbow",
+        "attackBonus": 4,
+        "damageFormula": "1d8+2",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "mago-teurgia": {
+    "slug": "mago-teurgia",
+    "name": "Mago, Teurgia",
+    "nameEn": "Wizard, Theurgy",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "humanoid (half-elf)",
+    "alignment": "Imparcial",
+    "cr": "9",
+    "xp": 5000,
+    "ac": 12,
+    "hp": 148,
+    "hpFormula": "27d8 + 27",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "👹",
+    "abilities": {
+      "str": 9,
+      "dex": 14,
+      "con": 12,
+      "int": 19,
+      "wis": 12,
+      "cha": 15
+    },
+    "savingThrows": {
+      "dex": 6,
+      "int": 8
+    },
+    "skills": {
+      "arcana": 8,
+      "deception": 6,
+      "persuasion": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "macgrifo-escarlate": {
+    "slug": "macgrifo-escarlate",
+    "name": "Macgrifo Escarlate",
+    "nameEn": "Scarlet Macgriffon",
+    "source": "pocketdm",
+    "size": "Pequeno",
+    "type": "monstrosity",
+    "alignment": "unaligned",
+    "cr": "1",
+    "xp": 200,
+    "ac": 13,
+    "hp": 27,
+    "hpFormula": "6d6 + 6",
+    "speed": "20 ft., voo 60 ft.",
+    "tokenUrl": "",
+    "avatar": "🦁",
+    "abilities": {
+      "str": 12,
+      "dex": 16,
+      "con": 12,
+      "int": 2,
+      "wis": 13,
+      "cha": 8
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 15",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Keen Sight",
+        "desc": "O macgrifo escarlate tem vantagem em testes de Sabedoria (Percepção) que dependam da visão."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O macgrifo escarlate faz dois ataques: um com seu bico e um com suas garras."
+      },
+      {
+        "name": "Beak",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 5 (1d4 + 3) de dano perfurante."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 8 (2d4 + 3) de dano cortante."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-3946ha",
+        "name": "Beak",
+        "attackBonus": 5,
+        "damageFormula": "1d4+3",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-b5phau",
+        "name": "Claw",
+        "attackBonus": 5,
+        "damageFormula": "2d4+3",
+        "damageType": "cortante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-vermelho-jovem": {
+    "slug": "dragao-vermelho-jovem",
+    "name": "Dragão Vermelho Jovem",
+    "nameEn": "Young Red Dragon",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "dragon",
+    "alignment": "Chaotic Evil",
+    "cr": "10",
+    "xp": 5900,
+    "ac": 18,
+    "hp": 178,
+    "hpFormula": "17d10 + 85",
+    "speed": "40 ft., escalada 40 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Young%20Red%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 23,
+      "dex": 10,
+      "con": 21,
+      "int": 14,
+      "wis": 11,
+      "cha": 19
+    },
+    "savingThrows": {
+      "DEX": 4,
+      "WIS": 4
+    },
+    "skills": {
+      "Perception": 8,
+      "Stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "fire",
+    "conditionImmunities": "",
+    "senses": "Blindsight 30 ft., Darkvision 120 ft., passive Perception 18",
+    "languages": "Common, Draconic",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +10, alcance 3 m (10 ft). 13 (2d6 + 6) de dano cortante mais 3 (1d6) de dano de fogo."
+      },
+      {
+        "name": "Fire Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 17, cada criatura em um Cone de 9 m (30 ft). Falha: 56 (16d6) de dano de fogo. Sucesso: Metade do dano."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-2685rr",
+        "name": "Rend",
+        "attackBonus": 10,
+        "damageFormula": "2d6+6",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-cqcwbs",
+        "name": "Fire Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "16d6",
+        "damageType": "fogo"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "amalthalda-a-exorcista": {
+    "slug": "amalthalda-a-exorcista",
+    "name": "Amalthalda, a Exorcista",
+    "nameEn": "Amalthalda, the Exorcist",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "humanoid (half-orc)",
+    "alignment": "Imparcial",
+    "cr": "15",
+    "xp": 13000,
+    "ac": 20,
+    "hp": 289,
+    "hpFormula": "34d8 + 136",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "👹",
+    "abilities": {
+      "str": 20,
+      "dex": 11,
+      "con": 19,
+      "int": 11,
+      "wis": 14,
+      "cha": 18
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 12",
+    "languages": "Celestial, Common, Orcish",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "Amalthalda faz três ataques corpo a corpo."
+      },
+      {
+        "name": "Sun Shard",
+        "desc": "Ataque com Arma Corpo a Corpo: +13 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 15 (2d6 + 8) de dano de concussão, perfurante ou cortante (escolha de Amalthalda) mais 4 (1d8) de dano radiante."
+      },
+      {
+        "name": "Holy Nova (Recharges after a Long Rest)",
+        "desc": "Amalthalda invoca a luz de Pelor em um raio de 9 m (30 ft) ao redor dela. Qualquer morto-vivo ou corruptor que Amalthalda escolher dentro da área fica atordoado até o final de seu próximo turno, e deve ser bem-sucedido em uma salvaguarda de Sabedoria CD 17 ou sofrer 45 (10d8) de dano radiante e ficar permanentemente cego. Em um sucesso, o alvo sofre metade do dano e não fica cego. Amalthalda e qualquer criatura aliada na área recupera 26 (5d8 + 4) pontos de vida."
+      },
+      {
+        "name": "Lay on Hands (Recharges after a Long Rest)",
+        "desc": "O toque abençoado de Amalthalda pode curar ferimentos. Ela possui uma reserva de poder de cura que pode usar para restaurar até 90 pontos de vida. Ela pode tocar uma criatura e canalizar poder da reserva para restaurar uma quantidade de pontos de vida para essa criatura, até o máximo restante em sua reserva. Alternativamente, ela pode gastar 5 pontos de vida de sua reserva para curar o alvo de uma doença ou neutralizar um veneno que o esteja afetando. Ela pode curar múltiplas doenças e neutralizar múltiplos venenos com um único uso de Mãos Consagradas, gastando pontos de vida separadamente para cada um. Esta ação não tem efeito sobre mortos-vivos e constructos."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-s3cqjp",
+        "name": "Sun Shard",
+        "attackBonus": 13,
+        "damageFormula": "2d6+8",
+        "damageType": "concussão"
+      },
+      {
+        "id": "atk-ygb8t4",
+        "name": "Holy Nova (Recharges after a Long Rest)",
+        "attackBonus": 0,
+        "damageFormula": "10d8",
+        "damageType": "Radiante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "arconte-lanterna": {
+    "slug": "arconte-lanterna",
+    "name": "Arconte Lanterna",
+    "nameEn": "Lantern Archon",
+    "source": "pocketdm",
+    "size": "Miúdo",
+    "type": "celestial",
+    "alignment": "lawful good",
+    "cr": "2",
+    "xp": 450,
+    "ac": 12,
+    "hp": 21,
+    "hpFormula": "6d6",
+    "speed": "0 ft., voo 50 ft.",
+    "tokenUrl": "",
+    "avatar": "👼",
+    "abilities": {
+      "str": 3,
+      "dex": 14,
+      "con": 10,
+      "int": 6,
+      "wis": 12,
+      "cha": 11
+    },
+    "savingThrows": {},
+    "skills": {
+      "insight": 3,
+      "perception": 3
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "lightning; bludgeoning, piercing, and slashing damage from nonmagical weapons",
+    "damageImmunities": "radiant",
+    "conditionImmunities": "petrified",
+    "senses": "darkvision 60 ft., passive Perception 13",
+    "languages": "Celestial",
+    "specialAbilities": [
+      {
+        "name": "Aura of Menace",
+        "desc": "Qualquer criatura à escolha do arconte em um raio de 6 m (20 ft) deve realizar uma salvaguarda de Sabedoria CD 11 no início de seu turno. Em uma falha, a criatura tem desvantagem em jogadas de ataque e salvaguardas por 24 horas, ou até atingir o arconte com um ataque. Em um sucesso, ou quando o efeito terminar, a criatura fica imune à Aura de Ameaça do arconte por 24 horas."
+      },
+      {
+        "name": "Celestial Communication",
+        "desc": "O arconte pode compreender todos os idiomas falados. Além disso, qualquer criatura que possa compreender um idioma pode compreender o arconte."
+      },
+      {
+        "name": "Illumination",
+        "desc": "O arconte emite luz plena em um raio de 9 m (30 ft) e penumbra por mais 4,5 m (15 ft)."
+      },
+      {
+        "name": "Innate Spellcasting",
+        "desc": "O modificador de habilidade de conjuração do arconte é Sabedoria (CD de resistência de magia 11). Ele pode conjurar inatamente as seguintes magias. À vontade: Proteção contra o Bem e o Mal; 1/dia: Auxílio"
+      }
+    ],
+    "actions": [
+      {
+        "name": "Light Ray",
+        "desc": "Ataque Mágico à Distância: +4 para acertar, alcance 9 m (30 ft), um alvo. Acerto: 11 (2d10) de dano radiante."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-93osa5",
+        "name": "Light Ray",
+        "attackBonus": 4,
+        "damageFormula": "2d10",
+        "damageType": "Radiante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "azer": {
+    "slug": "azer",
+    "name": "Azer",
+    "nameEn": "Azer",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "elemental",
+    "alignment": "Lawful Neutral",
+    "cr": "2",
+    "xp": 450,
+    "ac": 17,
+    "hp": 39,
+    "hpFormula": "6d8 + 12",
+    "speed": "30 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/MM/Azer.webp",
+    "avatar": "🔥",
+    "abilities": {
+      "str": 17,
+      "dex": 12,
+      "con": 15,
+      "int": 12,
+      "wis": 13,
+      "cha": 10
+    },
+    "savingThrows": {
+      "CON": 4
+    },
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "fire; poison",
+    "conditionImmunities": "poisoned",
+    "senses": "passive Perception 11",
+    "languages": "Ignan",
+    "specialAbilities": [
+      {
+        "name": "Heated Body",
+        "desc": "Uma criatura que toca o azer ou o acerta com um ataque corpo a corpo estando a até 1,5 m (5 ft) dele sofre 5 (1d10) de dano de fogo."
+      },
+      {
+        "name": "Heated Weapons",
+        "desc": "Quando o azer acerta com uma arma corpo a corpo de metal, ele causa 3 (1d6) de dano de fogo extra (incluído no ataque)."
+      },
+      {
+        "name": "Illumination",
+        "desc": "O azer emite luz plena em um raio de 3 m (10 ft) e luz fraca por mais 3 m (10 ft)."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Warhammer",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 7 (1d8 + 3) de dano de concussão, ou 8 (1d10 + 3) de dano de concussão se usado com duas mãos para realizar um ataque corpo a corpo, mais 3 (1d6) de dano de fogo."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-5unp8y",
+        "name": "Warhammer",
+        "attackBonus": 5,
+        "damageFormula": "1d8+3",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MM 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "beholder-nauseante": {
+    "slug": "beholder-nauseante",
+    "name": "Beholder Nauseante",
+    "nameEn": "Sickener Beholder",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "aberration",
+    "alignment": "lawful evil",
+    "cr": "10",
+    "xp": 5900,
+    "ac": 18,
+    "hp": 170,
+    "hpFormula": "20d10 + 60",
+    "speed": "0 ft., voo 20 ft.",
+    "tokenUrl": "",
+    "avatar": "🐙",
+    "abilities": {
+      "str": 9,
+      "dex": 15,
+      "con": 16,
+      "int": 17,
+      "wis": 15,
+      "cha": 17
+    },
+    "savingThrows": {
+      "int": 7,
+      "wis": 6,
+      "cha": 7
+    },
+    "skills": {
+      "perception": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "poison",
+    "damageImmunities": "",
+    "conditionImmunities": "poisoned, prone",
+    "senses": "darkvision 120 ft., passive Perception 20",
+    "languages": "Deep Speech, Undercommon",
+    "specialAbilities": [
+      {
+        "name": "Antimagic Cone",
+        "desc": "O olho central do beholder cria uma área de antimagia, como na magia Campo Antimagia, em um cone de 45 m (150 ft). No início de cada um de seus turnos, o beholder decide para qual direção o cone aponta e se o cone está ativo."
+      },
+      {
+        "name": "Illumination",
+        "desc": "O beholder emite luz verde plena em um raio de 3 m (10 ft) e penumbra verde por mais 3 m (10 ft)."
+      },
+      {
+        "name": "Radiating Sickness",
+        "desc": "Se uma criatura começar seu turno ou se mover a até 6 m (20 ft) do beholder, essa criatura sofre 5 (1d10) de dano radiante e fica Envenenada por 1 minuto. O veneno não tem efeito em constructos e mortos-vivos. Para cada rodada subsequente em que o alvo permanecer Envenenado, ele ganha um nível de Exaustão. No final do turno da criatura, ela pode fazer uma salvaguarda de Constituição CD 15, encerrando o efeito de envenenamento em um sucesso. O efeito pode atravessar barreiras, mas 60 cm (2 ft) de rocha, 5 cm (2 polegadas) de qualquer metal que não seja chumbo, ou uma fina folha de chumbo o bloqueiam."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O beholder faz oito ataques de pedúnculo."
+      },
+      {
+        "name": "Stalk",
+        "desc": "Ataque Corpo a Corpo com Arma: +7 para acertar, alcance 3 m (10 ft), um alvo. Acerto: 9 (1d12 + 3) de dano de concussão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-wtlww3",
+        "name": "Stalk",
+        "attackBonus": 7,
+        "damageFormula": "1d12+3",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "bruxa-do-mar": {
+    "slug": "bruxa-do-mar",
+    "name": "Bruxa do Mar",
+    "nameEn": "Sea Hag",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "fey",
+    "alignment": "Chaotic Evil",
+    "cr": "2",
+    "xp": 450,
+    "ac": 14,
+    "hp": 52,
+    "hpFormula": "7d8 + 21",
+    "speed": "30 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Sea%20Hag.webp",
+    "avatar": "🧚",
+    "abilities": {
+      "str": 16,
+      "dex": 13,
+      "con": 16,
+      "int": 12,
+      "wis": 12,
+      "cha": 13
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Darkvision 60 ft., passive Perception 11",
+    "languages": "Common, Giant, Primordial (Aquan)",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "A bruxa pode respirar ar e água."
+      },
+      {
+        "name": "Coven Magic",
+        "desc": "Enquanto estiver a até 9 m (30 ft) de pelo menos duas bruxas aliadas, a bruxa pode conjurar uma das seguintes magias, sem exigir componentes Materiais, usando o tempo de conjuração normal da magia e usando Inteligência como habilidade de conjuração (CD de resistência de magia 11): Augúrio, Convocar Familiar, Identificar, Localizar Objeto, Vidência ou Servo Invisível. A bruxa deve terminar um Descanso Longo antes de usar esta característica para conjurar aquela magia novamente."
+      },
+      {
+        "name": "Vile Appearance",
+        "desc": "Salvaguarda de Sabedoria: CD 11, qualquer Besta ou Humanoide que comece seu turno a até 9 m (30 ft) da bruxa e possa ver a verdadeira forma da bruxa. Falha: O alvo fica com a condição Amedrontado até o início do seu próximo turno. Sucesso: O alvo fica imune à Aparência Vil desta bruxa por 24 horas."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo: +5, alcance 1,5 m (5 ft). 10 (2d6 + 3) de dano cortante."
+      },
+      {
+        "name": "Death Glare (Recharge 5-6)",
+        "desc": "Salvaguarda de Sabedoria: CD 11, uma criatura Amedrontada que a bruxa possa ver a até 9 m (30 ft). Falha: Se o alvo tiver 20 Pontos de Vida ou menos, ele cai a 0 Pontos de Vida. Caso contrário, o alvo sofre 13 (3d8) de dano psíquico."
+      },
+      {
+        "name": "Illusory Appearance",
+        "desc": "A bruxa conjura Disfarçar-se, usando Constituição como habilidade de conjuração (CD de resistência de magia 13). A duração da magia é de 24 horas."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-56pxig",
+        "name": "Claw",
+        "attackBonus": 5,
+        "damageFormula": "2d6+3",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-j6ovuv",
+        "name": "Death Glare (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "3d8",
+        "damageType": "psíquico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "zumbinseto": {
+    "slug": "zumbinseto",
+    "name": "Zumbinseto",
+    "nameEn": "Hum Bug",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "monstrosity",
+    "alignment": "unaligned",
+    "cr": "9",
+    "xp": 3900,
+    "ac": 16,
+    "hp": 199,
+    "hpFormula": "21d12 + 63",
+    "speed": "30 ft., escavação 15 ft.",
+    "tokenUrl": "",
+    "avatar": "🦁",
+    "abilities": {
+      "str": 21,
+      "dex": 14,
+      "con": 17,
+      "int": 2,
+      "wis": 15,
+      "cha": 5
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "piercing and slashing from nonmagical weapons that aren't adamantine",
+    "damageImmunities": "thunder",
+    "conditionImmunities": "",
+    "senses": "tremorsense 120 ft., passive Perception 12",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O zumbinseto faz três ataques de pancada."
+      },
+      {
+        "name": "Slam",
+        "desc": "Ataque Corpo a Corpo com Arma: +9 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 16 (2d10 + 5) de dano de concussão mais 7 (2d6) de dano de trovão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-qxeqmn",
+        "name": "Slam",
+        "attackBonus": 9,
+        "damageFormula": "2d10+5",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "zumbi-ogro": {
+    "slug": "zumbi-ogro",
+    "name": "Zumbi Ogro",
+    "nameEn": "Ogre Zombie",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "undead",
+    "alignment": "Neutral Evil",
+    "cr": "2",
+    "xp": 450,
+    "ac": 8,
+    "hp": 85,
+    "hpFormula": "9d10 + 36",
+    "speed": "30 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ogre%20Zombie.webp",
+    "avatar": "💀",
+    "abilities": {
+      "str": 19,
+      "dex": 6,
+      "con": 18,
+      "int": 3,
+      "wis": 6,
+      "cha": 5
+    },
+    "savingThrows": {
+      "WIS": 0
+    },
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "poison",
+    "conditionImmunities": "exhaustion; poisoned",
+    "senses": "Darkvision 60 ft., passive Perception 8",
+    "languages": "understands Common and Giant but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Undead Fortitude",
+        "desc": "Se o dano reduzir o zumbi a 0 Pontos de Vida, ele realiza uma salvaguarda de Constituição (CD 5 mais o dano sofrido), a menos que o dano seja radiante ou de um Acerto Crítico. Em um sucesso na salvaguarda, o zumbi cai para 1 Ponto de Vida em vez disso."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Slam",
+        "desc": "Ataque Corpo a Corpo: +6, alcance 1,5 m (5 ft). 13 (2d8 + 4) de dano de concussão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-7be5m0",
+        "name": "Slam",
+        "attackBonus": 6,
+        "damageFormula": "2d8+4",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "zumbi-de-hera": {
+    "slug": "zumbi-de-hera",
+    "name": "Zumbi de Hera",
+    "nameEn": "Ivylash Zombie",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "neutral evil",
+    "cr": "1/2",
+    "xp": 100,
+    "ac": 11,
+    "hp": 30,
+    "hpFormula": "4d8 + 12",
+    "speed": "20 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 11,
+      "dex": 12,
+      "con": 16,
+      "int": 3,
+      "wis": 6,
+      "cha": 5
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "poison",
+    "conditionImmunities": "poisoned",
+    "senses": "darkvision 60 ft., passive Perception 8",
+    "languages": "understands all languages it spoke in life but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Undead Fortitude",
+        "desc": "Se o dano reduzir o zumbi a 0 Pontos de Vida, ele deve realizar uma salvaguarda de Constituição com CD igual a 5 + o dano sofrido, a menos que o dano seja radiante ou de um acerto crítico. Em um sucesso, o zumbi fica com 1 Ponto de Vida em vez disso."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +2 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 7 (2d6) de dano perfurante."
+      },
+      {
+        "name": "Ivylash",
+        "desc": "Ataque Corpo a Corpo com Arma: +3 para acertar, alcance 4,5 m (15 ft), um alvo. Acerto: 4 (1d4 + 2) de dano cortante mais 3 (1d6) de dano de veneno. Se o alvo for uma criatura, ele deve ser bem-sucedido em uma salvaguarda de Constituição CD 13 ou ficará envenenado até o final do próximo turno do zumbi."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-lsrfpz",
+        "name": "Bite",
+        "attackBonus": 2,
+        "damageFormula": "2d6",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-3sups6",
+        "name": "Ivylash",
+        "attackBonus": 3,
+        "damageFormula": "1d4+2",
+        "damageType": "cortante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "zumbi-cuspidor-de-acido": {
+    "slug": "zumbi-cuspidor-de-acido",
+    "name": "Zumbi Cuspidor de Ácido",
+    "nameEn": "Acid Spitting Zombie",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "neutral evil",
+    "cr": "4",
+    "xp": 1100,
+    "ac": 12,
+    "hp": 127,
+    "hpFormula": "17d8 + 51",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 11,
+      "dex": 14,
+      "con": 17,
+      "int": 3,
+      "wis": 6,
+      "cha": 5
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "acid, poison",
+    "conditionImmunities": "poisoned",
+    "senses": "darkvision 60 ft., passive Perception 8",
+    "languages": "understands the languages it knew in life but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Undead Fortitude",
+        "desc": "Se o dano reduzir o zumbi a 0 Pontos de Vida, ele deve fazer uma salvaguarda de Constituição com CD igual a 5 + o dano sofrido, a menos que o dano seja radiante ou de um acerto crítico. Em um sucesso, o zumbi cai para 1 Ponto de Vida em vez disso."
+      },
+      {
+        "name": "Unstable Base",
+        "desc": "Se o zumbi não tiver todos os seus Pontos de Vida, ele se torna instável, tremendo violentamente e espirrando ácido em um raio de 4,5 m (15 ft). Cada criatura que comece seu turno nessa área deve fazer uma salvaguarda de Destreza CD 13, sofrendo 10 (3d6) de dano ácido em uma falha, ou metade desse dano em um sucesso. Além disso, jogadas de ataque corpo a corpo contra o zumbi são feitas com Vantagem."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Slam",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 5 (1d6 + 2) de dano de concussão."
+      },
+      {
+        "name": "Projectile Vomit",
+        "desc": "Ataque à Distância com Arma: +5 para acertar, alcance 6/18 m (20/60 ft), um alvo. Acerto: 12 (3d6 + 2) de dano ácido."
+      },
+      {
+        "name": "Acid Reflux (Recharge 6)",
+        "desc": "O zumbi expele uma bolha de ácido que respinga em um ponto que ele possa ver a até 18 m (60 ft) dele. Cada criatura em uma esfera de 4,5 m (15 ft) de raio centrada naquele ponto deve realizar uma salvaguarda de Destreza CD 13. Uma criatura sofre 21 (6d6) de dano ácido em uma falha, ou metade desse dano em um sucesso."
+      }
+    ],
+    "reactions": [
+      {
+        "name": "Acid Reflex",
+        "desc": "Em resposta a sofrer dano, ácido pressurizado sai da ferida. Cada criatura a até 10"
+      }
+    ],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-wak7mm",
+        "name": "Slam",
+        "attackBonus": 5,
+        "damageFormula": "1d6+2",
+        "damageType": "concussão"
+      },
+      {
+        "id": "atk-08yjan",
+        "name": "Projectile Vomit",
+        "attackBonus": 5,
+        "damageFormula": "3d6+2",
+        "damageType": "ácido"
+      },
+      {
+        "id": "atk-asxnuk",
+        "name": "Acid Reflux (Recharge 6)",
+        "attackBonus": 0,
+        "damageFormula": "6d6",
+        "damageType": "ácido"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "zumbi-cabeca-de-metal": {
+    "slug": "zumbi-cabeca-de-metal",
+    "name": "Zumbi Cabeça-de-Metal",
+    "nameEn": "Metal-Head Zombie",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "neutral evil",
+    "cr": "1/2",
+    "xp": 100,
+    "ac": 8,
+    "hp": 26,
+    "hpFormula": "4d8 + 8",
+    "speed": "20 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 14,
+      "dex": 6,
+      "con": 16,
+      "int": 3,
+      "wis": 6,
+      "cha": 5
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "poisoned",
+    "senses": "darkvision 60 ft., passive Perception 8",
+    "languages": "understands all languages it spoke in life but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Ride the Lightning",
+        "desc": "Sempre que o zumbi for submetido a dano elétrico, ele não sofre dano e, em vez disso, recupera um número de Pontos de Vida igual ao dano elétrico causado."
+      },
+      {
+        "name": "Undead Fortitude",
+        "desc": "Se o dano reduzir o zumbi a 0 Pontos de Vida, ele deve fazer uma salvaguarda de Constituição com CD igual a 5 + o dano sofrido, a menos que o dano seja radiante ou de um acerto crítico. Em um sucesso, o zumbi cai para 1 Ponto de Vida em vez disso."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Headbutt",
+        "desc": "Ataque Corpo a Corpo com Arma: +3 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 6 (1d8 + 2) de dano de concussão."
+      },
+      {
+        "name": "Metal Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +3 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 5 (1d6 + 2) de dano de concussão. Se o alvo for Médio ou menor, ele fica imobilizado (CD de escape 12)."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-15v48y",
+        "name": "Headbutt",
+        "attackBonus": 3,
+        "damageFormula": "1d8+2",
+        "damageType": "concussão"
+      },
+      {
+        "id": "atk-d07dt3",
+        "name": "Metal Claw",
+        "attackBonus": 3,
+        "damageFormula": "1d6+2",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "zombesta-remendada": {
+    "slug": "zombesta-remendada",
+    "name": "Zombesta Remendada",
+    "nameEn": "Stitched Zombeast",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "undead",
+    "alignment": "neutral evil",
+    "cr": "9",
+    "xp": 5000,
+    "ac": 16,
+    "hp": 189,
+    "hpFormula": "18d10 + 90",
+    "speed": "40 ft., voo 80 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 21,
+      "dex": 13,
+      "con": 20,
+      "int": 3,
+      "wis": 15,
+      "cha": 10
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "cold, lightning, necrotic; bludgeoning, piercing, and slashing from nonmagical weapons",
+    "damageImmunities": "poison",
+    "conditionImmunities": "charmed, frightened, poisoned",
+    "senses": "darkvision 120 ft., passive Perception 16",
+    "languages": "understands Common but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Charge",
+        "desc": "Se a zombesta se mover pelo menos 6 m (20 ft) em linha reta em direção a um alvo e então acertá-lo com um ataque de presas no mesmo turno, o alvo sofre 7 (2d6) de dano cortante extra. Se o alvo for uma criatura, ele deve ser bem-sucedido em uma salvaguarda de Força CD 13 ou será derrubado, ficando com a condição Caído."
+      },
+      {
+        "name": "Relentless (Recharges after a Short or Long Rest)",
+        "desc": "Se a zombesta sofrer 20 de dano ou menos que a reduziria a 0 Pontos de Vida, ela é reduzida a 1 Ponto de Vida em vez disso."
+      },
+      {
+        "name": "Keen Smell",
+        "desc": "A zombesta tem Vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "A zombesta faz quatro ataques: um com sua mordida, um com suas presas, um com suas garras e um com seu ferrão."
+      },
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +9 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 12 (2d6 + 5) de dano perfurante."
+      },
+      {
+        "name": "Tusks",
+        "desc": "Ataque Corpo a Corpo com Arma: +9 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 12 (2d6 + 5) de dano perfurante."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +9 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 12 (2d6 + 5) de dano cortante."
+      },
+      {
+        "name": "Sting",
+        "desc": "Ataque Corpo a Corpo com Arma: +9 para acertar, alcance 3 m (10 ft), um alvo. Acerto: 11 (1d12 + 5) de dano perfurante e o alvo deve realizar uma salvaguarda de Constituição CD 17, sofrendo 22 (4d10) de dano por veneno em caso de falha, ou metade desse dano em caso de sucesso."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-nnbblw",
+        "name": "Bite",
+        "attackBonus": 9,
+        "damageFormula": "2d6+5",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-d7xfw8",
+        "name": "Tusks",
+        "attackBonus": 9,
+        "damageFormula": "2d6+5",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-39z3tn",
+        "name": "Claw",
+        "attackBonus": 9,
+        "damageFormula": "2d6+5",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-n6ct6q",
+        "name": "Sting",
+        "attackBonus": 9,
+        "damageFormula": "1d12+5",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "yuan-ti-ignan": {
+    "slug": "yuan-ti-ignan",
+    "name": "Yuan-Ti Ignan",
+    "nameEn": "Yuan-Ti Ignan",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "monstrosity (yuan-ti)",
+    "alignment": "it is grappled (escape DC 15). Until this grapple ends, the target is restrained and takes 12 (2d6 + 5) bludgeoning damage plus 3 (1d6) fire damage at the start of each of its turns, and the yuan-ti can't use its tail on another target.",
+    "cr": "8",
+    "xp": 3900,
+    "ac": 16,
+    "hp": 133,
+    "hpFormula": "14d10 + 56",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "👹",
+    "abilities": {
+      "str": 21,
+      "dex": 13,
+      "con": 18,
+      "int": 6,
+      "wis": 14,
+      "cha": 11
+    },
+    "savingThrows": {
+      "dex": 4,
+      "wis": 5
+    },
+    "skills": {
+      "perception": 8,
+      "stealth": 4,
+      "survival": 5
+    },
+    "damageVulnerabilities": "cold",
+    "damageResistances": "",
+    "damageImmunities": "fire, poison",
+    "conditionImmunities": "poisoned",
+    "senses": "darkvision 60 ft., passive Perception 18",
+    "languages": "Abyssal, Draconic, Ignan",
+    "specialAbilities": [
+      {
+        "name": "Cruelty",
+        "desc": "O yuan-ti pode fazer um ataque de Maça Pesada como ação bônus contra uma criatura que ele esteja agarrando."
+      },
+      {
+        "name": "Innate Spellcasting",
+        "desc": "A habilidade de conjuração inata do yuan-ti é Carisma (CD de resistência de magia 11). O yuan-ti pode conjurar inatamente as seguintes magias, sem necessitar de componentes materiais: À vontade: Amizade Animal (apenas serpentes) 3/dia: Chamuscador de Aganazzar"
+      },
+      {
+        "name": "Magic Resistance",
+        "desc": "O yuan-ti tem Vantagem em salvaguardas contra magias e outros efeitos mágicos."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O yuan-ti faz dois ataques: um com sua chifrada e um com sua maça pesada. Ele pode usar sua cauda no lugar de um ataque corpo a corpo."
+      },
+      {
+        "name": "Gore",
+        "desc": "Ataque com Arma Corpo a Corpo: +8 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 9 (1d8 + 5) de dano perfurante mais 3 (1d6) de dano de fogo."
+      },
+      {
+        "name": "Heavy Mace",
+        "desc": "Ataque com Arma Corpo a Corpo: +8 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 12 (2d6 + 5) de dano contundente mais 3 (1d6) de dano de fogo."
+      },
+      {
+        "name": "Tail",
+        "desc": "Ataque com Arma Corpo a Corpo: +8 para acertar, alcance 3 m (10 ft), um alvo. Acerto: 12 (2d6 + 5) de dano contundente mais 3 (1d6) de dano de fogo. Se o alvo for uma criatura Grande ou menor, ele fica imobilizado (CD de escape 15). Até que esse agarrão termine, o alvo está contido e sofre 12 (2d6 + 5) de dano contundente mais 3 (1d6) de dano de fogo no início de cada um de seus turnos, e o yuan-ti não pode usar sua cauda em outro alvo."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-mu6c7m",
+        "name": "Gore",
+        "attackBonus": 8,
+        "damageFormula": "1d8+5",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-xkgkme",
+        "name": "Heavy Mace",
+        "attackBonus": 8,
+        "damageFormula": "2d6+5",
+        "damageType": "fogo"
+      },
+      {
+        "id": "atk-567r2s",
+        "name": "Tail",
+        "attackBonus": 8,
+        "damageFormula": "2d6+5",
+        "damageType": "fogo"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-azul-adulto": {
+    "slug": "dragao-azul-adulto",
+    "name": "Dragão Azul Adulto",
+    "nameEn": "Adult Blue Dragon",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "dragon",
+    "alignment": "Lawful Evil",
+    "cr": "16",
+    "xp": 15000,
+    "ac": 19,
+    "hp": 212,
+    "hpFormula": "17d12 + 102",
+    "speed": "40 ft., escavação 30 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Adult%20Blue%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 25,
+      "dex": 10,
+      "con": 23,
+      "int": 16,
+      "wis": 15,
+      "cha": 20
+    },
+    "savingThrows": {
+      "DEX": 5,
+      "WIS": 7
+    },
+    "skills": {
+      "Perception": 12,
+      "Stealth": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 22",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+        "desc": "Se o dragão falhar em uma salvaguarda, ele pode escolher ter sucesso."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de Conjuração para lançar Estilhaçar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +12, alcance 3 m (10 ft). 16 (2d8 + 7) de dano cortante mais 5 (1d10) de dano elétrico."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 19, cada criatura em uma Linha de 27 m (90 ft) de comprimento por 1,5 m (5 ft) de largura. Falha: 60 (11d10) de dano elétrico. Êxito: Metade do dano."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 18):\nÀ vontade: Detectar Magia, Invisibilidade, Mãos Mágicas, Despedaçar\n1/dia cada: Vidência, Remeter"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Cloaked Flight",
+        "desc": "O dragão usa Conjuração para lançar Invisibilidade em si mesmo e pode voar até metade de seu Deslocamento de Voo. O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Sonic Boom",
+        "desc": "O dragão usa Conjuração para lançar Despedaçar. O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Tail Swipe",
+        "desc": "O dragão realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-58i4s9",
+        "name": "Rend",
+        "attackBonus": 12,
+        "damageFormula": "2d8+7",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-09r8p0",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "11d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-azul-anciao": {
+    "slug": "dragao-azul-anciao",
+    "name": "Dragão Azul Ancião",
+    "nameEn": "Ancient Blue Dragon",
+    "source": "pocketdm",
+    "size": "Imenso",
+    "type": "dragon",
+    "alignment": "Lawful Evil",
+    "cr": "23",
+    "xp": 50000,
+    "ac": 22,
+    "hp": 481,
+    "hpFormula": "26d20 + 208",
+    "speed": "40 ft., escavação 40 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ancient%20Blue%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 29,
+      "dex": 10,
+      "con": 27,
+      "int": 18,
+      "wis": 17,
+      "cha": 25
+    },
+    "savingThrows": {
+      "DEX": 7,
+      "WIS": 10
+    },
+    "skills": {
+      "Perception": 17,
+      "Stealth": 7
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 27",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de Conjuração para lançar Despedaçar (versão de nível 3)."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +16, alcance 4,5 m (15 ft). 18 (2d8 + 9) de dano cortante mais 11 (2d10) de dano elétrico."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 23, cada criatura em uma Linha de 36 m (120 ft) de comprimento e 3 m (10 ft) de largura. Falha: 88 (16d10) de dano elétrico. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 22):\nÀ vontade: Detectar Magia, Invisibilidade, Mãos Mágicas, Despedaçar (versão de nível 3)\n1/dia cada: Vidência, Remeter"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Cloaked Flight",
+        "desc": "O dragão usa Conjuração para lançar Invisibilidade em si mesmo e pode voar até metade de seu Deslocamento de Voo. O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Sonic Boom",
+        "desc": "O dragão usa Conjuração para lançar Despedaçar (versão de nível 3). O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Tail Swipe",
+        "desc": "O dragão realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-kbro6r",
+        "name": "Rend",
+        "attackBonus": 16,
+        "damageFormula": "2d8+9",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-ir00a6",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "16d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-azul-jovem": {
+    "slug": "dragao-azul-jovem",
+    "name": "Dragão Azul Jovem",
+    "nameEn": "Young Blue Dragon",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "dragon",
+    "alignment": "Lawful Evil",
+    "cr": "9",
+    "xp": 5000,
+    "ac": 18,
+    "hp": 152,
+    "hpFormula": "16d10 + 64",
+    "speed": "40 ft., escavação 20 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Young%20Blue%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 21,
+      "dex": 10,
+      "con": 19,
+      "int": 14,
+      "wis": 13,
+      "cha": 17
+    },
+    "savingThrows": {
+      "DEX": 4,
+      "WIS": 5
+    },
+    "skills": {
+      "Perception": 9,
+      "Stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 30 ft., Darkvision 120 ft., passive Perception 19",
+    "languages": "Common, Draconic",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +9, alcance 3 m (10 ft). 12 (2d6 + 5) de dano cortante mais 5 (1d10) de dano elétrico."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 16, cada criatura em uma Linha de 18 m (60 ft) de comprimento e 1,5 m (5 ft) de largura. Falha: 55 (10d10) de dano elétrico. Sucesso: Metade do dano."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-ng6434",
+        "name": "Rend",
+        "attackBonus": 9,
+        "damageFormula": "2d6+5",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-raummx",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "10d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-branco-adulto": {
+    "slug": "dragao-branco-adulto",
+    "name": "Dragão Branco Adulto",
+    "nameEn": "Adult White Dragon",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "dragon",
+    "alignment": "Chaotic Evil",
+    "cr": "13",
+    "xp": 10000,
+    "ac": 18,
+    "hp": 200,
+    "hpFormula": "16d12 + 96",
+    "speed": "40 ft., escavação 30 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Adult%20White%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 22,
+      "dex": 10,
+      "con": 22,
+      "int": 8,
+      "wis": 12,
+      "cha": 12
+    },
+    "savingThrows": {
+      "DEX": 5,
+      "WIS": 6
+    },
+    "skills": {
+      "Perception": 11,
+      "Stealth": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "cold",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 21",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Ice Walk",
+        "desc": "O dragão pode se mover e escalar superfícies geladas sem precisar fazer um teste de habilidade. Além disso, terreno difícil composto de gelo ou neve não custa movimento adicional."
+      },
+      {
+        "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +11, alcance 3 m (10 ft). 13 (2d6 + 6) de dano cortante mais 4 (1d8) de dano de frio."
+      },
+      {
+        "name": "Cold Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Constituição: CD 19, cada criatura em um Cone de 18 m (60 ft). Falha: 54 (12d8) de dano de frio. Sucesso: Metade do dano."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Freezing Burst",
+        "desc": "Salvaguarda de Constituição: CD 14, cada criatura em uma Esfera de 9 m (30 ft) de raio centrada em um ponto que o dragão possa ver a até 36 m (120 ft). Falha: 7 (2d6) de dano de frio, e o Deslocamento do alvo fica 0 até o final do próximo turno do alvo. Falha ou Sucesso: O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Frightful Presence",
+        "desc": "O dragão lança Medo, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 14). O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-w64nrr",
+        "name": "Rend",
+        "attackBonus": 11,
+        "damageFormula": "2d6+6",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-8peeiy",
+        "name": "Cold Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "12d8",
+        "damageType": "frio"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-branco-anciao": {
+    "slug": "dragao-branco-anciao",
+    "name": "Dragão Branco Ancião",
+    "nameEn": "Ancient White Dragon",
+    "source": "pocketdm",
+    "size": "Imenso",
+    "type": "dragon",
+    "alignment": "Chaotic Evil",
+    "cr": "20",
+    "xp": 25000,
+    "ac": 20,
+    "hp": 333,
+    "hpFormula": "18d20 + 144",
+    "speed": "40 ft., escavação 40 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ancient%20White%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 26,
+      "dex": 10,
+      "con": 26,
+      "int": 10,
+      "wis": 13,
+      "cha": 18
+    },
+    "savingThrows": {
+      "DEX": 6,
+      "WIS": 7
+    },
+    "skills": {
+      "Perception": 13,
+      "Stealth": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "cold",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 23",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Ice Walk",
+        "desc": "O dragão pode se mover e escalar superfícies geladas sem precisar fazer um teste de habilidade. Além disso, terreno difícil composto de gelo ou neve não custa movimento extra para ele."
+      },
+      {
+        "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +14, alcance 4,5 m (15 ft). 17 (2d8 + 8) de dano cortante mais 7 (2d6) de dano de frio."
+      },
+      {
+        "name": "Cold Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Constituição: CD 22, cada criatura em um Cone de 27 m (90 ft). Falha: 63 (14d8) de dano de frio. Sucesso: Metade do dano."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Freezing Burst",
+        "desc": "Salvaguarda de Constituição: CD 20, cada criatura em uma Esfera de 9 m (30 ft) de raio centrada em um ponto que o dragão possa ver a até 36 m (120 ft). Falha: 14 (4d6) de dano de frio, e o Deslocamento do alvo é 0 até o final do próximo turno do alvo. Falha ou Sucesso: O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Frightful Presence",
+        "desc": "O dragão conjura Medo, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 18). O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-zudv0u",
+        "name": "Rend",
+        "attackBonus": 14,
+        "damageFormula": "2d8+8",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-ymais5",
+        "name": "Cold Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "14d8",
+        "damageType": "frio"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-branco-jovem": {
+    "slug": "dragao-branco-jovem",
+    "name": "Dragão Branco Jovem",
+    "nameEn": "Young White Dragon",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "dragon",
+    "alignment": "Chaotic Evil",
+    "cr": "6",
+    "xp": 2300,
+    "ac": 17,
+    "hp": 123,
+    "hpFormula": "13d10 + 52",
+    "speed": "40 ft., escavação 20 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Young%20White%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 18,
+      "dex": 10,
+      "con": 18,
+      "int": 6,
+      "wis": 11,
+      "cha": 12
+    },
+    "savingThrows": {
+      "DEX": 3,
+      "WIS": 3
+    },
+    "skills": {
+      "Perception": 6,
+      "Stealth": 3
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "cold",
+    "conditionImmunities": "",
+    "senses": "Blindsight 30 ft., Darkvision 120 ft., passive Perception 16",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Ice Walk",
+        "desc": "O dragão pode se mover e escalar superfícies congeladas sem precisar fazer um teste de habilidade. Além disso, terreno difícil composto de gelo ou neve não custa movimento extra para ele."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +7, alcance 3 m (10 ft). 9 (2d4 + 4) de dano cortante mais 2 (1d4) de dano de frio."
+      },
+      {
+        "name": "Cold Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Constituição: CD 15, cada criatura em um Cone de 9 m (30 ft). Falha: 40 (9d8) de dano de frio. Sucesso: Metade do dano."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-ljz2z7",
+        "name": "Rend",
+        "attackBonus": 7,
+        "damageFormula": "2d4+4",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-gx98sa",
+        "name": "Cold Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "9d8",
+        "damageType": "frio"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-cristalino": {
+    "slug": "dragao-cristalino",
+    "name": "Dragão Cristalino",
+    "nameEn": "Crystalline Dragon",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "dragon",
+    "alignment": "any chaotic",
+    "cr": "18",
+    "xp": 20000,
+    "ac": 20,
+    "hp": 270,
+    "hpFormula": "20d12 + 140",
+    "speed": "40 ft., voo 80 ft.",
+    "tokenUrl": "",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 28,
+      "dex": 10,
+      "con": 10,
+      "int": 10,
+      "wis": 10,
+      "cha": 14
+    },
+    "savingThrows": {
+      "dex": 8,
+      "con": 13,
+      "wis": 9,
+      "cha": 14
+    },
+    "skills": {
+      "insight": 9,
+      "intimidation": 14,
+      "perception": 15
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "bludgeoning, piercing, and slashing from nonmagical weapons that aren't adamantine",
+    "conditionImmunities": "",
+    "senses": "blindsight 60 ft., darkvision 120 ft., passive Perception 25",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Legendary Resistance (3/day)",
+        "desc": "Se o dragão falhar em uma salvaguarda, ele pode escolher ser bem-sucedido em vez disso."
+      },
+      {
+        "name": "Prismatic Immunity",
+        "desc": "O dragão pode usar sua ação bônus para ganhar imunidade a um dos seguintes tipos de dano: ácido, frio, fogo ou relâmpago. A imunidade dura até o dragão usar essa habilidade novamente."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão pode usar sua Presença Aterrorizante. Em seguida, faz três ataques: um com sua mordida e dois com suas garras."
+      },
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +15 para acertar, alcance 3 m (10 ft), um alvo. Acerto: 20 (2d10 + 9) de dano perfurante."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +15 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 16 (2d6 + 9) de dano cortante."
+      },
+      {
+        "name": "Tail",
+        "desc": "Ataque Corpo a Corpo com Arma: +15 para acertar, alcance 4,5 m (15 ft), um alvo. Acerto: 18 (2d8 + 9) de dano de concussão."
+      },
+      {
+        "name": "Frightful Presence",
+        "desc": "Cada criatura à escolha do dragão que esteja a até 36 m (120 ft) do dragão e ciente dele deve ser bem-sucedida em uma salvaguarda de Sabedoria CD 22 ou ficará amedrontada por 1 minuto. Uma criatura pode repetir a salvaguarda no final de cada um de seus turnos, encerrando o efeito sobre si mesma em um sucesso. Se a salvaguarda de uma criatura for bem-sucedida ou o efeito terminar para ela, a criatura fica imune à Presença Aterrorizante do dragão pelas próximas 24 horas."
+      },
+      {
+        "name": "Prismatic Breath (Recharge 5-6)",
+        "desc": "$54"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-1cj2bh",
+        "name": "Bite",
+        "attackBonus": 15,
+        "damageFormula": "2d10+9",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-fwmxfu",
+        "name": "Claw",
+        "attackBonus": 15,
+        "damageFormula": "2d6+9",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-zadffx",
+        "name": "Tail",
+        "attackBonus": 15,
+        "damageFormula": "2d8+9",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-da-sorte": {
+    "slug": "dragao-da-sorte",
+    "name": "Dragão da Sorte",
+    "nameEn": "Luck Dragon",
+    "source": "pocketdm",
+    "size": "Miúdo",
+    "type": "dragon",
+    "alignment": "unaligned",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 12,
+    "hp": 7,
+    "hpFormula": "2d4 + 2",
+    "speed": "15 ft., voo 60 ft.",
+    "tokenUrl": "",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 6,
+      "dex": 10,
+      "con": 10,
+      "int": 10,
+      "wis": 10,
+      "cha": 15
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 3,
+      "persuasion": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "bludgeoning, piercing, and slashing from nonmagical weapons",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 13",
+    "languages": "understands Common and Draconic but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Dragon Luck (1/Day)",
+        "desc": "Quando o dragão da sorte faz uma jogada de ataque, um teste de habilidade ou uma salvaguarda, ele pode obter vantagem na jogada."
+      },
+      {
+        "name": "Limited Telepathy",
+        "desc": "O dragão da sorte pode comunicar magicamente ideias simples, emoções e imagens telepaticamente com qualquer criatura a até 30 m (100 ft) dele que possa entender um idioma."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 4 (1d4 + 2) de dano perfurante."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-4ark54",
+        "name": "Bite",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-de-bronze-adulto": {
+    "slug": "dragao-de-bronze-adulto",
+    "name": "Dragão de Bronze Adulto",
+    "nameEn": "Adult Bronze Dragon",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "dragon",
+    "alignment": "Lawful Good",
+    "cr": "15",
+    "xp": 13000,
+    "ac": 18,
+    "hp": 212,
+    "hpFormula": "17d12 + 102",
+    "speed": "40 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Adult%20Bronze%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 25,
+      "dex": 10,
+      "con": 23,
+      "int": 16,
+      "wis": 15,
+      "cha": 20
+    },
+    "savingThrows": {
+      "DEX": 5,
+      "WIS": 7
+    },
+    "skills": {
+      "Insight": 7,
+      "Perception": 12,
+      "Stealth": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 22",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O dragão pode respirar ar e água."
+      },
+      {
+        "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de (A) Sopro de Repulsão ou (B) Conjuração para lançar Raio Guia (versão de nível 2)."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +12, alcance 3 m (10 ft). 16 (2d8 + 7) de dano cortante mais 5 (1d10) de dano elétrico."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 19, cada criatura em uma Linha de 27 m (90 ft) de comprimento e 1,5 m (5 ft) de largura. Falha: 55 (10d10) de dano elétrico. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Repulsion Breath",
+        "desc": "Salvaguarda de Força: CD 19, cada criatura em um Cone de 9 m (30 ft). Falha: O alvo é empurrado até 18 m (60 ft) em linha reta para longe do dragão e fica com a condição Caído."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 17, +10 para acertar com ataques de magia):\nÀ vontade: Detectar Magia, Raio Guia (versão de nível 2), Metamorfose (apenas forma de Fera ou Humanoide, sem Pontos de Vida Temporários ganhos pela magia e sem Concentração ou Pontos de Vida Temporários necessários para manter a magia), Falar com Animais, Taumaturgia\n1/dia cada: Detectar Pensamentos, Respirar na Água"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Guiding Light",
+        "desc": "O dragão usa Conjuração para lançar Raio Guia (versão de nível 2)."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      },
+      {
+        "name": "Thunderclap",
+        "desc": "Salvaguarda de Constituição: CD 17, cada criatura em uma Esfera de 6 m (20 ft) de raio centrada em um ponto que o dragão possa ver a até 27 m (90 ft). Falha: 10 (3d6) de dano trovejante, e o alvo fica com a condição Surdo até o fim de seu próximo turno."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-zqg195",
+        "name": "Rend",
+        "attackBonus": 12,
+        "damageFormula": "2d8+7",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-xgj4wp",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "10d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-de-bronze-anciao": {
+    "slug": "dragao-de-bronze-anciao",
+    "name": "Dragão de Bronze Ancião",
+    "nameEn": "Ancient Bronze Dragon",
+    "source": "pocketdm",
+    "size": "Imenso",
+    "type": "dragon",
+    "alignment": "Lawful Good",
+    "cr": "22",
+    "xp": 41000,
+    "ac": 22,
+    "hp": 444,
+    "hpFormula": "24d20 + 192",
+    "speed": "40 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ancient%20Bronze%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 29,
+      "dex": 10,
+      "con": 27,
+      "int": 18,
+      "wis": 17,
+      "cha": 25
+    },
+    "savingThrows": {
+      "DEX": 7,
+      "WIS": 10
+    },
+    "skills": {
+      "Insight": 10,
+      "Perception": 17,
+      "Stealth": 7
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 27",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O dragão pode respirar ar e água."
+      },
+      {
+        "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de (A) Sopro de Repulsão ou (B) Conjuração para lançar Raio Guia (versão de nível 2)."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +16, alcance 4,5 m (15 ft). 18 (2d8 + 9) de dano cortante mais 9 (2d8) de dano elétrico."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 23, cada criatura em uma Linha de 36 m (120 ft) de comprimento e 3 m (10 ft) de largura. Falha: 82 (15d10) de dano elétrico. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Repulsion Breath",
+        "desc": "Salvaguarda de Força: CD 23, cada criatura em um Cone de 9 m (30 ft). Falha: O alvo é empurrado até 18 m (60 ft) em linha reta para longe do dragão e fica com a condição Caído."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 22, +14 para acertar com ataques mágicos):\nÀ vontade: Detectar Magia, Raio Guia (versão de nível 2), Metamorfose (apenas forma de Fera ou Humanoide, sem Pontos de Vida Temporários obtidos pela magia e sem Concentração ou Pontos de Vida Temporários necessários para manter a magia), Falar com Animais, Taumaturgia\n1/dia cada: Detectar Pensamentos, Controlar Água, Vidência, Respirar na Água"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Guiding Light",
+        "desc": "O dragão usa Conjuração para lançar Raio Guia (versão de nível 2)."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      },
+      {
+        "name": "Thunderclap",
+        "desc": "Salvaguarda de Constituição: CD 22, cada criatura em uma Esfera de 6 m (20 ft) de raio centrada em um ponto que o dragão possa ver a até 36 m (120 ft). Falha: 13 (3d8) de dano trovejante, e o alvo fica com a condição Surdo até o fim de seu próximo turno."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-w0yaow",
+        "name": "Rend",
+        "attackBonus": 16,
+        "damageFormula": "2d8+9",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-s2zpyc",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "15d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-de-bronze-jovem": {
+    "slug": "dragao-de-bronze-jovem",
+    "name": "Dragão de Bronze Jovem",
+    "nameEn": "Young Bronze Dragon",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "dragon",
+    "alignment": "Lawful Good",
+    "cr": "8",
+    "xp": 3900,
+    "ac": 17,
+    "hp": 142,
+    "hpFormula": "15d10 + 60",
+    "speed": "40 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Young%20Bronze%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 21,
+      "dex": 10,
+      "con": 19,
+      "int": 14,
+      "wis": 13,
+      "cha": 17
+    },
+    "savingThrows": {
+      "DEX": 3,
+      "WIS": 4
+    },
+    "skills": {
+      "Insight": 4,
+      "Perception": 7,
+      "Stealth": 3
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "lightning",
+    "conditionImmunities": "",
+    "senses": "Blindsight 30 ft., Darkvision 120 ft., passive Perception 17",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O dragão pode respirar ar e água."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de Sopro de Repulsão."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +8, alcance 3 m (10 ft). 16 (2d10 + 5) de dano cortante."
+      },
+      {
+        "name": "Lightning Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 15, cada criatura em uma Linha de 18 m (60 ft) de comprimento e 1,5 m (5 ft) de largura. Falha: 49 (9d10) de dano elétrico. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Repulsion Breath",
+        "desc": "Salvaguarda de Força: CD 15, cada criatura em um Cone de 9 m (30 ft). Falha: O alvo é empurrado até 12 m (40 ft) em linha reta para longe do dragão e fica com a condição Caído."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-5qbyet",
+        "name": "Rend",
+        "attackBonus": 8,
+        "damageFormula": "2d10+5",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-senjgz",
+        "name": "Lightning Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "9d10",
+        "damageType": "elétrico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-de-cobre-adulto": {
+    "slug": "dragao-de-cobre-adulto",
+    "name": "Dragão de Cobre Adulto",
+    "nameEn": "Adult Copper Dragon",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "dragon",
+    "alignment": "Chaotic Good",
+    "cr": "14",
+    "xp": 11500,
+    "ac": 18,
+    "hp": 184,
+    "hpFormula": "16d12 + 80",
+    "speed": "40 ft., escalada 40 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Adult%20Copper%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 23,
+      "dex": 12,
+      "con": 21,
+      "int": 18,
+      "wis": 15,
+      "cha": 18
+    },
+    "savingThrows": {
+      "DEX": 6,
+      "WIS": 7
+    },
+    "skills": {
+      "Deception": 9,
+      "Perception": 12,
+      "Stealth": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "acid",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 22",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de (A) Sopro Lentificante ou (B) Conjuração para lançar Espinho Mental (versão de nível 4)."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +11, alcance 3 m (10 ft). 17 (2d10 + 6) de dano cortante mais 4 (1d8) de dano ácido."
+      },
+      {
+        "name": "Acid Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 18, cada criatura em uma Linha de 18 m (60 ft) de comprimento e 1,5 m (5 ft) de largura. Falha: 54 (12d8) de dano ácido. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Slowing Breath",
+        "desc": "Salvaguarda de Constituição: CD 18, cada criatura em um Cone de 18 m (60 ft). Falha: O alvo não pode realizar Reações; seu Deslocamento é reduzido à metade; e ele pode realizar uma ação ou uma Ação Bônus em seu turno, mas não ambas. Esse efeito dura até o fim de seu próximo turno."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das magias a seguir, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 17):\nÀ vontade: Detectar Magia, Espinho Mental (versão de nível 4), Ilusão Menor, Metamorfose (apenas forma de Fera ou Humanoide, sem Pontos de Vida Temporários ganhos pela magia, e sem Concentração ou Pontos de Vida Temporários necessários para manter a magia)\n1/dia cada: Restauração Maior, Imagem Maior"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Giggling Magic",
+        "desc": "Salvaguarda de Carisma: CD 17, uma criatura que o dragão possa ver a até 27 m (90 ft). Falha: 24 (7d6) de dano psíquico. Até o fim de seu próximo turno, o alvo rola 1d6 sempre que fizer um teste de habilidade ou uma rolagem de ataque e subtrai o número obtido do Teste de D20. Falha ou Sucesso: O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Mind Jolt",
+        "desc": "O dragão usa Conjuração para lançar Espinho Mental (versão de nível 4). O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-4vfmsc",
+        "name": "Rend",
+        "attackBonus": 11,
+        "damageFormula": "2d10+6",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-2uotp9",
+        "name": "Acid Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "12d8",
+        "damageType": "ácido"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-de-ouro-anciao": {
+    "slug": "dragao-de-ouro-anciao",
+    "name": "Dragão de Ouro Ancião",
+    "nameEn": "Ancient Gold Dragon",
+    "source": "pocketdm",
+    "size": "Imenso",
+    "type": "dragon",
+    "alignment": "Lawful Good",
+    "cr": "24",
+    "xp": 62000,
+    "ac": 22,
+    "hp": 546,
+    "hpFormula": "28d20 + 252",
+    "speed": "40 ft., voo 80 ft., natação 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ancient%20Gold%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 30,
+      "dex": 14,
+      "con": 29,
+      "int": 18,
+      "wis": 17,
+      "cha": 28
+    },
+    "savingThrows": {
+      "DEX": 9,
+      "WIS": 10
+    },
+    "skills": {
+      "Insight": 10,
+      "Perception": 17,
+      "Persuasion": 16,
+      "Stealth": 9
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "fire",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 27",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O dragão pode respirar ar e água."
+      },
+      {
+        "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de (A) Conjuração para lançar Raio Guia (versão de nível 4) ou (B) Sopro Enfraquecedor."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +17 para acertar, alcance 4,5 m (15 ft). 19 (2d8 + 10) de dano cortante mais 9 (2d8) de dano de fogo."
+      },
+      {
+        "name": "Fire Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Destreza: CD 24, cada criatura em um Cone de 27 m (90 ft). Falha: 71 (13d10) de dano de fogo. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 24, +16 para acertar com ataques de magia):\nÀ vontade: Detectar Magia, Raio Guia (versão de nível 4), Metamorfose (apenas forma de Fera ou Humanoide, sem ganhar Pontos de Vida Temporários da magia e sem exigir Concentração ou Pontos de Vida Temporários para manter a magia)\n1/dia cada: Coluna de Chamas (versão de nível 6), Palavra de Regresso, Zona da Verdade"
+      },
+      {
+        "name": "Weakening Breath",
+        "desc": "Salvaguarda de Força: CD 24, cada criatura que não esteja atualmente afetada por este sopro em um Cone de 27 m (90 ft). Falha: O alvo fica com Desvantagem em Testes de D20 baseados em Força e subtrai 5 (1d10) de suas rolagens de dano. Ele repete a salvaguarda ao final de cada um de seus turnos, encerrando o efeito sobre si em caso de sucesso. Após 1 minuto, ele tem sucesso automaticamente."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Banish",
+        "desc": "Salvaguarda de Carisma: CD 24, uma criatura que o dragão possa ver a até 36 m (120 ft). Falha: 24 (7d6) de dano de força, e o alvo fica com a condição Incapacitado e é transportado para um demiplano inofensivo até o início do próximo turno do dragão, quando então reaparece em um espaço desocupado escolhido pelo dragão a até 36 m (120 ft) dele. Falha ou Sucesso: O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Guiding Light",
+        "desc": "O dragão usa Conjuração para lançar Raio Guia (versão de nível 4)."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-02au07",
+        "name": "Rend",
+        "attackBonus": 17,
+        "damageFormula": "2d8+10",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-nl44ij",
+        "name": "Fire Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "13d10",
+        "damageType": "fogo"
+      },
+      {
+        "id": "atk-p87pz8",
+        "name": "Weakening Breath",
+        "attackBonus": 0,
+        "damageFormula": "1d10",
+        "damageType": "Físico"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "dragao-prateado-anciao": {
+    "slug": "dragao-prateado-anciao",
+    "name": "Dragão Prateado Ancião",
+    "nameEn": "Ancient Silver Dragon",
+    "source": "pocketdm",
+    "size": "Imenso",
+    "type": "dragon",
+    "alignment": "Lawful Good",
+    "cr": "23",
+    "xp": 50000,
+    "ac": 22,
+    "hp": 468,
+    "hpFormula": "24d20 + 216",
+    "speed": "40 ft., voo 80 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Ancient%20Silver%20Dragon.webp",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 30,
+      "dex": 10,
+      "con": 29,
+      "int": 18,
+      "wis": 15,
+      "cha": 26
+    },
+    "savingThrows": {
+      "DEX": 7,
+      "WIS": 9
+    },
+    "skills": {
+      "History": 11,
+      "Perception": 16,
+      "Stealth": 7
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "cold",
+    "conditionImmunities": "",
+    "senses": "Blindsight 60 ft., Darkvision 120 ft., passive Perception 26",
+    "languages": "Common, Draconic",
+    "specialAbilities": [
+      {
+        "name": "Legendary Resistance (4/Day, or 5/Day in Lair)",
+        "desc": "If the dragon fails a saving throw, it can choose to succeed instead."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragão faz três ataques de Dilacerar. Ele pode substituir um ataque por um uso de (A) Sopro Paralisante ou (B) Conjuração para lançar Faca de Gelo (versão de nível 2)."
+      },
+      {
+        "name": "Rend",
+        "desc": "Ataque Corpo a Corpo: +17, alcance 4,5 m (15 ft). 19 (2d8 + 10) de dano cortante mais 9 (2d8) de dano de frio."
+      },
+      {
+        "name": "Cold Breath (Recharge 5-6)",
+        "desc": "Salvaguarda de Constituição: CD 24, cada criatura em um Cone de 27 m (90 ft). Falha: 67 (15d8) de dano de frio. Sucesso: Metade do dano."
+      },
+      {
+        "name": "Paralyzing Breath",
+        "desc": "Salvaguarda de Constituição: CD 24, cada criatura em um Cone de 27 m (90 ft). Primeira Falha: O alvo fica com a condição Incapacitado até o final de seu próximo turno, quando repete a salvaguarda. Segunda Falha: O alvo fica com a condição Paralisado, e repete a salvaguarda no final de cada um de seus turnos, encerrando o efeito sobre si mesmo em um sucesso. Após 1 minuto, ele é bem-sucedido automaticamente."
+      },
+      {
+        "name": "Spellcasting",
+        "desc": "O dragão conjura uma das seguintes magias, sem exigir componentes Materiais e usando Carisma como habilidade de conjuração (CD de resistência de magia 23, +15 para acertar com ataques de magia):\nÀ vontade: Detectar Magia, Paralisar Monstro, Faca de Gelo (versão de nível 2), Metamorfose (apenas forma de Fera ou Humanoide, sem Pontos de Vida Temporários obtidos pela magia, e sem Concentração ou Pontos de Vida Temporários exigidos para manter a magia)\n1/dia cada: Controlar o Clima, Tempestade Glacial (versão de nível 7), Teleporte, Zona da Verdade"
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [
+      {
+        "name": "Chill",
+        "desc": "O dragão usa Conjuração para lançar Imobilizar Monstro. O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Cold Gale",
+        "desc": "Salvaguarda de Destreza: CD 23, cada criatura em uma Linha de 18 m (60 ft) de comprimento e 3 m (10 ft) de largura. Falha: 14 (4d6) de dano de frio, e o alvo é empurrado até 9 m (30 ft) em linha reta para longe do dragão. Sucesso: Apenas metade do dano. Falha ou Sucesso: O dragão não pode realizar esta ação novamente até o início de seu próximo turno."
+      },
+      {
+        "name": "Pounce",
+        "desc": "O dragão se move até metade de seu Deslocamento e realiza um ataque de Dilacerar."
+      }
+    ],
+    "parsedAttacks": [
+      {
+        "id": "atk-7rg1i2",
+        "name": "Rend",
+        "attackBonus": 17,
+        "damageFormula": "2d8+10",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-zhsjha",
+        "name": "Cold Breath (Recharge 5-6)",
+        "attackBonus": 0,
+        "damageFormula": "15d8",
+        "damageType": "frio"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "abominacao-yeti": {
+    "slug": "abominacao-yeti",
+    "name": "Abominação Yeti",
+    "nameEn": "Yeti Abomination",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "aberration",
+    "alignment": "chaotic evil",
+    "cr": "12",
+    "xp": 8400,
+    "ac": 17,
+    "hp": 250,
+    "hpFormula": "20d12 + 120",
+    "speed": "40 ft., escalada 40 ft.",
+    "tokenUrl": "",
+    "avatar": "🐙",
+    "abilities": {
+      "str": 24,
+      "dex": 10,
+      "con": 22,
+      "int": 9,
+      "wis": 13,
+      "cha": 9
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 5,
+      "stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "necrotic",
+    "damageImmunities": "cold",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 15",
+    "languages": "Deep Speech, Yeti",
+    "specialAbilities": [
+      {
+        "name": "Fear of Fire",
+        "desc": "Se o yeti sofrer dano de fogo, ele terá Desvantagem em jogadas de ataque e testes de atributo até o final de seu próximo turno."
+      },
+      {
+        "name": "Frenzied",
+        "desc": "Como ação bônus, o yeti pode se mover até seu Movimento em direção a uma criatura hostil que ele possa ver."
+      },
+      {
+        "name": "Keen Smell",
+        "desc": "O yeti tem vantagem em testes de Sabedoria (Percepção) que dependam do olfato."
+      },
+      {
+        "name": "Snow Camouflage",
+        "desc": "O yeti tem Vantagem em testes de Destreza (Furtividade) feitos para se esconder em terreno nevado."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O yeti pode usar seu Olhar Hediondo e faz três ataques de garra."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +11 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 14 (2d6 + 7) de dano cortante mais 7 (2d6) de dano necrótico."
+      },
+      {
+        "name": "Heinous Gaze",
+        "desc": "O yeti mira uma criatura que pode ver a até 9 m (30 ft) dele. O alvo deve ser bem-sucedido em uma salvaguarda de Constituição CD 18 contra essa magia ou sofre 21 (6d6) de dano necrótico e fica paralisado por 1 minuto, a menos que seja imune a dano necrótico. O alvo pode repetir a salvaguarda no final de cada um dos seus turnos, encerrando o efeito em um sucesso. Se a salvaguarda do alvo for bem-sucedida, ele sofre metade do dano e fica imune ao olhar do yeti por 24 horas."
+      },
+      {
+        "name": "Necrotic Breath (Recharge 6)",
+        "desc": "O yeti exala uma nuvem de decomposição em um cone de 9 m (30 ft). Cada criatura nessa área deve fazer uma salvaguarda de Constituição CD 18, sofrendo 45 (10d8) de dano necrótico em uma falha, ou metade do dano em um sucesso."
+      },
+      {
+        "name": "Roar",
+        "desc": "Cada criatura a até 18 m (60 ft) do yeti que pode ouvir seu rugido e que não seja uma aberração deve ser bem-sucedida em uma salvaguarda de Sabedoria CD 18 ou fica amedrontada. Uma criatura pode repetir a salvaguarda no final de cada um dos seus turnos, encerrando o efeito sobre si mesma em um sucesso. Se a salvaguarda de uma criatura for bem-sucedida, a criatura fica imune ao rugido do yeti pelas próximas 24 horas."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-lxt01k",
+        "name": "Claw",
+        "attackBonus": 11,
+        "damageFormula": "2d6+7",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-xj5sej",
+        "name": "Heinous Gaze",
+        "attackBonus": 0,
+        "damageFormula": "6d6",
+        "damageType": "necrótico"
+      },
+      {
+        "id": "atk-mw9tmj",
+        "name": "Necrotic Breath (Recharge 6)",
+        "attackBonus": 0,
+        "damageFormula": "10d8",
+        "damageType": "necrótico"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "armadilha-de-moscas-cadaverica": {
+    "slug": "armadilha-de-moscas-cadaverica",
+    "name": "Armadilha-de-Moscas Cadavérica",
+    "nameEn": "Cadaver Fly-Trap",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "chaotic evil",
+    "cr": "2",
+    "xp": 450,
+    "ac": 12,
+    "hp": 97,
+    "hpFormula": "13d8 + 39",
+    "speed": "30 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 17,
+      "dex": 11,
+      "con": 16,
+      "int": 7,
+      "wis": 7,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "poison",
+    "conditionImmunities": "poisoned",
+    "senses": "blindsight 10 ft. (blind beyond this radius), passive Perception 8",
+    "languages": "—",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O cadáver faz dois ataques: um com sua garra e um com sua armadilha-de-moscas."
+      },
+      {
+        "name": "Claw",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 6 (1d6 + 3) de dano cortante."
+      },
+      {
+        "name": "Fly-Trap",
+        "desc": "Ataque Corpo a Corpo com Arma: +5 para acertar, alcance 3 m (10 ft), uma criatura. Acerto: 5 (1d4 + 3) de dano perfurante mais 5 (2d4) de dano ácido. Se o alvo for Pequeno ou menor, ele deve ser bem-sucedido em uma salvaguarda de Destreza CD 10 ou será engolido. Enquanto engolida, a criatura está cega e contida, possui cobertura total contra ataques e outros efeitos de fora do cadáver, e sofre 15 (6d4) de dano ácido no início de cada turno do cadáver. Se o cadáver sofrer 20 ou mais de dano em um único turno de uma criatura dentro dele, o cadáver deve ser bem-sucedido em uma salvaguarda de Constituição CD 20 no final daquele turno ou regurgitar a criatura, que cai com a condição Caído em um espaço a até 1,5 m (5 ft) do cadáver. Se o cadáver morrer, uma criatura engolida não está mais contida por ele e pode escapar do corpo usando 1,5 m (5 ft) de movimento, saindo com a condição Caído. O cadáver só pode engolir uma criatura por vez e não pode usar armadilha-de-moscas enquanto uma criatura estiver engolida."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-ucc0m7",
+        "name": "Claw",
+        "attackBonus": 5,
+        "damageFormula": "1d6+3",
+        "damageType": "cortante"
+      },
+      {
+        "id": "atk-zjpqi4",
+        "name": "Fly-Trap",
+        "attackBonus": 5,
+        "damageFormula": "1d4+3",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "dragonete-do-pantano": {
+    "slug": "dragonete-do-pantano",
+    "name": "Dragonete do Pântano",
+    "nameEn": "Swamp Drake",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "dragon",
+    "alignment": "neutral evil",
+    "cr": "3",
+    "xp": 700,
+    "ac": 15,
+    "hp": 78,
+    "hpFormula": "12d8 + 24",
+    "speed": "30 ft., natação 30 ft.",
+    "tokenUrl": "",
+    "avatar": "🐉",
+    "abilities": {
+      "str": 16,
+      "dex": 12,
+      "con": 14,
+      "int": 4,
+      "wis": 12,
+      "cha": 7
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 3
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "acid",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 60 ft., passive Perception 13",
+    "languages": "understands Draconic but can't speak",
+    "specialAbilities": [
+      {
+        "name": "Amphibious",
+        "desc": "O dragonete pode respirar ar e água."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O dragonete faz dois ataques: um com sua mordida e um com seu cuspe ácido."
+      },
+      {
+        "name": "Bite",
+        "desc": "Ataque com Arma Corpo a Corpo: +5 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 6 (1d6 + 3) de dano perfurante."
+      },
+      {
+        "name": "Acid Spit",
+        "desc": "Ataque com Arma à Distância: +3 para acertar, alcance 9/18 m (30/60 ft), um alvo. Acerto: 8 (2d6 + 1) de dano ácido."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-6shizt",
+        "name": "Bite",
+        "attackBonus": 5,
+        "damageFormula": "1d6+3",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-584xzk",
+        "name": "Acid Spit",
+        "attackBonus": 3,
+        "damageFormula": "2d6+1",
+        "damageType": "ácido"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "o-holofrenes-sem-cabeca": {
+    "slug": "o-holofrenes-sem-cabeca",
+    "name": "O Holofrenes Sem Cabeça",
+    "nameEn": "The Headless Holofrenes",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "undead",
+    "alignment": "lawful evil",
+    "cr": "10",
+    "xp": 5900,
+    "ac": 18,
+    "hp": 170,
+    "hpFormula": "20d10 + 60",
+    "speed": "0 ft., voo 20 ft.",
+    "tokenUrl": "",
+    "avatar": "💀",
+    "abilities": {
+      "str": 9,
+      "dex": 15,
+      "con": 16,
+      "int": 17,
+      "wis": 15,
+      "cha": 17
+    },
+    "savingThrows": {
+      "int": 7,
+      "wis": 6,
+      "cha": 7
+    },
+    "skills": {
+      "perception": 6
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "poison",
+    "damageImmunities": "",
+    "conditionImmunities": "poisoned, prone",
+    "senses": "darkvision 120 ft., passive Perception 20",
+    "languages": "Deep Speech, Undercommon",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O observador faz oito ataques de pedúnculo."
+      },
+      {
+        "name": "Stalk",
+        "desc": "Ataque Corpo a Corpo com Arma: +7 para acertar, alcance 3 m (10 ft), um alvo. Acerto: 9 (1d12 + 3) de dano de concussão."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-uf9feo",
+        "name": "Stalk",
+        "attackBonus": 7,
+        "damageFormula": "1d12+3",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "aranha-lobo-gigante": {
+    "slug": "aranha-lobo-gigante",
+    "name": "Aranha-Lobo Gigante",
+    "nameEn": "Giant Wolf Spider",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "beast",
+    "alignment": "Unaligned",
+    "cr": "1/4",
+    "xp": 50,
+    "ac": 13,
+    "hp": 11,
+    "hpFormula": "2d8 + 2",
+    "speed": "40 ft., escalada 40 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Giant%20Wolf%20Spider.webp",
+    "avatar": "🐺",
+    "abilities": {
+      "str": 12,
+      "dex": 16,
+      "con": 13,
+      "int": 3,
+      "wis": 12,
+      "cha": 4
+    },
+    "savingThrows": {},
+    "skills": {
+      "Perception": 3,
+      "Stealth": 7
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Blindsight 10 ft., Darkvision 60 ft., passive Perception 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Spider Climb",
+        "desc": "A aranha pode escalar superfícies difíceis, inclusive ao longo de tetos, sem precisar fazer um teste de habilidade."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo: +5, alcance 1,5 m (5 ft). 5 (1d4 + 3) de dano perfurante mais 5 (2d4) de dano de veneno."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-lbwz07",
+        "name": "Bite",
+        "attackBonus": 5,
+        "damageFormula": "1d4+3",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "lobo-atroz": {
+    "slug": "lobo-atroz",
+    "name": "Lobo Atroz",
+    "nameEn": "Dire Wolf",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "beast",
+    "alignment": "Unaligned",
+    "cr": "1",
+    "xp": 200,
+    "ac": 14,
+    "hp": 22,
+    "hpFormula": "3d10 + 6",
+    "speed": "50 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Dire%20Wolf.webp",
+    "avatar": "🐺",
+    "abilities": {
+      "str": 17,
+      "dex": 15,
+      "con": 15,
+      "int": 3,
+      "wis": 12,
+      "cha": 7
+    },
+    "savingThrows": {},
+    "skills": {
+      "Perception": 5,
+      "Stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "Darkvision 60 ft., passive Perception 15",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Pack Tactics",
+        "desc": "O lobo tem Vantagem em uma jogada de ataque contra uma criatura se pelo menos um dos aliados do lobo estiver a até 1,5 m (5 ft) da criatura e o aliado não tiver a condição Incapacitado."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo: +5, alcance 1,5 m (5 ft). 8 (1d10 + 3) de dano perfurante. Se o alvo for uma criatura Grande ou menor, ele fica com a condição Caído."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-8qdb2d",
+        "name": "Bite",
+        "attackBonus": 5,
+        "damageFormula": "1d10+3",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "arbusto-desperto": {
+    "slug": "arbusto-desperto",
+    "name": "Arbusto Desperto",
+    "nameEn": "Awakened Shrub",
+    "source": "pocketdm",
+    "size": "Pequeno",
+    "type": "plant",
+    "alignment": "Neutral",
+    "cr": "0",
+    "xp": 10,
+    "ac": 9,
+    "hp": 10,
+    "hpFormula": "3d6",
+    "speed": "20 ft.",
+    "tokenUrl": "https://raw.githubusercontent.com/5etools-mirror-2/5etools-img/main/bestiary/tokens/XMM/Awakened%20Shrub.webp",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 3,
+      "dex": 8,
+      "con": 11,
+      "int": 10,
+      "wis": 10,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "fire",
+    "damageResistances": "piercing",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "passive Perception 10",
+    "languages": "Common plus one other language",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Rake",
+        "desc": "Ataque Corpo a Corpo: +1, alcance 1,5 m (5 ft). 1 de dano cortante."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-ldh3wn",
+        "name": "Rake",
+        "attackBonus": 1,
+        "damageFormula": "1d6",
+        "damageType": "cortante"
+      }
+    ],
+    "notes": "Importado de PocketDM (XMM 2024).",
+    "fetchedFromPocketDm": true
+  },
+  "miconideo-fedor": {
+    "slug": "miconideo-fedor",
+    "name": "Miconídeo Fedor",
+    "nameEn": "Myconid Stinkhorn",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "plant",
+    "alignment": "lawful neutral",
+    "cr": "4",
+    "xp": 1100,
+    "ac": 14,
+    "hp": 65,
+    "hpFormula": "10d8 + 20",
+    "speed": "20 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 10,
+      "dex": 14,
+      "con": 14,
+      "int": 10,
+      "wis": 12,
+      "cha": 8
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 120 ft., passive Perception 11",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Distress Spores",
+        "desc": "Quando o miconídeo sofre dano, todos os outros miconídeos a até 72 m (240 ft) dele podem sentir sua dor."
+      },
+      {
+        "name": "Sun Sickness",
+        "desc": "Enquanto estiver sob luz solar, o miconídeo tem Desvantagem em testes de habilidade, jogadas de ataque e salvaguardas. O miconídeo morre se passar mais de 1 hora sob luz solar direta."
+      },
+      {
+        "name": "Stink Trail",
+        "desc": "Quando o miconídeo se move, ele libera inconscientemente parte de seus esporos fedorentos. Cada espaço pelo qual o miconídeo se move fica coberto de esporos até o início do próximo turno do miconídeo."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O miconídeo usa seus Esporos Fétidos ou seus Esporos Lacrimejantes e, em seguida, faz um ataque de punho."
+      },
+      {
+        "name": "Fist",
+        "desc": "Ataque Corpo a Corpo com Arma: +2 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 7 (2d4 + 2) de dano de concussão mais 10 (4d4) de dano de veneno."
+      },
+      {
+        "name": "Stink Spores",
+        "desc": "O miconídeo se sacode vigorosamente e ejeta esporos em uma explosão. Esses esporos caem em um raio de 3 m (10 ft) ao redor do miconídeo, espalhando-se ao redor de cantos. Quando uma criatura entra na área pela primeira vez em um turno ou começa seu turno lá, ela deve fazer uma salvaguarda de Constituição CD 14 contra veneno. Criaturas que não precisam respirar ou são imunes a veneno são automaticamente bem-sucedidas nessa salvaguarda. Em uma falha, a criatura gasta sua ação naquele turno vomitando e cambaleando por causa do veneno. Um vento forte (pelo menos 20 milhas por hora) dispersa os esporos. Os esporos duram até o início do próximo turno do miconídeo."
+      },
+      {
+        "name": "Eye-watering Spores",
+        "desc": "O miconídeo incha momentaneamente e depois desinfla, ejetando esporos ao fazer isso. Eles cobrem um raio de 1,5 m (5 ft) ao redor do miconídeo, espalhando-se ao redor de cantos. Quando uma criatura entra na área pela primeira vez em um turno, ou começa seu turno lá, ela deve fazer uma salvaguarda de Constituição CD 14 contra veneno. Em uma falha, a criatura fica cega. Em um sucesso, a criatura tem desvantagem em jogadas de ataque e testes de habilidade relacionados à visão. O efeito dura até o início do próximo turno do miconídeo."
+      },
+      {
+        "name": "Rapport Spores",
+        "desc": "Um raio de 9 m (30 ft) de esporos se estende a partir do miconídeo. Esses esporos podem contornar cantos e afetam apenas criaturas com Inteligência 2 ou maior que não sejam mortos-vivos, constructos ou elementais. Criaturas afetadas podem se comunicar telepaticamente umas com as outras enquanto estiverem a até 9 m (30 ft) uma da outra. O efeito dura 1 hora."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-n8hsqk",
+        "name": "Fist",
+        "attackBonus": 2,
+        "damageFormula": "2d4+2",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "miconideo-vidente": {
+    "slug": "miconideo-vidente",
+    "name": "Miconídeo Vidente",
+    "nameEn": "Myconid Seer",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "plant",
+    "alignment": "lawful neutral",
+    "cr": "3",
+    "xp": 700,
+    "ac": 12,
+    "hp": 38,
+    "hpFormula": "7d8 + 7",
+    "speed": "20 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 9,
+      "dex": 14,
+      "con": 13,
+      "int": 11,
+      "wis": 16,
+      "cha": 12
+    },
+    "savingThrows": {
+      "int": 2,
+      "wis": 5
+    },
+    "skills": {
+      "arcana": 5,
+      "nature": 5
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "darkvision 120 ft., passive Perception 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Spellcasting",
+        "desc": "O miconídeo é um conjurador de 7º nível. Sua habilidade de conjuração é Sabedoria (CD de resistência de magia 13, +5 para acertar com ataques de magia). Ele não precisa de componentes verbais para conjurar suas magias. O miconídeo tem as seguintes magias preparadas: Truques (à vontade): Arte Druídica, Orientação, Ilusão Menor, Rajada de Veneno; 1º nível (4 espaços): Bom Fruto, Palavra Curativa, Armadura Arcana, Imagem Silenciosa; 2º nível (3 espaços): Prender à Terra, Invisibilidade, Força Espectral; 3º nível (3 espaços): Imagem Maior, Padrão Hipnótico; 4º nível (1 espaço): Terreno Alucinatório"
+      },
+      {
+        "name": "Distress Spores",
+        "desc": "Quando o miconídeo sofre dano, todos os outros miconídeos a até 72 m (240 ft) dele podem sentir sua dor."
+      },
+      {
+        "name": "Sun Sickness",
+        "desc": "Enquanto estiver sob luz solar, o miconídeo tem desvantagem em testes de habilidade, jogadas de ataque e salvaguardas. O miconídeo morre se passar mais de 1 hora sob luz solar direta."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Fist",
+        "desc": "Ataque Corpo a Corpo com Arma: +1 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 4 (2d4 - 1) de dano de concussão mais 5 (2d4) de dano de veneno."
+      },
+      {
+        "name": "Hallucination Spores",
+        "desc": "O miconídeo ejeta esporos em uma criatura que ele pode ver a até 1,5 m (5 ft) dele. O alvo deve ser bem-sucedido em uma salvaguarda de Constituição CD 13 ou ficará envenenado por 1 minuto. O alvo envenenado fica incapacitado enquanto alucina. O alvo pode repetir a salvaguarda no final de cada um de seus turnos, encerrando o efeito sobre si mesmo em um sucesso."
+      },
+      {
+        "name": "Rapport Spores",
+        "desc": "Um raio de 9 m (30 ft) de esporos se estende a partir do miconídeo. Esses esporos podem contornar cantos e afetam apenas criaturas com Inteligência 2 ou maior que não sejam mortos-vivos, constructos ou elementais. Criaturas afetadas podem se comunicar telepaticamente umas com as outras enquanto estiverem a até 9 m (30 ft) uma da outra. O efeito dura 1 hora."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-x2mpjr",
+        "name": "Fist",
+        "attackBonus": 1,
+        "damageFormula": "2d4-1",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "sarca-rastejante": {
+    "slug": "sarca-rastejante",
+    "name": "Sarça Rastejante",
+    "nameEn": "Vine Bramble",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "plant",
+    "alignment": "unaligned",
+    "cr": "3",
+    "xp": 700,
+    "ac": 16,
+    "hp": 39,
+    "hpFormula": "8d10 + 30",
+    "speed": "10 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 18,
+      "dex": 10,
+      "con": 18,
+      "int": 4,
+      "wis": 10,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "poison, psychic",
+    "conditionImmunities": "grappled, restrained, exhaustion, frightened, poisoned",
+    "senses": "blindsight 120 ft. (blind beyond this radius), passive Perception 14",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "False Appearance",
+        "desc": "Enquanto a sarça rastejante permanecer imóvel, ela é indistinguível de uma planta comum."
+      },
+      {
+        "name": "Unstable Footing",
+        "desc": "O terreno a até 9 m (30 ft) de uma sarça rastejante é terreno difícil para todas as outras criaturas, devido às vinhas grossas e à vegetação rasteira da sarça rastejante."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "A sarça rastejante faz três ataques: um com sua mordida e dois com suas vinhas."
+      },
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +6 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 11 (2d6 + 4) de dano perfurante."
+      },
+      {
+        "name": "Vines",
+        "desc": "Ataque Corpo a Corpo com Arma: +6 para acertar, alcance 12 m (40 ft), um alvo. Acerto: 10 (1d10 + 4) de dano de concussão. Se o alvo for Médio ou menor, ele fica imobilizado (CD 15 para escapar). Até que essa condição de agarrar termine, o alvo fica contido e é puxado 3 m (10 ft) em direção à sarça rastejante no início de cada um de seus turnos. A sarça possui duas vinhas constritoras. Cada vinha constritora pode agarrar uma criatura."
+      },
+      {
+        "name": "Seeds of Reanimation (1/day)",
+        "desc": "Todos os cadáveres de bestas Médias ou menores a até 1,5 m (5 ft) da sarça rastejante são reanimados como bestas-de-vinha sob o controle da sarça, a menos que a besta seja restaurada à vida ou seu corpo seja destruído. A sarça não pode ter mais do que quatro bestas-de-vinha sob seu controle ao mesmo tempo."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-s4qj91",
+        "name": "Bite",
+        "attackBonus": 6,
+        "damageFormula": "2d6+4",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-jcbmyv",
+        "name": "Vines",
+        "attackBonus": 6,
+        "damageFormula": "1d10+4",
+        "damageType": "concussão"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "fera-das-vinhas": {
+    "slug": "fera-das-vinhas",
+    "name": "Fera das Vinhas",
+    "nameEn": "Vinebeast",
+    "source": "pocketdm",
+    "size": "Médio",
+    "type": "plant",
+    "alignment": "unaligned",
+    "cr": "1",
+    "xp": 200,
+    "ac": 14,
+    "hp": 39,
+    "hpFormula": "6d8 + 12",
+    "speed": "40 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 17,
+      "dex": 14,
+      "con": 14,
+      "int": 3,
+      "wis": 13,
+      "cha": 6
+    },
+    "savingThrows": {},
+    "skills": {
+      "perception": 3,
+      "stealth": 4
+    },
+    "damageVulnerabilities": "",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "passive Perception 13",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Keen Hearing and Smell",
+        "desc": "A fera das vinhas tem Vantagem em testes de Sabedoria (Percepção) que dependem da audição ou do olfato."
+      },
+      {
+        "name": "Forest Camouflage",
+        "desc": "A fera das vinhas tem Vantagem em testes de Destreza (Furtividade) feitos enquanto está em terreno arborizado."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 7 (1d8 + 3) de dano perfurante. Se o alvo for uma criatura, ele deve ser bem-sucedido em uma salvaguarda de Força CD 13 ou será derrubado, ficando com a condição Caído."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-4znivq",
+        "name": "Bite",
+        "attackBonus": 4,
+        "damageFormula": "1d8+3",
+        "damageType": "perfurante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "arbusto-emboscador": {
+    "slug": "arbusto-emboscador",
+    "name": "Arbusto Emboscador",
+    "nameEn": "Am Bush",
+    "source": "pocketdm",
+    "size": "Grande",
+    "type": "plant",
+    "alignment": "unaligned",
+    "cr": "1",
+    "xp": 200,
+    "ac": 8,
+    "hp": 65,
+    "hpFormula": "10d10 + 10",
+    "speed": "0 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 14,
+      "dex": 6,
+      "con": 12,
+      "int": 1,
+      "wis": 3,
+      "cha": 1
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "fire",
+    "damageResistances": "",
+    "damageImmunities": "",
+    "conditionImmunities": "blinded, deafened, exhaustion",
+    "senses": "blindsight 60 ft. (blind beyond this radius), passive Perception 6",
+    "languages": "—",
+    "specialAbilities": [
+      {
+        "name": "Ambusher",
+        "desc": "O arbusto emboscador tem vantagem em jogadas de ataque contra qualquer criatura que ele tenha surpreendido."
+      },
+      {
+        "name": "False Appearance",
+        "desc": "Enquanto o arbusto emboscador permanecer imóvel, ele é indistinguível de um arbusto comum."
+      }
+    ],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "O arbusto emboscador faz dois ataques de cipó constritor."
+      },
+      {
+        "name": "Bite",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 1,5 m (5 ft), um alvo. Acerto: 5 (1d6 + 2) de dano perfurante. Se o alvo for uma criatura Média ou menor, ele é ingerido. Enquanto ingerida, a criatura está cega e contida, tem cobertura total contra ataques e outros efeitos de fora do arbusto emboscador, e sofre 5 (2d4) de dano ácido no início de cada turno do arbusto emboscador. Se o arbusto emboscador sofrer 10 de dano ou mais em um único turno de uma criatura dentro dele, ou 15 de dano de fogo de qualquer fonte em um único turno, o arbusto emboscador deve ser bem-sucedido em uma salvaguarda de Constituição CD 20 no final desse turno ou regurgitar a criatura, que cai com a condição Caído em um espaço a até 1,5 m (5 ft) do arbusto emboscador. Se o arbusto emboscador morrer, uma criatura ingerida não está mais contida e pode escapar do cadáver usando 4,5 m (15 ft) de movimento, saindo com a condição Caído. O arbusto emboscador pode ingerir apenas uma criatura por vez."
+      },
+      {
+        "name": "Constrictor Vine",
+        "desc": "Ataque Corpo a Corpo com Arma: +4 para acertar, alcance 9 m (30 ft), um alvo. Acerto: 4 (1d4 + 2) de dano cortante. Se o alvo for uma criatura Média ou menor, ele é imobilizado (CD de escape 12). Até que esse agarrão termine, o alvo está contido e é movido 3 m (10 ft) em direção ao arbusto emboscador no final de cada um de seus turnos. O arbusto emboscador tem quatro cipós constritores. Cada cipó constritor pode agarrar uma criatura, mas não pode atacar enquanto estiver agarrando."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-l13dbc",
+        "name": "Bite",
+        "attackBonus": 4,
+        "damageFormula": "1d6+2",
+        "damageType": "perfurante"
+      },
+      {
+        "id": "atk-us0xpu",
+        "name": "Constrictor Vine",
+        "attackBonus": 4,
+        "damageFormula": "1d4+2",
+        "damageType": "cortante"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  },
+  "arvore-do-enforcamento": {
+    "slug": "arvore-do-enforcamento",
+    "name": "Árvore do Enforcamento",
+    "nameEn": "Lynching Tree",
+    "source": "pocketdm",
+    "size": "Enorme",
+    "type": "plant",
+    "alignment": "lawful evil",
+    "cr": "10",
+    "xp": 5900,
+    "ac": 16,
+    "hp": 207,
+    "hpFormula": "18d12 + 90",
+    "speed": "10 ft.",
+    "tokenUrl": "",
+    "avatar": "🌿",
+    "abilities": {
+      "str": 18,
+      "dex": 8,
+      "con": 20,
+      "int": 12,
+      "wis": 19,
+      "cha": 12
+    },
+    "savingThrows": {},
+    "skills": {},
+    "damageVulnerabilities": "fire",
+    "damageResistances": "bludgeoning, piercing",
+    "damageImmunities": "",
+    "conditionImmunities": "",
+    "senses": "passive Perception 14",
+    "languages": "understands Sylvan but can't speak",
+    "specialAbilities": [],
+    "actions": [
+      {
+        "name": "Multiattack",
+        "desc": "A árvore-forca faz três ataques de cipó-laço."
+      },
+      {
+        "name": "Vine Noose",
+        "desc": "Ataque Corpo a Corpo com Arma: +8 para acertar, alcance 9 m (30 ft), um alvo. Acerto: 11 (2d6 + 4) de dano de concussão, e o alvo fica imobilizado (CD de escape 16). A criatura imobilizada não consegue respirar, está contida e sofre 11 (2d6 + 4) de dano de concussão no início de cada turno da árvore-forca."
+      },
+      {
+        "name": "Voice of the Voiceless (Recharge 6)",
+        "desc": "A árvore-forca libera as vozes de todos os inocentes mortos em seus galhos. Cada criatura a até 18 m (60 ft) da árvore-forca deve fazer uma salvaguarda de Sabedoria CD 16, e o faz com desvantagem se estiver imobilizada pela árvore. Uma criatura sofre 66 (12d10) de dano psíquico em uma falha, ou metade do dano em um sucesso."
+      }
+    ],
+    "reactions": [],
+    "legendaryActions": [],
+    "parsedAttacks": [
+      {
+        "id": "atk-xbc7fo",
+        "name": "Vine Noose",
+        "attackBonus": 8,
+        "damageFormula": "2d6+4",
+        "damageType": "concussão"
+      },
+      {
+        "id": "atk-u47dl6",
+        "name": "Voice of the Voiceless (Recharge 6)",
+        "attackBonus": 0,
+        "damageFormula": "12d10",
+        "damageType": "psíquico"
+      }
+    ],
+    "notes": "Importado de PocketDM (MAD 2014).",
+    "fetchedFromPocketDm": true
+  }
+}

@@ -1,0 +1,26 @@
+# Dependências
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Builds e caches
+client/dist/
+client/.vite/
+*.log
+npm-debug.log*
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Dados locais de sessão/campanhas em execução (contém senhas de salas)
+server/data/rooms.json
+
+# Arquivos auxiliares pesados locais (mapas duplicados da raiz do server e PDF de referência)
+server/*.webp
+*.pdf
+
+# Sistema operacional / Editores
+.DS_Store
+Thumbs.db
+.vscode/

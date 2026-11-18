@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Lich Arquimago Malakor",
+    "isNpc": true,
+    "isSecretNpc": true,
+    "race": "Morto-Vivo",
+    "className": "Chefe / Conjurador",
+    "level": 18,
+    "cr": "21 (33.000 XP)",
+    "avatar": "☠️",
+    "hp": 135,
+    "maxHp": 135,
+    "ac": 17,
+    "speed": "9m",
+    "abilities": {
+      "str": 11,
+      "dex": 16,
+      "con": 16,
+      "int": 20,
+      "wis": 14,
+      "cha": 16
+    },
+    "savingThrowProficiencies": ["con", "int", "wis"],
+    "skillProficiencies": ["arcana", "history", "insight", "perception"],
+    "attacks": [
+      {
+        "id": "atk-toque",
+        "name": "Toque Paralisante",
+        "attackBonus": 12,
+        "damageFormula": "3d6",
+        "damageType": "Gelo"
+      },
+      {
+        "id": "atk-raio",
+        "name": "Raio Desintegrador",
+        "attackBonus": 12,
+        "damageFormula": "10d6+40",
+        "damageType": "Energia"
+      }
+    ],
+    "spells": ["Bola de Fogo", "Contramágica", "Palavra de Poder: Matar", "Teleporte"],
+    "inventory": ["Cajado do Poder", "Filactério Oculto"],
+    "traits": "Resistência Lendária (3/dia). Imunidade a veneno e armas não mágicas.",
+    "notes": "Vilão principal da masmorra final."
+  },
+  {
+    "name": "Mercador Anão Thorek",
+    "isNpc": true,
+    "isSecretNpc": false,
+    "race": "Anão",
+    "className": "NPC Aliado",
+    "level": 2,
+    "cr": "1/2 (100 XP)",
+    "avatar": "⚒️",
+    "hp": 22,
+    "maxHp": 22,
+    "ac": 14,
+    "speed": "7,5m",
+    "abilities": {
+      "str": 14,
+      "dex": 10,
+      "con": 15,
+      "int": 12,
+      "wis": 13,
+      "cha": 12
+    },
+    "savingThrowProficiencies": ["con"],
+    "skillProficiencies": ["persuasion", "insight"],
+    "attacks": [
+      {
+        "id": "atk-martelo",
+        "name": "Martelo de Guerra",
+        "attackBonus": 4,
+        "damageFormula": "1d8+2",
+        "damageType": "Concussão"
+      }
+    ],
+    "inventory": ["3 Poções de Cura (50 PO cada)", "Mapa da Mina Antiga", "Tochas"],
+    "traits": "Conhecimento em Pedras: Vantagem em História sobre construções de pedra.",
+    "notes": "Vende suprimentos e compra gemas dos aventureiros."
+  }
+]

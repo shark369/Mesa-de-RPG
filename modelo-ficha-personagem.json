@@ -1,0 +1,113 @@
+{
+  "name": "Kaelen Lâmina da Aurora",
+  "isNpc": false,
+  "race": "Elfo",
+  "subrace": "Alto Elfo",
+  "className": "Guerreiro",
+  "subclass": "Campeão",
+  "level": 3,
+  "xp": 900,
+  "background": "Soldado",
+  "alignment": "Neutro e Bom",
+  "avatar": "⚔️",
+  "abilities": {
+    "str": 16,
+    "dex": 14,
+    "con": 14,
+    "int": 11,
+    "wis": 12,
+    "cha": 10
+  },
+  "savingThrowProficiencies": ["str", "con"],
+  "skillProficiencies": ["athletics", "perception", "intimidation", "survival"],
+  "expertiseSkills": [],
+  "hp": 28,
+  "maxHp": 28,
+  "tempHp": 0,
+  "ac": 18,
+  "armorName": "Cota de Malha + Escudo",
+  "speed": "9m",
+  "hitDice": "3d10",
+  "hitDiceRemaining": 3,
+  "spellcastingAbility": null,
+  "spellSlots": {},
+  "spellList": [],
+  "attacks": [
+    {
+      "id": "atk-1",
+      "name": "Espada Longa",
+      "attackBonus": 5,
+      "damageFormula": "1d8+3",
+      "damageType": "Cortante"
+    },
+    {
+      "id": "atk-2",
+      "name": "Arco Longo",
+      "attackBonus": 4,
+      "damageFormula": "1d8+2",
+      "damageType": "Perfurante"
+    }
+  ],
+  "inventoryItems": [
+    {
+      "id": "item-1",
+      "name": "Espada Longa",
+      "quantity": 1,
+      "weightKg": 1.5,
+      "category": "Arma",
+      "value": "15 PO",
+      "equipped": true
+    },
+    {
+      "id": "item-2",
+      "name": "Cota de Malha",
+      "quantity": 1,
+      "weightKg": 27.5,
+      "category": "Armadura",
+      "value": "75 PO",
+      "equipped": true
+    },
+    {
+      "id": "item-3",
+      "name": "Escudo",
+      "quantity": 1,
+      "weightKg": 3,
+      "category": "Armadura",
+      "value": "10 PO",
+      "equipped": true
+    },
+    {
+      "id": "item-4",
+      "name": "Poção de Cura",
+      "quantity": 2,
+      "weightKg": 0.25,
+      "category": "Poção",
+      "value": "50 PO",
+      "equipped": false
+    },
+    {
+      "id": "item-5",
+      "name": "Mochila + Rações (5 dias)",
+      "quantity": 1,
+      "weightKg": 5,
+      "category": "Equipamento",
+      "value": "5 PO",
+      "equipped": false
+    }
+  ],
+  "currency": {
+    "cp": 0,
+    "sp": 15,
+    "ep": 0,
+    "gp": 25,
+    "pp": 0
+  },
+  "traits": "Visão no Escuro 18m • Retomar Fôlego (1d10+3 PV, 1x/descanso) • Surto de Ação (1x/descanso) • Crítico Aprimorado (19-20)",
+  "personality": {
+    "traits": "Sempre analiso o terreno antes de sacar a lâmina.",
+    "ideals": "Proteger os inocentes acima de qualquer recompensa.",
+    "bonds": "Jurei honrar o estandarte da minha antiga companhia.",
+    "flaws": "Tenho dificuldade em recuar quando um aliado está em perigo."
+  },
+  "notes": "Edite os campos deste JSON e importe pelo botão 'Importar JSON' na aba Fichas!"
+}
