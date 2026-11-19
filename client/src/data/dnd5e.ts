@@ -1550,6 +1550,14 @@ export const BATTLEMAP_LIBRARY: BattlemapAsset[] = [
     tag: 'Marítimo'
   },
   {
+    id: 'map-barcos-duplos',
+    name: 'Navios (2 Barcos / Convés + Porão)',
+    imageUrl: '/maps/barcos-duplos.webp',
+    cols: 26,
+    rows: 20,
+    tag: 'Marítimo'
+  },
+  {
     id: 'map-caverna',
     name: 'Caverna (Dragon\'s Rest)',
     imageUrl: '/maps/caverna.webp',

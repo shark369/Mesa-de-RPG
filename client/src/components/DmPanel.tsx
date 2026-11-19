@@ -1319,14 +1319,53 @@ export const DmPanel: React.FC<DmPanelProps> = ({
                 <span>Mapas Ilustrados ({BATTLEMAP_LIBRARY.length})</span>
                 <span className="text-[10px] font-normal text-slate-400">Clique para aplicar</span>
               </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const barco = BATTLEMAP_LIBRARY.find((m) => m.id === 'map-barco');
+                  const duplos = BATTLEMAP_LIBRARY.find((m) => m.id === 'map-barcos-duplos');
+                  if (!barco || !duplos) return;
+                  const layerY = Math.max(0, Math.floor((barco.rows - duplos.rows) / 2));
+                  onUpdateMap({
+                    imageUrl: barco.imageUrl,
+                    baseCols: barco.cols,
+                    baseRows: barco.rows,
+                    cols: barco.cols + duplos.cols,
+                    rows: Math.max(barco.rows, layerY + duplos.rows),
+                    gridColor: 'rgba(255, 255, 255, 0.05)',
+                    layers: [
+                      {
+                        id: `layer-${Date.now()}`,
+                        name: duplos.name,
+                        imageUrl: duplos.imageUrl,
+                        x: barco.cols,
+                        y: layerY,
+                        cols: duplos.cols,
+                        rows: duplos.rows
+                      }
+                    ]
+                  });
+                  setMapUrlInput(barco.imageUrl);
+                }}
+                className="w-full py-1.5 px-2.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-200 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                title="Coloca os mapas Barco / Navio e Navios (Barcos Duplos) lado a lado na mesma cena"
+              >
+                ⛵ Usar Barco + Barcos Duplos na mesma cena
+              </button>
+
               <div className="grid grid-cols-1 gap-2">
                 {BATTLEMAP_LIBRARY.map((bm) => {
-                  const isActive = map.imageUrl === bm.imageUrl;
+                  const isActive =
+                    map.imageUrl === bm.imageUrl && !(map.layers && map.layers.length > 0);
+                  const isInScene =
+                    map.imageUrl === bm.imageUrl ||
+                    Boolean(map.layers?.some((l) => l.imageUrl === bm.imageUrl));
                   return (
                     <div
                       key={bm.id}
                       className={`rounded-xl border overflow-hidden transition ${
-                        isActive
+                        isActive || isInScene
                           ? 'border-amber-400 bg-amber-500/15'
                           : 'border-slate-800 bg-slate-900/80 hover:border-slate-700'
                       }`}
@@ -1350,6 +1389,9 @@ export const DmPanel: React.FC<DmPanelProps> = ({
                             onClick={() => {
                               onUpdateMap({
                                 imageUrl: bm.imageUrl,
+                                baseCols: null as unknown as undefined,
+                                baseRows: null as unknown as undefined,
+                                layers: [],
                                 cols: bm.cols,
                                 rows: bm.rows,
                                 gridColor: 'rgba(255, 255, 255, 0.05)'
@@ -1364,21 +1406,243 @@ export const DmPanel: React.FC<DmPanelProps> = ({
                           >
                             {isActive ? 'Ativo' : 'Usar'}
                           </button>
-                          <button
-                            onClick={() =>
-                              onCreateScene(bm.name, 'dungeon', bm.imageUrl, bm.cols, bm.rows)
-                            }
-                            className="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] cursor-pointer"
-                            title="Criar uma nova cena separada com este mapa"
-                          >
-                            + Cena
-                          </button>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => {
+                                const existingLayers = map.layers || [];
+                                const currentBaseCols =
+                                  existingLayers.length > 0 && map.baseCols ? map.baseCols : map.cols;
+                                const currentBaseRows =
+                                  existingLayers.length > 0 && map.baseRows ? map.baseRows : map.rows;
+                                const nextX = existingLayers.reduce(
+                                  (maxX, l) => Math.max(maxX, l.x + l.cols),
+                                  currentBaseCols
+                                );
+                                const nextY = Math.max(
+                                  0,
+                                  Math.floor((currentBaseRows - bm.rows) / 2)
+                                );
+                                const newLayer = {
+                                  id: `layer-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+                                  name: bm.name,
+                                  imageUrl: bm.imageUrl,
+                                  x: nextX,
+                                  y: nextY,
+                                  cols: bm.cols,
+                                  rows: bm.rows
+                                };
+                                onUpdateMap({
+                                  baseCols: currentBaseCols,
+                                  baseRows: currentBaseRows,
+                                  cols: Math.max(map.cols, nextX + bm.cols),
+                                  rows: Math.max(map.rows, nextY + bm.rows),
+                                  layers: [...existingLayers, newLayer]
+                                });
+                              }}
+                              className="px-1.5 py-0.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/35 border border-sky-500/40 text-sky-200 text-[10px] font-semibold cursor-pointer"
+                              title="Adicionar este mapa ao lado do mapa atual na mesma cena"
+                            >
+                              + Juntar
+                            </button>
+                            <button
+                              onClick={() =>
+                                onCreateScene(bm.name, 'dungeon', bm.imageUrl, bm.cols, bm.rows)
+                              }
+                              className="px-1.5 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] cursor-pointer"
+                              title="Criar uma nova cena separada com este mapa"
+                            >
+                              + Cena
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
+
+              {(map.layers || []).length > 0 && (
+                <div className="pt-2 border-t border-slate-800 space-y-1.5">
+                  <div className="text-[11px] font-bold text-amber-300 flex items-center justify-between">
+                    <span>Mapas combinados nesta cena ({(map.layers || []).length})</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onUpdateMap({
+                          layers: [],
+                          cols: map.baseCols || map.cols,
+                          rows: map.baseRows || map.rows,
+                          baseCols: null as unknown as undefined,
+                          baseRows: null as unknown as undefined
+                        })
+                      }
+                      className="text-[10px] text-rose-300 hover:underline cursor-pointer"
+                    >
+                      Limpar extras
+                    </button>
+                  </div>
+                  {(() => {
+                    const baseLib = BATTLEMAP_LIBRARY.find((m) => m.imageUrl === map.imageUrl);
+                    const curBaseCols = map.baseCols || map.cols;
+                    const curBaseRows = map.baseRows || map.rows;
+                    const needsFix =
+                      baseLib &&
+                      (curBaseCols !== baseLib.cols || curBaseRows !== baseLib.rows);
+                    return (
+                      <div className="bg-slate-900/90 border border-slate-800 rounded-lg p-2 space-y-1.5 text-[10px]">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-semibold text-amber-200 truncate">
+                            Base: {baseLib?.name || 'Mapa Principal'}
+                          </span>
+                          {needsFix && baseLib && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const layers = (map.layers || []).map((l) =>
+                                  l.x === curBaseCols ? { ...l, x: baseLib.cols } : l
+                                );
+                                const maxC = layers.reduce(
+                                  (m, l) => Math.max(m, l.x + l.cols),
+                                  baseLib.cols
+                                );
+                                const maxR = layers.reduce(
+                                  (m, l) => Math.max(m, l.y + l.rows),
+                                  baseLib.rows
+                                );
+                                onUpdateMap({
+                                  baseCols: baseLib.cols,
+                                  baseRows: baseLib.rows,
+                                  layers,
+                                  cols: maxC,
+                                  rows: maxR
+                                });
+                              }}
+                              className="px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold cursor-pointer shrink-0"
+                            >
+                              Corrigir p/ {baseLib.cols}×{baseLib.rows}
+                            </button>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <label className="flex items-center gap-1 text-slate-400">
+                            Cols:
+                            <input
+                              type="number"
+                              min={8}
+                              value={curBaseCols}
+                              onChange={(e) => {
+                                const nc = Math.max(8, parseInt(e.target.value, 10) || 26);
+                                const layers = map.layers || [];
+                                const maxC = layers.reduce((m, l) => Math.max(m, l.x + l.cols), nc);
+                                onUpdateMap({ baseCols: nc, cols: maxC });
+                              }}
+                              className="w-14 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-slate-100 font-mono"
+                            />
+                          </label>
+                          <label className="flex items-center gap-1 text-slate-400">
+                            Lins:
+                            <input
+                              type="number"
+                              min={8}
+                              value={curBaseRows}
+                              onChange={(e) => {
+                                const nr = Math.max(8, parseInt(e.target.value, 10) || 20);
+                                const layers = map.layers || [];
+                                const maxR = layers.reduce((m, l) => Math.max(m, l.y + l.rows), nr);
+                                onUpdateMap({ baseRows: nr, rows: maxR });
+                              }}
+                              className="w-14 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-slate-100 font-mono"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {(map.layers || []).map((layer) => (
+                    <div
+                      key={layer.id}
+                      className="bg-slate-900/90 border border-slate-800 rounded-lg p-2 space-y-1.5 text-[10px]"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-slate-200 truncate">
+                          {layer.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextLayers = (map.layers || []).filter((l) => l.id !== layer.id);
+                            const baseC = map.baseCols || map.cols;
+                            const baseR = map.baseRows || map.rows;
+                            const maxC = nextLayers.reduce(
+                              (m, l) => Math.max(m, l.x + l.cols),
+                              baseC
+                            );
+                            const maxR = nextLayers.reduce(
+                              (m, l) => Math.max(m, l.y + l.rows),
+                              baseR
+                            );
+                            onUpdateMap({
+                              layers: nextLayers,
+                              cols: maxC,
+                              rows: maxR,
+                              ...(nextLayers.length === 0
+                                ? {
+                                    baseCols: null as unknown as undefined,
+                                    baseRows: null as unknown as undefined
+                                  }
+                                : {})
+                            });
+                          }}
+                          className="text-rose-400 hover:text-rose-300 cursor-pointer"
+                          title="Remover este mapa extra da cena"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <label className="flex items-center gap-1 text-slate-400">
+                          Col X:
+                          <input
+                            type="number"
+                            min={0}
+                            value={layer.x}
+                            onChange={(e) => {
+                              const nx = Math.max(0, parseInt(e.target.value, 10) || 0);
+                              const nextLayers = (map.layers || []).map((l) =>
+                                l.id === layer.id ? { ...l, x: nx } : l
+                              );
+                              onUpdateMap({
+                                layers: nextLayers,
+                                cols: Math.max(map.cols, nx + layer.cols)
+                              });
+                            }}
+                            className="w-14 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-slate-100 font-mono"
+                          />
+                        </label>
+                        <label className="flex items-center gap-1 text-slate-400">
+                          Lin Y:
+                          <input
+                            type="number"
+                            min={0}
+                            value={layer.y}
+                            onChange={(e) => {
+                              const ny = Math.max(0, parseInt(e.target.value, 10) || 0);
+                              const nextLayers = (map.layers || []).map((l) =>
+                                l.id === layer.id ? { ...l, y: ny } : l
+                              );
+                              onUpdateMap({
+                                layers: nextLayers,
+                                rows: Math.max(map.rows, ny + layer.rows)
+                              });
+                            }}
+                            className="w-14 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-slate-100 font-mono"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Cenários Prontos */}
@@ -1392,6 +1656,9 @@ export const DmPanel: React.FC<DmPanelProps> = ({
                       onUpdateMap({
                         presetId: preset.id,
                         imageUrl: '',
+                        baseCols: null as unknown as undefined,
+                        baseRows: null as unknown as undefined,
+                        layers: [],
                         cols: 26,
                         rows: 18,
                         gridColor: 'rgba(255, 255, 255, 0.14)'
@@ -1439,7 +1706,32 @@ export const DmPanel: React.FC<DmPanelProps> = ({
                   className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100"
                 />
                 <button
-                  onClick={() => onUpdateMap({ imageUrl: mapUrlInput })}
+                  onClick={() => {
+                    const url = mapUrlInput.trim();
+                    const lib = BATTLEMAP_LIBRARY.find((m) => m.imageUrl === url);
+                    if (lib) {
+                      const layers = map.layers || [];
+                      if (layers.length > 0) {
+                        onUpdateMap({
+                          imageUrl: url,
+                          baseCols: lib.cols,
+                          baseRows: lib.rows,
+                          cols: layers.reduce((m, l) => Math.max(m, l.x + l.cols), lib.cols),
+                          rows: layers.reduce((m, l) => Math.max(m, l.y + l.rows), lib.rows)
+                        });
+                      } else {
+                        onUpdateMap({
+                          imageUrl: url,
+                          baseCols: null as unknown as undefined,
+                          baseRows: null as unknown as undefined,
+                          cols: lib.cols,
+                          rows: lib.rows
+                        });
+                      }
+                    } else {
+                      onUpdateMap({ imageUrl: url });
+                    }
+                  }}
                   className="px-3 py-1.5 rounded-lg bg-sky-500 text-slate-950 font-bold text-xs cursor-pointer"
                 >
                   Aplicar

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import {
   Plus,
+  Minus,
   Upload,
   Download,
   Heart,
@@ -127,10 +128,21 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
   const [tradeSp, setTradeSp] = useState(0);
   const [tradeCp, setTradeCp] = useState(0);
   const [tradeSentMsg, setTradeSentMsg] = useState('');
+  const [hpDeltaInput, setHpDeltaInput] = useState('5');
+  const [hpEditDraft, setHpEditDraft] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const visibleCharacters =
+    role === 'dm' ? characters : characters.filter((c) => !c.isNpc);
+
   const selected =
-    characters.find((c) => c.id === selectedId) || characters[0] || null;
+    visibleCharacters.find((c) => c.id === selectedId) || visibleCharacters[0] || null;
+
+  React.useEffect(() => {
+    if (selected) {
+      setHpEditDraft(String(selected.hp));
+    }
+  }, [selected?.id, selected?.hp]);
 
   const canEdit = (char: CharacterSheetType) => {
     if (role === 'dm') return true;
@@ -560,9 +572,9 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
           </div>
         )}
 
-        {characters.length > 0 && (
+        {visibleCharacters.length > 0 && (
           <div className="flex gap-1.5 overflow-x-auto pb-1">
-            {characters.map((c) => (
+            {visibleCharacters.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setSelectedId(c.id)}
@@ -710,17 +722,33 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
                 <div className="flex items-center justify-center gap-0.5 mt-0.5">
                   <input
                     type="number"
+                    min={0}
                     disabled={!canEdit(selected)}
-                    value={selected.hp}
-                    onChange={(e) =>
-                      onSaveCharacter({
-                        ...selected,
-                        hp: Math.max(0, parseInt(e.target.value, 10) || 0)
-                      })
-                    }
-                    className="w-9 text-center bg-slate-950 border border-slate-700 rounded text-xs font-mono font-bold text-slate-100"
+                    value={canEdit(selected) ? hpEditDraft : selected.hp}
+                    onChange={(e) => setHpEditDraft(e.target.value)}
+                    onBlur={() => {
+                      const parsed = parseInt(hpEditDraft, 10);
+                      if (!Number.isNaN(parsed)) {
+                        const nextHp = Math.max(0, parsed);
+                        setHpEditDraft(String(nextHp));
+                        if (nextHp !== selected.hp) {
+                          onSaveCharacter({ ...selected, hp: nextHp });
+                        }
+                      } else {
+                        setHpEditDraft(String(selected.hp));
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        (e.target as HTMLInputElement).blur();
+                      }
+                    }}
+                    className={`w-11 text-center bg-slate-950 border border-slate-700 rounded text-sm font-mono font-extrabold ${
+                      selected.hp > selected.maxHp ? 'text-cyan-300' : 'text-slate-100'
+                    }`}
+                    title="Alterar vida atual diretamente (pode ultrapassar o máximo)"
                   />
-                  <span className="text-[10px] text-slate-500">/{selected.maxHp}</span>
+                  <span className="text-[11px] font-mono text-slate-400">/{selected.maxHp}</span>
                 </div>
               </div>
 
@@ -754,7 +782,7 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
                       ac: parseInt(e.target.value, 10) || 10
                     })
                   }
-                  className="w-10 text-center bg-slate-950 border border-slate-700 rounded text-xs font-mono font-bold text-slate-100 mt-0.5"
+                  className="w-11 text-center bg-slate-950 border border-slate-700 rounded text-sm font-mono font-extrabold text-slate-100 mt-0.5"
                 />
               </div>
 
@@ -784,6 +812,75 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Ajuste Rápido de PV (1 em 1 e Dano / Cura, inclusive acima do máximo) */}
+            {canEdit(selected) && (
+              <div className="flex flex-wrap items-center gap-1.5 bg-slate-900/70 border border-slate-800 rounded-lg px-2 py-1.5 text-[11px]">
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onSaveCharacter({
+                        ...selected,
+                        hp: Math.max(0, selected.hp - 1)
+                      })
+                    }
+                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/40 text-rose-200 transition cursor-pointer active:scale-95"
+                    title="Diminuir 1 PV"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onSaveCharacter({
+                        ...selected,
+                        hp: selected.hp + 1
+                      })
+                    }
+                    className="w-7 h-7 flex items-center justify-center rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-200 transition cursor-pointer active:scale-95"
+                    title="Aumentar 1 PV"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-1 ml-auto flex-1 justify-end">
+                  <input
+                    type="number"
+                    min={1}
+                    value={hpDeltaInput}
+                    onChange={(e) => setHpDeltaInput(e.target.value)}
+                    className="w-12 text-center bg-slate-950 border border-slate-700 rounded-lg px-1 py-1 font-mono font-bold text-slate-100"
+                    title="Quantidade de dano ou cura"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const amt = Math.max(1, Math.abs(parseInt(hpDeltaInput, 10) || 0));
+                      if (amt > 0) {
+                        onSaveCharacter({ ...selected, hp: Math.max(0, selected.hp - amt) });
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/35 border border-rose-500/40 text-rose-200 font-semibold cursor-pointer"
+                  >
+                    - Dano
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const amt = Math.max(1, Math.abs(parseInt(hpDeltaInput, 10) || 0));
+                      if (amt > 0) {
+                        onSaveCharacter({ ...selected, hp: selected.hp + amt });
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-500/40 text-emerald-200 font-semibold cursor-pointer"
+                  >
+                    + Cura
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Barra de Descanso, Dados de Vida & Level Up */}
             {canEdit(selected) && (

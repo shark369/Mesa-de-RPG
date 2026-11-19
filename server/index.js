@@ -396,11 +396,13 @@ function getRoomStateForRole(room, role, userName = '') {
     name: room.name,
     hasPassword: Boolean(room.dmPassword),
     map: room.map,
-    tokens: room.tokens.filter((t) => !t.hidden),
+    tokens: room.tokens
+      .filter((t) => !t.hidden)
+      .map((t) => (t.type === 'pc' ? t : { ...t, hp: 0, maxHp: 0 })),
     drawings: room.drawings || [],
     scenes: sceneMeta,
     activeSceneId: room.activeSceneId,
-    characters: room.characters.filter((c) => !c.isSecretNpc),
+    characters: room.characters.filter((c) => !c.isNpc),
     playerCharLimits: room.playerCharLimits || {},
     allowMultiCharAll: Boolean(room.allowMultiCharAll),
     rollLimit: room.rollLimit || { enabled: true, maxRolls: 2, windowSeconds: 40 },
@@ -408,7 +410,9 @@ function getRoomStateForRole(room, role, userName = '') {
     initiative: {
       round: room.initiative.round,
       activeIndex: room.initiative.activeIndex,
-      entries: room.initiative.entries.filter((e) => !e.hidden)
+      entries: room.initiative.entries
+        .filter((e) => !e.hidden)
+        .map((e) => (e.isNpc ? { ...e, hp: 0, maxHp: 0 } : e))
     },
     chat: filteredChat,
     dmNotes: ''
@@ -629,7 +633,10 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomId);
     if (!room) return;
 
-    room.map = { ...room.map, ...patch };
+    const nextMap = { ...room.map, ...patch };
+    if (patch.baseCols == null || patch.baseCols <= 0) delete nextMap.baseCols;
+    if (patch.baseRows == null || patch.baseRows <= 0) delete nextMap.baseRows;
+    room.map = nextMap;
     syncActiveScene(room);
     scheduleSave();
     broadcastRoomState(roomId);
@@ -863,6 +870,22 @@ io.on('connection', (socket) => {
     }
 
     const updatedToken = room.tokens[idx];
+    // Sincroniza HP/AC/condições de volta com a ficha vinculada
+    if (updatedToken.characterId) {
+      room.characters = room.characters.map((c) =>
+        c.id === updatedToken.characterId
+          ? {
+              ...c,
+              hp: updatedToken.hp,
+              maxHp: updatedToken.maxHp,
+              ac: updatedToken.ac,
+              conditions: Array.isArray(updatedToken.conditions)
+                ? updatedToken.conditions
+                : c.conditions || []
+            }
+          : c
+      );
+    }
     // Mantém iniciativa sincronizada se HP/AC mudou
     if (room.initiative?.entries?.length) {
       room.initiative.entries = room.initiative.entries.map((e) =>
@@ -978,24 +1001,35 @@ io.on('connection', (socket) => {
       room.characters.push(cleanChar);
     }
 
-    // Sincroniza HP/AC/condições/imagem com tokens vinculados
-    room.tokens = room.tokens.map((t) =>
-      t.characterId === cleanChar.id
-        ? {
-            ...t,
-            name: cleanChar.name,
-            hp: cleanChar.hp,
-            maxHp: cleanChar.maxHp,
-            ac: cleanChar.ac,
-            ownerName: cleanChar.ownerName || t.ownerName,
-            avatar: cleanChar.avatar || t.avatar,
-            imageUrl: cleanChar.imageUrl || t.imageUrl,
-            conditions: Array.isArray(cleanChar.conditions)
-              ? cleanChar.conditions
-              : t.conditions || []
-          }
-        : t
-    );
+    // Sincroniza HP/AC/condições/imagem com tokens vinculados e iniciativa
+    const linkedTokenIds = new Set();
+    room.tokens = room.tokens.map((t) => {
+      if (t.characterId === cleanChar.id) {
+        linkedTokenIds.add(t.id);
+        return {
+          ...t,
+          name: cleanChar.name,
+          hp: cleanChar.hp,
+          maxHp: cleanChar.maxHp,
+          ac: cleanChar.ac,
+          ownerName: cleanChar.ownerName || t.ownerName,
+          avatar: cleanChar.avatar || t.avatar,
+          imageUrl: cleanChar.imageUrl || t.imageUrl,
+          conditions: Array.isArray(cleanChar.conditions)
+            ? cleanChar.conditions
+            : t.conditions || []
+        };
+      }
+      return t;
+    });
+
+    if (room.initiative?.entries?.length && linkedTokenIds.size > 0) {
+      room.initiative.entries = room.initiative.entries.map((e) =>
+        e.tokenId && linkedTokenIds.has(e.tokenId)
+          ? { ...e, name: cleanChar.name, hp: cleanChar.hp, maxHp: cleanChar.maxHp, ac: cleanChar.ac }
+          : e
+      );
+    }
 
     syncActiveScene(room);
     scheduleSave();

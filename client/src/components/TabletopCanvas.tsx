@@ -69,6 +69,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgImageRef = useRef<HTMLImageElement | null>(null);
+  const layerImagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const tokenImagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
   const [tool, setTool] = useState<ToolMode>('select');
@@ -79,8 +80,8 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   const [aoeMeters, setAoeMeters] = useState(6);
   const [aoePos, setAoePos] = useState<{ x: number; y: number; angle: number } | null>(null);
   const [activeStroke, setActiveStroke] = useState<{ x: number; y: number }[] | null>(null);
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 40, y: 40 });
+  const [camera, setCamera] = useState({ zoom: 1, pan: { x: 40, y: 40 } });
+  const { zoom, pan } = camera;
   const [selectedTokenIds, setSelectedTokenIds] = useState<string[]>([]);
 
   // Estados de interação com ponteiro
@@ -111,6 +112,14 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
 
   const selectedTokens = tokens.filter((t) => selectedTokenIds.includes(t.id));
   const selectedToken = selectedTokens.length === 1 ? selectedTokens[0] : null;
+  const [tokenHpDelta, setTokenHpDelta] = useState('5');
+  const [tokenHpDraft, setTokenHpDraft] = useState('');
+
+  useEffect(() => {
+    if (selectedToken) {
+      setTokenHpDraft(String(selectedToken.hp));
+    }
+  }, [selectedToken?.id, selectedToken?.hp]);
 
   const yScale = viewMode === '3d' ? 0.68 : 1;
 
@@ -126,12 +135,39 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
       0.2,
       Math.min(1.15, +Math.min((vw - 70) / mapW, (vh - 60) / mapH).toFixed(2))
     );
-    setZoom(nextZoom);
-    setPan({
-      x: Math.round((vw - mapW * nextZoom) / 2),
-      y: Math.round((vh - mapH * nextZoom) / 2)
+    setCamera({
+      zoom: nextZoom,
+      pan: {
+        x: Math.round((vw - mapW * nextZoom) / 2),
+        y: Math.round((vh - mapH * nextZoom) / 2)
+      }
     });
   }, [map.cols, map.rows, map.gridSize, yScale]);
+
+  const zoomAtPoint = useCallback((zoomMultiplier: number, sx: number, sy: number) => {
+    setCamera((prev) => {
+      const nextZoom = Math.max(0.2, Math.min(2.5, +(prev.zoom * zoomMultiplier).toFixed(3)));
+      if (nextZoom === prev.zoom) return prev;
+      const scaleRatio = nextZoom / prev.zoom;
+      return {
+        zoom: nextZoom,
+        pan: {
+          x: sx - (sx - prev.pan.x) * scaleRatio,
+          y: sy - (sy - prev.pan.y) * scaleRatio
+        }
+      };
+    });
+  }, []);
+
+  const zoomAtCenter = useCallback(
+    (zoomMultiplier: number) => {
+      const container = containerRef.current;
+      const cx = container ? container.clientWidth / 2 : 0;
+      const cy = container ? container.clientHeight / 2 : 0;
+      zoomAtPoint(zoomMultiplier, cx, cy);
+    },
+    [zoomAtPoint]
+  );
 
   // Ajusta o zoom/enquadramento ao trocar de mapa ou dimensões
   useEffect(() => {
@@ -151,6 +187,19 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
     };
     img.src = map.imageUrl;
   }, [map.imageUrl]);
+
+  // Pré-carrega imagens de camadas adicionais combinadas na mesma cena
+  useEffect(() => {
+    (map.layers || []).forEach((layer) => {
+      if (!layer.imageUrl || layerImagesRef.current.has(layer.imageUrl)) return;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        layerImagesRef.current.set(layer.imageUrl, img);
+      };
+      img.src = layer.imageUrl;
+    });
+  }, [map.layers]);
 
   // Converte coordenada do mouse no canvas para coordenada do mundo (mapa)
   const screenToWorld = useCallback(
@@ -251,10 +300,26 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
       ctx.fillRect(0, 0, mapW, mapH);
 
       if (map.imageUrl && bgImageRef.current) {
-        ctx.drawImage(bgImageRef.current, 0, 0, mapW, mapH);
+        const baseW = (map.baseCols || map.cols) * map.gridSize;
+        const baseH = (map.baseRows || map.rows) * map.gridSize;
+        ctx.drawImage(bgImageRef.current, 0, 0, baseW, baseH);
       } else {
         // Desenha mapa procedural estilizado conforme o preset
         drawPresetMap(ctx, preset.id, mapW, mapH, map.gridSize, preset.floorColor, preset.accentColor);
+      }
+
+      // Camadas extras de mapa combinadas na mesma cena (ex: Barco + Barcos Duplos)
+      for (const layer of map.layers || []) {
+        const lImg = layerImagesRef.current.get(layer.imageUrl);
+        if (lImg && lImg.complete && lImg.naturalWidth > 0) {
+          ctx.drawImage(
+            lImg,
+            layer.x * map.gridSize,
+            layer.y * map.gridSize,
+            layer.cols * map.gridSize,
+            layer.rows * map.gridSize
+          );
+        }
       }
 
       // Grid
@@ -455,16 +520,23 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
             ctx.setLineDash([]);
           }
 
-          // Barra de HP acima da miniatura
-          if (token.maxHp > 0) {
+          // Barra de HP acima da miniatura (oculta para monstros quando jogador)
+          if (token.maxHp > 0 && (role === 'dm' || token.type === 'pc')) {
             const barW = sizePx * 0.76;
             const barH = 4;
             const barX = -barW / 2;
             const barY = stY - 7;
+            const isOverMax = token.hp > token.maxHp;
             const ratio = Math.max(0, Math.min(1, token.hp / token.maxHp));
             ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
             ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
-            ctx.fillStyle = ratio > 0.5 ? '#22c55e' : ratio > 0.25 ? '#eab308' : '#ef4444';
+            ctx.fillStyle = isOverMax
+              ? '#22d3ee'
+              : ratio > 0.5
+              ? '#22c55e'
+              : ratio > 0.25
+              ? '#eab308'
+              : '#ef4444';
             ctx.fillRect(barX, barY, barW * ratio, barH);
           }
 
@@ -545,17 +617,24 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
           ctx.fillText(token.avatar || '🛡️', cx, cy + 1);
         }
 
-        // Barra de HP abaixo do token
-        if (token.maxHp > 0) {
+        // Barra de HP abaixo do token (oculta para monstros quando jogador)
+        if (token.maxHp > 0 && (role === 'dm' || token.type === 'pc')) {
           const barW = sizePx * 0.76;
           const barH = 4;
           const barX = cx - barW / 2;
           const barY = cy + radius + 2;
+          const isOverMax = token.hp > token.maxHp;
           const ratio = Math.max(0, Math.min(1, token.hp / token.maxHp));
 
           ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
           ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
-          ctx.fillStyle = ratio > 0.5 ? '#22c55e' : ratio > 0.25 ? '#eab308' : '#ef4444';
+          ctx.fillStyle = isOverMax
+            ? '#22d3ee'
+            : ratio > 0.5
+            ? '#22c55e'
+            : ratio > 0.25
+            ? '#eab308'
+            : '#ef4444';
           ctx.fillRect(barX, barY, barW * ratio, barH);
         }
 
@@ -860,7 +939,10 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
     if (isPanning) {
       const dx = e.clientX - panStartRef.current.x;
       const dy = e.clientY - panStartRef.current.y;
-      setPan({ x: panStartRef.current.panX + dx, y: panStartRef.current.panY + dy });
+      setCamera((prev) => ({
+        ...prev,
+        pan: { x: panStartRef.current.panX + dx, y: panStartRef.current.panY + dy }
+      }));
       return;
     }
 
@@ -974,8 +1056,12 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
   };
 
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    const delta = e.deltaY < 0 ? 0.1 : -0.1;
-    setZoom((z) => Math.max(0.2, Math.min(2.5, +(z + delta).toFixed(2))));
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+    zoomAtPoint(factor, sx, sy);
   };
 
   return (
@@ -1179,43 +1265,152 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-2 mb-2.5">
-            <div className="bg-slate-950/80 border border-slate-800 rounded-lg p-2">
-              <div className="flex items-center gap-1 text-rose-400 font-semibold mb-1">
-                <Heart className="w-3 h-3" /> PV
-              </div>
-              <div className="flex items-center justify-between gap-1">
-                <button
-                  onClick={() =>
-                    canControlToken(selectedToken) &&
-                    onUpdateToken(selectedToken.id, { hp: Math.max(0, selectedToken.hp - 1) })
-                  }
-                  className="p-1 rounded bg-slate-800 hover:bg-rose-500/30 text-slate-200 cursor-pointer"
-                >
-                  <Minus className="w-3 h-3" />
-                </button>
-                <span className="font-mono font-bold text-slate-100">
-                  {selectedToken.hp}/{selectedToken.maxHp}
-                </span>
-                <button
-                  onClick={() =>
-                    canControlToken(selectedToken) &&
-                    onUpdateToken(selectedToken.id, {
-                      hp: Math.min(selectedToken.maxHp, selectedToken.hp + 1)
-                    })
-                  }
-                  className="p-1 rounded bg-slate-800 hover:bg-emerald-500/30 text-slate-200 cursor-pointer"
-                >
-                  <Plus className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
+          <div className="space-y-2 mb-2.5">
+            {(role === 'dm' || selectedToken.type === 'pc') ? (
+              <div className="bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1 text-rose-400 font-semibold">
+                    <Heart className="w-3.5 h-3.5" /> PV
+                  </div>
+                  {selectedToken.hp > selectedToken.maxHp && (
+                    <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">
+                      +{selectedToken.hp - selectedToken.maxHp} acima do máx.
+                    </span>
+                  )}
+                </div>
 
-            <div className="bg-slate-950/80 border border-slate-800 rounded-lg p-2 flex flex-col justify-between">
-              <div className="flex items-center gap-1 text-sky-400 font-semibold">
-                <Shield className="w-3 h-3" /> CA
+                <div className="flex items-center justify-between gap-1.5">
+                  {canControlToken(selectedToken) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onUpdateToken(selectedToken.id, {
+                          hp: Math.max(0, selectedToken.hp - 1)
+                        })
+                      }
+                      className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/40 text-rose-200 transition cursor-pointer active:scale-95"
+                      title="Diminuir 1 PV"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                  )}
+
+                  <div className="flex-1 flex items-center justify-center gap-1 min-w-0">
+                    {canControlToken(selectedToken) ? (
+                      <input
+                        type="number"
+                        min={0}
+                        value={tokenHpDraft}
+                        onChange={(e) => setTokenHpDraft(e.target.value)}
+                        onBlur={() => {
+                          const parsed = parseInt(tokenHpDraft, 10);
+                          if (!Number.isNaN(parsed)) {
+                            const nextHp = Math.max(0, parsed);
+                            setTokenHpDraft(String(nextHp));
+                            if (nextHp !== selectedToken.hp) {
+                              onUpdateToken(selectedToken.id, { hp: nextHp });
+                            }
+                          } else {
+                            setTokenHpDraft(String(selectedToken.hp));
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            (e.target as HTMLInputElement).blur();
+                          }
+                        }}
+                        className={`w-14 text-center bg-slate-900 border border-slate-700 rounded-lg px-1 py-1 font-mono font-extrabold text-base ${
+                          selectedToken.hp > selectedToken.maxHp ? 'text-cyan-300' : 'text-slate-100'
+                        }`}
+                        title="Alterar vida atual diretamente (pode ultrapassar o máximo)"
+                      />
+                    ) : (
+                      <span
+                        className={`font-mono font-extrabold text-base ${
+                          selectedToken.hp > selectedToken.maxHp ? 'text-cyan-300' : 'text-slate-100'
+                        }`}
+                      >
+                        {selectedToken.hp}
+                      </span>
+                    )}
+                    <span className="font-mono font-semibold text-slate-400 text-sm">
+                      /{selectedToken.maxHp}
+                    </span>
+                  </div>
+
+                  {canControlToken(selectedToken) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onUpdateToken(selectedToken.id, {
+                          hp: selectedToken.hp + 1
+                        })
+                      }
+                      className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-200 transition cursor-pointer active:scale-95"
+                      title="Aumentar 1 PV (pode passar do máximo)"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {canControlToken(selectedToken) && (
+                  <div className="flex items-center gap-1 pt-0.5">
+                    <input
+                      type="number"
+                      min={1}
+                      value={tokenHpDelta}
+                      onChange={(e) => setTokenHpDelta(e.target.value)}
+                      className="w-12 text-center bg-slate-900 border border-slate-700 rounded-lg px-1 py-1 font-mono font-bold text-xs text-slate-100"
+                      title="Quantidade de dano ou cura"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const amt = Math.max(1, Math.abs(parseInt(tokenHpDelta, 10) || 0));
+                        if (amt > 0) {
+                          onUpdateToken(selectedToken.id, {
+                            hp: Math.max(0, selectedToken.hp - amt)
+                          });
+                        }
+                      }}
+                      className="flex-1 py-1 px-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/35 border border-rose-500/40 text-rose-200 font-semibold text-[11px] cursor-pointer"
+                    >
+                      - Dano
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const amt = Math.max(1, Math.abs(parseInt(tokenHpDelta, 10) || 0));
+                        if (amt > 0) {
+                          onUpdateToken(selectedToken.id, {
+                            hp: selectedToken.hp + amt
+                          });
+                        }
+                      }}
+                      className="flex-1 py-1 px-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-500/40 text-emerald-200 font-semibold text-[11px] cursor-pointer"
+                    >
+                      + Cura
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className="font-mono font-bold text-base text-slate-100">{selectedToken.ac}</div>
+            ) : (
+              <div className="bg-slate-950/80 border border-slate-800 rounded-lg px-2 py-1.5 text-[11px] text-slate-400 flex items-center justify-between">
+                <span className="flex items-center gap-1 text-rose-400/80 font-semibold">
+                  <Heart className="w-3 h-3" /> PV
+                </span>
+                <span className="italic text-slate-500">Oculto dos jogadores</span>
+              </div>
+            )}
+
+            <div className="bg-slate-950/80 border border-slate-800 rounded-lg px-2.5 py-2 flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-sky-400 font-semibold text-xs">
+                <Shield className="w-3.5 h-3.5" /> CA
+              </div>
+              <div className="font-mono font-extrabold text-lg text-slate-100 leading-none">
+                {selectedToken.ac}
+              </div>
             </div>
           </div>
 
@@ -1407,7 +1602,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
       {/* Controles de Zoom (Canto Inferior Esquerdo) */}
       <div className="absolute bottom-2.5 left-2.5 z-10 max-w-[calc(100%-1.25rem)] flex flex-wrap items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-2 py-1 rounded-xl shadow-xl text-xs">
         <button
-          onClick={() => setZoom((z) => Math.max(0.2, +(z - 0.1).toFixed(2)))}
+          onClick={() => zoomAtCenter(1 / 1.15)}
           className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
           title="Diminuir Zoom"
         >
@@ -1415,7 +1610,7 @@ export const TabletopCanvas: React.FC<TabletopCanvasProps> = ({
         </button>
         <span className="px-1.5 font-mono text-slate-300">{Math.round(zoom * 100)}%</span>
         <button
-          onClick={() => setZoom((z) => Math.min(2.5, +(z + 0.1).toFixed(2)))}
+          onClick={() => zoomAtCenter(1.15)}
           className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 cursor-pointer"
           title="Aumentar Zoom"
         >

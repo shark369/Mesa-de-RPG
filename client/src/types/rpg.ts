@@ -161,9 +161,22 @@ export interface MapPing {
   timestamp: number;
 }
 
+export interface MapLayer {
+  id: string;
+  name: string;
+  imageUrl: string;
+  x: number;
+  y: number;
+  cols: number;
+  rows: number;
+}
+
 export interface MapConfig {
   presetId: string;
   imageUrl: string;
+  baseCols?: number;
+  baseRows?: number;
+  layers?: MapLayer[];
   gridSize: number;
   cols: number;
   rows: number;

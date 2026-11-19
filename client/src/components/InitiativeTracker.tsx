@@ -174,7 +174,8 @@ export const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({
                       {entry.name}
                     </div>
                     <div className="text-[10px] text-slate-400">
-                      CA {entry.ac} • PV {entry.hp}/{entry.maxHp}
+                      CA {entry.ac}
+                      {(role === 'dm' || !entry.isNpc) && ` • PV ${entry.hp}/${entry.maxHp}`}
                     </div>
                   </div>
                 </div>
