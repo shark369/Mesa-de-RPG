@@ -344,7 +344,7 @@ export function buildMonsterModelSpec(input: MonsterModelInput): MonsterModelSpe
       head: (d.head ?? 1) * (0.82 + rnd() * 0.36),
       limb: (d.limb ?? 1) * (0.85 + rnd() * 0.3)
     },
-    variant: buildVariant(fullSeedKey, key, d.archetype, d.features, colors.body),
+    variant: buildVariant(fullSeedKey, key, d.archetype, d.features, colors.body, input.tokenType),
     seed
   };
 }
@@ -355,6 +355,7 @@ const UPRIGHT: Archetype[] = ['humanoid', 'giant', 'skeleton', 'zombie', 'ghost'
 const HUMANOID_ONLY: VariantExtra[] = ['belt', 'earrings', 'warpaint', 'skullTrophy', 'tattered', 'armorPlate'];
 const CREATURE_ONLY: VariantExtra[] = ['whiskers', 'mandibles', 'antennae', 'backFins', 'barnacles'];
 const INANIMATE_OK: VariantExtra[] = ['crystals', 'aura', 'glowRunes', 'floatingOrbs', 'bones', 'moss'];
+const PC_EXTRAS: VariantExtra[] = ['belt', 'armorPlate', 'scars', 'earrings', 'shoulderSpikes', 'plume', 'aura'];
 const ALL_EXTRAS: VariantExtra[] = [
   'crest', 'backFins', 'shoulderSpikes', 'armorPlate', 'glowRunes', 'extraEyes', 'mandibles', 'whiskers',
   'antennae', 'chinSpikes', 'scars', 'moss', 'crystals', 'belt', 'aura', 'backSpines', 'earrings',
@@ -367,13 +368,22 @@ export function isUprightArchetype(a: Archetype): boolean {
   return UPRIGHT.includes(a);
 }
 
-function buildVariant(seedKey: string, saltKey: string, archetype: Archetype, f: MonsterModelFeatures, bodyColor: string): MonsterVariant {
+function buildVariant(
+  seedKey: string,
+  saltKey: string,
+  archetype: Archetype,
+  f: MonsterModelFeatures,
+  bodyColor: string,
+  tokenType?: MonsterModelInput['tokenType']
+): MonsterVariant {
   const salt = MONSTER_VARIANT_SALTS[saltKey] ?? 0;
   const r = mulberry32(hashString(`${seedKey}::variant::${salt}`));
   const pickV = <T,>(arr: T[]): T => arr[Math.floor(r() * arr.length) % arr.length];
 
   let pool: VariantExtra[];
-  if (INANIMATE.includes(archetype)) {
+  if (tokenType === 'pc') {
+    pool = PC_EXTRAS;
+  } else if (INANIMATE.includes(archetype)) {
     pool = INANIMATE_OK;
   } else if (UPRIGHT.includes(archetype)) {
     pool = ALL_EXTRAS.filter((e) => !CREATURE_ONLY.includes(e) || e === 'backFins');
@@ -383,7 +393,7 @@ function buildVariant(seedKey: string, saltKey: string, archetype: Archetype, f:
   if (f.headless) pool = pool.filter((e) => !['crest', 'extraEyes', 'mandibles', 'whiskers', 'antennae', 'chinSpikes', 'earrings', 'warpaint', 'plume'].includes(e));
   if (f.helmet) pool = pool.filter((e) => e !== 'crest' && e !== 'plume');
 
-  const count = INANIMATE.includes(archetype) ? 1 + Math.floor(r() * 2) : 2 + Math.floor(r() * 2);
+  const count = tokenType === 'pc' ? 1 : INANIMATE.includes(archetype) ? 1 + Math.floor(r() * 2) : 2 + Math.floor(r() * 2);
   const extras: VariantExtra[] = [];
   let guard = 0;
   while (extras.length < count && guard++ < 50) {
@@ -457,6 +467,11 @@ function classify(
   pick: <T>(arr: T[]) => T
 ): Draft {
   const F = (features: MonsterModelFeatures = {}): MonsterModelFeatures => features;
+
+  // Jogadores (PCs): combinam Raça + Classe sempre, sem virar monstros pelo nome próprio
+  if (tokenType === 'pc') {
+    return humanoidDraft(has, pick, rnd);
+  }
 
   // ---------------- Enxames ----------------
   if (has('swarm', 'enxame')) {
@@ -1280,7 +1295,7 @@ function classify(
   }
 
   // ---------------- Humanoides genéricos (NPCs) ----------------
-  if (type === 'humanoid' || tokenType === 'npc' || tokenType === 'pc') {
+  if (type === 'humanoid' || tokenType === 'npc') {
     return humanoidDraft(has, pick, rnd);
   }
 
@@ -1399,81 +1414,180 @@ function zombieDraft(has: (...w: string[]) => boolean, pick: <T>(arr: T[]) => T,
 }
 
 function humanoidDraft(has: (...w: string[]) => boolean, pick: <T>(arr: T[]) => T, rnd: () => number): Draft {
-  const F = (f: MonsterModelFeatures) => f;
   const cloth = pick(CLOTH_TONES);
   const skin = pick(SKIN_TONES);
-  if (has('archmage', 'arquimago', 'mage', 'mago', 'wizard', 'feiticeiro', 'sorcerer', 'warlock', 'bruxo', 'necromancer', 'necromante', 'evoker', 'evocador'))
-    return { archetype: 'humanoid', body: skin, accent: has('necro') ? '#1c1917' : cloth, features: F({ robe: true, hood: rnd() < 0.5, weapon: 'staff', beard: has('arch', 'arqui') }) };
-  if (has('priest', 'sacerdote', 'acolyte', 'acolito', 'cleric', 'clerigo'))
-    return { archetype: 'humanoid', body: skin, accent: '#f8fafc', features: F({ robe: true, weapon: 'staff', pauldrons: has('cleric', 'clerigo'), halo: false }) };
-  if (has('cult', 'culto', 'cultista', 'fanatic', 'fanatico'))
-    return { archetype: 'humanoid', body: skin, accent: '#7f1d1d', features: F({ robe: true, hood: true, weapon: 'dagger' }) };
-  if (has('druid', 'druida'))
-    return { archetype: 'humanoid', body: skin, accent: '#15803d', features: F({ robe: true, weapon: 'staff', horns: 'antlers' }) };
-  if (has('ranger', 'patrulheiro'))
-    return { archetype: 'humanoid', body: skin, accent: '#14532d', features: F({ hood: true, cape: true, weapon: 'bow', pauldrons: false }) };
-  if (has('bard', 'bardo'))
-    return { archetype: 'humanoid', body: skin, accent: '#7e22ce', features: F({ cape: true, weapon: 'dagger' }) };
-  if (has('monk', 'monge'))
-    return { archetype: 'humanoid', body: skin, accent: '#b45309', features: F({ robe: true, weapon: 'staff' }) };
-  if (has('knight', 'cavaleiro', 'paladin', 'paladino', 'guard', 'guarda', 'captain', 'capitao', 'veteran', 'veterano', 'soldier', 'soldado', 'warrior', 'guerreiro', 'infantry', 'infantaria', 'gladiator', 'gladiador', 'champion', 'campeao'))
-    return {
-      archetype: 'humanoid',
-      body: skin,
-      accent: has('knight', 'cavaleiro', 'paladin') ? '#94a3b8' : cloth,
-      features: F({
-        helmet: true,
-        pauldrons: true,
-        shield: !has('gladiator', 'gladiador') || rnd() < 0.5,
-        weapon: has('gladiator', 'gladiador') ? 'spear' : pick(['sword', 'sword', 'axe', 'spear']),
-        cape: has('captain', 'capitao', 'knight', 'cavaleiro', 'paladin', 'paladino')
-      }),
-      bulk: 1.1
-    };
-  if (has('berserker', 'barbarian', 'barbaro', 'tribal'))
-    return { archetype: 'humanoid', body: skin, accent: '#78350f', features: F({ weapon: 'axe', beard: rnd() < 0.6, horns: has('berserker') ? 'small' : undefined }), bulk: 1.2 };
-  if (has('assassin', 'assassino', 'spy', 'espiao', 'thief', 'ladrao', 'rogue', 'ladino', 'bandit', 'bandido', 'thug', 'brutamontes', 'tough!', 'pirate', 'pirata', 'scout', 'batedor', 'explorador', 'jack!'))
-    return {
-      archetype: 'humanoid',
-      body: skin,
-      accent: has('assassin', 'assassino', 'spy', 'espiao') ? '#1c1917' : cloth,
-      features: F({
-        hood: has('assassin', 'assassino', 'spy', 'espiao', 'bandit', 'bandido', 'scout', 'batedor'),
-        weapon: has('scout', 'batedor', 'explorador') ? 'bow' : has('thug', 'brutamontes', 'tough!') ? 'club' : has('pirate', 'pirata') ? 'sword' : 'dagger',
-        cape: has('captain', 'capitao'),
-        beard: has('pirate', 'pirata') && rnd() < 0.7
-      })
-    };
-  if (has('noble', 'nobre', 'king!', 'rei!', 'queen', 'rainha', 'prince', 'princip', 'lord!', 'lorde'))
-    return { archetype: 'humanoid', body: skin, accent: '#7e22ce', features: F({ crown: true, cape: true, weapon: 'sword' }) };
-  if (has('dwarf', 'anao', 'duergar'))
-    return { archetype: 'humanoid', body: has('duergar') ? '#6b7280' : skin, accent: cloth, features: F({ beard: true, helmet: true, weapon: 'axe', shield: true }), height: 0.8, bulk: 1.25 };
-  if (has('drow', 'elf', 'elfo', 'half-elf', 'meio-elfo'))
-    return { archetype: 'humanoid', body: has('drow') ? '#3b3654' : skin, accent: cloth, features: F({ earsPointy: true, weapon: pick(['bow', 'sword', 'dagger']), cape: true }) };
-  if (has('gnome', 'gnomo', 'halfling', 'svirfneblin'))
-    return { archetype: 'humanoid', body: has('svirfneblin', 'deep') ? '#78716c' : skin, accent: cloth, features: F({ earsPointy: has('gnome', 'gnomo', 'svirfneblin'), weapon: 'dagger', hood: rnd() < 0.5 }), height: 0.7, head: 1.25 };
-  if (has('half-orc', 'meio-orc'))
-    return { archetype: 'humanoid', body: '#84a96b', accent: cloth, features: F({ tusks: true, weapon: 'axe' }), bulk: 1.15 };
-  if (has('goliath', 'golias', 'firbolg'))
-    return { archetype: 'humanoid', body: has('goliath', 'golias') ? '#a8a29e' : '#7aa0c4', accent: cloth, features: F({ weapon: 'club', beard: has('firbolg') }), bulk: 1.3, height: 1.15 };
-  if (has('tiefling'))
-    return { archetype: 'humanoid', body: '#b91c1c', accent: cloth, features: F({ horns: 'curved', tail: true, weapon: 'dagger' }) };
-  if (has('aasimar'))
-    return { archetype: 'humanoid', body: skin, accent: '#f8fafc', emissive: '#fde68a', features: F({ halo: true, weapon: 'sword' }) };
-  if (has('warforged', 'forjado'))
-    return { archetype: 'golem', body: '#64748b', features: F({ weapon: 'sword' }), bulk: 0.8 };
-  if (has('genasi', 'changeling', 'metamorfo', 'doppelganger'))
-    return { archetype: 'humanoid', body: has('water', 'agua') ? '#38bdf8' : '#d6d3d1', accent: cloth, features: F({ earsPointy: false, weapon: 'dagger' }) };
-  if (has('commoner', 'plebeu', 'camponês', 'campones', 'aldeao', 'villager'))
-    return { archetype: 'humanoid', body: skin, accent: pick(['#78350f', '#713f12', '#57534e']), features: F({ weapon: pick(['club', 'staff']) }) };
-  if (has('spring heeled', 'salto de mola'))
-    return { archetype: 'humanoid', body: '#1c1917', eye: '#ef4444', features: F({ cape: true, horns: 'small', goatLegs: true }) };
-  return {
-    archetype: 'humanoid',
-    body: skin,
-    accent: cloth,
-    features: F({ weapon: pick(['sword', 'dagger', 'spear', 'axe', 'staff', 'bow']), helmet: rnd() < 0.3, hood: rnd() < 0.25, beard: rnd() < 0.3 })
-  };
+
+  // 1. Camada de Raça (forma corporal, pele, orelhas, chifres, cauda, estatura)
+  let body = skin;
+  let eye: string | undefined;
+  let emissive: string | undefined;
+  let bulk = 1.0;
+  let height = 1.0;
+  let head = 1.0;
+  let archetype: Archetype = 'humanoid';
+  const features: MonsterModelFeatures = {};
+
+  if (has('warforged', 'forjado')) {
+    archetype = 'golem';
+    body = '#64748b';
+    bulk = 0.85;
+  } else if (has('dragonborn', 'draconato', 'half-dragon', 'meio-dragao', 'half-red', 'meio dragao')) {
+    body = has('red', 'vermelh')
+      ? '#b91c1c'
+      : has('blue', 'azul')
+      ? '#1d4ed8'
+      : has('green', 'verd')
+      ? '#15803d'
+      : has('black', 'negr', 'pret')
+      ? '#1e293b'
+      : has('white', 'branc')
+      ? '#e2e8f0'
+      : has('gold', 'ouro', 'dourad')
+      ? '#d97706'
+      : has('silver', 'prat')
+      ? '#94a3b8'
+      : has('bronze')
+      ? '#92400e'
+      : has('copper', 'cobre')
+      ? '#b45309'
+      : '#a16207';
+    features.snout = 'lizard';
+    features.horns = 'small';
+    features.tail = true;
+    bulk = 1.15;
+    height = 1.08;
+  } else if (has('tiefling')) {
+    body = '#b91c1c';
+    eye = '#facc15';
+    features.horns = 'curved';
+    features.tail = true;
+  } else if (has('half-orc', 'meio-orc', 'meio orc')) {
+    body = '#7da461';
+    features.tusks = true;
+    bulk = 1.18;
+    height = 1.05;
+  } else if (has('dwarf', 'anao', 'duergar')) {
+    body = has('duergar') ? '#6b7280' : skin;
+    features.beard = true;
+    height = 0.78;
+    bulk = 1.25;
+  } else if (has('drow', 'elf', 'elfo', 'half-elf', 'meio-elfo', 'meio elfo')) {
+    body = has('drow', 'negro') ? '#3b3654' : skin;
+    features.earsPointy = true;
+    height = 1.03;
+    bulk = 0.92;
+  } else if (has('gnome', 'gnomo', 'svirfneblin')) {
+    body = has('svirfneblin', 'deep') ? '#78716c' : skin;
+    features.earsPointy = true;
+    height = 0.66;
+    head = 1.25;
+  } else if (has('halfling')) {
+    height = 0.66;
+    head = 1.2;
+  } else if (has('goliath', 'golias', 'firbolg')) {
+    body = has('goliath', 'golias') ? '#a8a29e' : '#7aa0c4';
+    if (has('firbolg')) features.beard = true;
+    bulk = 1.3;
+    height = 1.15;
+  } else if (has('aasimar')) {
+    emissive = '#fde68a';
+    features.halo = true;
+  } else if (has('genasi', 'changeling', 'metamorfo', 'doppelganger')) {
+    body = has('water', 'agua') ? '#38bdf8' : '#d6d3d1';
+  } else if (has('spring heeled', 'salto de mola')) {
+    body = '#1c1917';
+    eye = '#ef4444';
+    features.cape = true;
+    features.horns = 'small';
+    features.goatLegs = true;
+  }
+
+  // 2. Camada de Classe / Arquétipo Social (sobrepõe equipamento/vestimenta sem apagar a raça)
+  let accent = cloth;
+  const hasRaceHorns = Boolean(features.horns);
+  const hasRaceEars = Boolean(features.earsPointy || features.snout);
+
+  if (has('archmage', 'arquimago', 'mage', 'mago', 'wizard', 'feiticeiro', 'sorcerer', 'warlock', 'bruxo', 'necromancer', 'necromante', 'evoker', 'evocador')) {
+    accent = has('necro', 'bruxo', 'warlock') ? '#4c1d95' : has('feiticeiro', 'sorcerer') ? '#991b1b' : '#1e3a8a';
+    features.robe = true;
+    features.hood = has('bruxo', 'warlock', 'necro') || rnd() < 0.5;
+    features.weapon = 'staff';
+    if (has('feiticeiro', 'sorcerer')) features.cape = true;
+    if (has('arch', 'arqui')) features.beard = true;
+  } else if (has('priest', 'sacerdote', 'acolyte', 'acolito', 'cleric', 'clerigo')) {
+    accent = '#e2e8f0';
+    features.robe = true;
+    features.weapon = 'staff';
+    features.pauldrons = has('cleric', 'clerigo');
+  } else if (has('cult', 'culto', 'cultista', 'fanatic', 'fanatico')) {
+    accent = '#7f1d1d';
+    features.robe = true;
+    features.hood = true;
+    features.weapon = 'dagger';
+  } else if (has('druid', 'druida')) {
+    accent = '#15803d';
+    features.robe = true;
+    features.weapon = 'staff';
+    if (!hasRaceHorns) features.horns = 'antlers';
+  } else if (has('ranger', 'patrulheiro')) {
+    accent = '#14532d';
+    features.hood = true;
+    features.cape = true;
+    features.weapon = 'bow';
+  } else if (has('bard', 'bardo')) {
+    accent = '#7e22ce';
+    features.cape = true;
+    features.weapon = 'dagger';
+  } else if (has('monk', 'monge')) {
+    accent = '#b45309';
+    features.robe = true;
+    features.weapon = 'staff';
+  } else if (has('knight', 'cavaleiro', 'paladin', 'paladino', 'guard', 'guarda', 'captain', 'capitao', 'veteran', 'veterano', 'soldier', 'soldado', 'warrior', 'guerreiro', 'fighter', 'infantry', 'infantaria', 'gladiator', 'gladiador', 'champion', 'campeao')) {
+    accent = has('knight', 'cavaleiro', 'paladin', 'paladino') ? '#94a3b8' : cloth;
+    if (!hasRaceHorns && !hasRaceEars) features.helmet = true;
+    features.pauldrons = true;
+    features.shield = !has('gladiator', 'gladiador') || rnd() < 0.5;
+    features.weapon = has('gladiator', 'gladiador') ? 'spear' : has('paladin', 'paladino') ? 'sword' : pick(['sword', 'sword', 'axe', 'spear']);
+    features.cape = has('captain', 'capitao', 'knight', 'cavaleiro', 'paladin', 'paladino');
+    bulk *= 1.08;
+  } else if (has('berserker', 'barbarian', 'barbaro', 'tribal')) {
+    accent = '#78350f';
+    features.weapon = 'axe';
+    if (!hasRaceHorns && has('berserker')) features.horns = 'small';
+    bulk *= 1.15;
+  } else if (has('assassin', 'assassino', 'spy', 'espiao', 'thief', 'ladrao', 'rogue', 'ladino', 'bandit', 'bandido', 'thug', 'brutamontes', 'tough!', 'pirate', 'pirata', 'scout', 'batedor', 'explorador', 'jack!')) {
+    accent = has('assassin', 'assassino', 'spy', 'espiao', 'rogue', 'ladino') ? '#1c1917' : cloth;
+    features.hood = has('assassin', 'assassino', 'spy', 'espiao', 'bandit', 'bandido', 'scout', 'batedor', 'rogue', 'ladino');
+    features.weapon = has('scout', 'batedor', 'explorador') ? 'bow' : has('thug', 'brutamontes', 'tough!') ? 'club' : has('pirate', 'pirata') ? 'sword' : 'dagger';
+    features.cape = has('captain', 'capitao');
+    if (has('pirate', 'pirata') && rnd() < 0.7) features.beard = true;
+  } else if (has('noble', 'nobre', 'king!', 'rei!', 'queen', 'rainha', 'prince', 'princip', 'lord!', 'lorde')) {
+    accent = '#7e22ce';
+    features.crown = true;
+    features.cape = true;
+    features.weapon = 'sword';
+  } else if (has('commoner', 'plebeu', 'campones', 'aldeao', 'villager')) {
+    accent = pick(['#78350f', '#713f12', '#57534e']);
+    features.weapon = pick(['club', 'staff']);
+  } else {
+    // Fallback para humanoide sem classe específica (usa características raciais já definidas)
+    if (!features.weapon) {
+      features.weapon = has('dwarf', 'anao')
+        ? 'axe'
+        : has('elf', 'elfo')
+        ? 'bow'
+        : has('gnome', 'gnomo', 'halfling', 'tiefling')
+        ? 'dagger'
+        : pick(['sword', 'dagger', 'spear', 'axe', 'staff', 'bow']);
+    }
+    if (has('dwarf', 'anao') && !hasRaceHorns) {
+      features.helmet = true;
+      features.shield = true;
+    }
+    if (has('elf', 'elfo')) features.cape = true;
+  }
+
+  return { archetype, body, accent, eye, emissive, features, bulk, height, head };
 }
 
 // --- Utilidades de cor -------------------------------------------------------

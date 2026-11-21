@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { RotateCw, Pause, Play, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import {
   Archetype,
@@ -8,6 +12,7 @@ import {
   MonsterModelInput
 } from '../utils/monsterModelSpec';
 import { buildMonsterModel } from '../utils/monsterModelBuilder';
+import { createStudioEnvironment } from '../utils/monsterMaterials';
 
 interface MonsterModelViewer3DProps {
   input: MonsterModelInput;
@@ -79,7 +84,7 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
 
   const spec = useMemo(
     () => buildMonsterModelSpec(input),
-    [input.slug, input.name, input.nameEn, input.type, input.tokenType]
+    [input.slug, input.name, input.nameEn, input.type, input.tokenType, input.variantSeed]
   );
 
   const EXTRA_PT: Record<string, string> = {
@@ -152,10 +157,10 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.04;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearColor(0x070b17, 1);
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
@@ -164,28 +169,26 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
     renderer.domElement.style.display = 'block';
 
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#070b17');
 
-    // Environment map PBR (faz metais, olhos úmidos, escamas e quitina refletirem luz real)
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const roomEnv = new RoomEnvironment();
-    const envRT = pmrem.fromScene(roomEnv, 0.04);
-    scene.environment = envRT.texture;
-    roomEnv.dispose();
-    pmrem.dispose();
+    // Environment map HDRI sintético de estúdio (reflexos realistas em metal, olhos e escamas)
+    const envTex = createStudioEnvironment(renderer);
+    scene.environment = envTex;
 
-    // Iluminação dramática com sombras reais para destacar musculatura, poros e armaduras
-    scene.add(new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.7));
-    const key = new THREE.DirectionalLight(0xfff7ed, 2.1);
+    // Iluminação dramática com sombras suaves 2048x2048
+    scene.add(new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.58));
+    const key = new THREE.DirectionalLight(0xfff7ed, 2.2);
     key.position.set(2.8, 4.8, 3.8);
     key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.mapSize.set(2048, 2048);
     key.shadow.camera.near = 0.5;
     key.shadow.camera.far = 14;
     key.shadow.camera.left = -2;
     key.shadow.camera.right = 2;
     key.shadow.camera.top = 2.4;
     key.shadow.camera.bottom = -0.5;
-    key.shadow.bias = -0.0005;
+    key.shadow.bias = -0.0004;
+    key.shadow.normalBias = 0.02;
     scene.add(key);
 
     const rim = new THREE.DirectionalLight(0x60a5fa, 1.15);
@@ -242,6 +245,23 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
 
     const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 30);
 
+    // Pós-processamento: GTAO (sombras de contato), Bloom sutil e OutputPass (ACESFilmic + sRGB)
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const gtaoPass = new GTAOPass(scene, camera, width, height);
+    gtaoPass.output = GTAOPass.OUTPUT.Default;
+    gtaoPass.blendIntensity = 0.65;
+    gtaoPass.updateGtaoMaterial({ radius: 0.28, distanceExponent: 1.5, thickness: 1.0, scale: 1.0, samples: 12 });
+    composer.addPass(gtaoPass);
+
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.24, 0.35, 0.94);
+    composer.addPass(bloomPass);
+
+    const outputPass = new OutputPass();
+    composer.addPass(outputPass);
+
     const ro = new ResizeObserver(() => {
       if (!container) return;
       const w = Math.max(120, container.clientWidth);
@@ -249,6 +269,7 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      composer.setSize(w, h);
     });
     ro.observe(container);
 
@@ -272,7 +293,7 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
       );
       camera.lookAt(0, targetY, 0);
 
-      renderer.render(scene, camera);
+      composer.render();
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -285,7 +306,11 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
       plinthMat.dispose();
       ringGeo.dispose();
       ringMat.dispose();
-      envRT.dispose();
+      gtaoPass.dispose();
+      bloomPass.dispose();
+      outputPass.dispose();
+      composer.dispose();
+      envTex.dispose();
       renderer.dispose();
     };
   }, [spec]);

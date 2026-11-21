@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 
 /**
- * Gerador procedural de mapas PBR (Albedo/Map, BumpMap e RoughnessMap) + UVs triplanares
- * para substituir o aspecto liso de "massa de modelar" por superfícies orgânicas e rígidas
- * realistas (pele, escamas, pelo, quitina, pedra, metal escovado, osso, madeira, tecido, limo).
+ * Gerador procedural completo de materiais PBR (Albedo, NormalMap, RoughnessMap,
+ * MetalnessMap e AOMap) + ambiente HDRI sintético + UVs triplanares (uv + uv1).
  */
 
 export type SurfaceKind =
@@ -21,8 +20,10 @@ export type SurfaceKind =
 
 interface PbrTextureSet {
   map: THREE.CanvasTexture;
-  bumpMap: THREE.CanvasTexture;
+  normalMap: THREE.CanvasTexture;
   roughnessMap: THREE.CanvasTexture;
+  aoMap: THREE.CanvasTexture;
+  metalnessMap?: THREE.CanvasTexture;
 }
 
 const TEXTURE_CACHE = new Map<SurfaceKind, PbrTextureSet>();
@@ -54,38 +55,137 @@ function toTex(canvas: HTMLCanvasElement, srgb: boolean, repeat = 2): THREE.Canv
   return tex;
 }
 
+/**
+ * Converte um mapa de alturas (escala de cinza em canvas) em NormalMap RGB em espaço tangente
+ * usando filtro Sobel 3x3 (wrap contínuo nas bordas para tiling perfeito) e um AOMap de frestas.
+ */
+function deriveNormalAndAO(
+  heightCanvas: HTMLCanvasElement,
+  strength: number,
+  repeat: number
+): { normalMap: THREE.CanvasTexture; aoMap: THREE.CanvasTexture } {
+  const sz = heightCanvas.width;
+  const hCtx = heightCanvas.getContext('2d')!;
+  const src = hCtx.getImageData(0, 0, sz, sz).data;
+
+  const [normC, normCtx] = makeCanvas(sz);
+  const normImg = normCtx.createImageData(sz, sz);
+  const nd = normImg.data;
+
+  const [aoC, aoCtx] = makeCanvas(sz);
+  const aoImg = aoCtx.createImageData(sz, sz);
+  const ad = aoImg.data;
+
+  const hAt = (x: number, y: number) => {
+    const wx = ((x % sz) + sz) % sz;
+    const wy = ((y % sz) + sz) % sz;
+    return src[(wy * sz + wx) * 4] / 255;
+  };
+
+  for (let y = 0; y < sz; y++) {
+    for (let x = 0; x < sz; x++) {
+      const tl = hAt(x - 1, y - 1);
+      const t = hAt(x, y - 1);
+      const tr = hAt(x + 1, y - 1);
+      const l = hAt(x - 1, y);
+      const c = hAt(x, y);
+      const r = hAt(x + 1, y);
+      const bl = hAt(x - 1, y + 1);
+      const b = hAt(x, y + 1);
+      const br = hAt(x + 1, y + 1);
+
+      const dx = tr + 2 * r + br - (tl + 2 * l + bl);
+      const dy = bl + 2 * b + br - (tl + 2 * t + tr);
+      let nx = -dx * strength;
+      let ny = -dy * strength;
+      let nz = 1;
+      const invLen = 1 / Math.hypot(nx, ny, nz);
+      nx *= invLen;
+      ny *= invLen;
+      nz *= invLen;
+
+      const idx = (y * sz + x) * 4;
+      nd[idx] = Math.round((nx * 0.5 + 0.5) * 255);
+      nd[idx + 1] = Math.round((ny * 0.5 + 0.5) * 255);
+      nd[idx + 2] = Math.round((nz * 0.5 + 0.5) * 255);
+      nd[idx + 3] = 255;
+
+      // AO local: cavidades mais fundas que a vizinhança ficam suavemente ocluídas
+      const avg = (tl + t + tr + l + r + bl + b + br) / 8;
+      const cavity = Math.max(0, avg - c);
+      const ao = Math.max(135, Math.min(255, Math.round((0.68 + c * 0.32 - cavity * 0.85) * 255)));
+      ad[idx] = ao;
+      ad[idx + 1] = ao;
+      ad[idx + 2] = ao;
+      ad[idx + 3] = 255;
+    }
+  }
+
+  normCtx.putImageData(normImg, 0, 0);
+  aoCtx.putImageData(aoImg, 0, 0);
+
+  return {
+    normalMap: toTex(normC, false, repeat),
+    aoMap: toTex(aoC, false, repeat)
+  };
+}
+
 function paintNoiseFields(
   size: number,
   seed: number,
   drawCell: (
     colCtx: CanvasRenderingContext2D,
-    bumpCtx: CanvasRenderingContext2D,
+    heightCtx: CanvasRenderingContext2D,
     roughCtx: CanvasRenderingContext2D,
+    metalCtx: CanvasRenderingContext2D | null,
     rnd: () => number,
     size: number
   ) => void,
-  baseCol = '#ececec',
-  baseBump = '#808080',
-  baseRough = '#a0a0a0',
-  repeat = 2
+  opts: {
+    baseCol?: string;
+    baseHeight?: string;
+    baseRough?: string;
+    baseMetal?: string;
+    repeat?: number;
+    normalStrength?: number;
+    hasMetalMap?: boolean;
+  } = {}
 ): PbrTextureSet {
+  const {
+    baseCol = '#ececec',
+    baseHeight = '#808080',
+    baseRough = '#a0a0a0',
+    baseMetal = '#ffffff',
+    repeat = 2,
+    normalStrength = 2.6,
+    hasMetalMap = false
+  } = opts;
+
   const [colC, colCtx] = makeCanvas(size);
-  const [bumpC, bumpCtx] = makeCanvas(size);
+  const [heightC, heightCtx] = makeCanvas(size);
   const [roughC, roughCtx] = makeCanvas(size);
+  const [metalC, metalCtx] = hasMetalMap ? makeCanvas(size) : [null, null];
 
   colCtx.fillStyle = baseCol;
   colCtx.fillRect(0, 0, size, size);
-  bumpCtx.fillStyle = baseBump;
-  bumpCtx.fillRect(0, 0, size, size);
+  heightCtx.fillStyle = baseHeight;
+  heightCtx.fillRect(0, 0, size, size);
   roughCtx.fillStyle = baseRough;
   roughCtx.fillRect(0, 0, size, size);
+  if (metalCtx) {
+    metalCtx.fillStyle = baseMetal;
+    metalCtx.fillRect(0, 0, size, size);
+  }
 
-  drawCell(colCtx, bumpCtx, roughCtx, mulberry(seed), size);
+  drawCell(colCtx, heightCtx, roughCtx, metalCtx, mulberry(seed), size);
 
+  const { normalMap, aoMap } = deriveNormalAndAO(heightC, normalStrength, repeat);
   return {
     map: toTex(colC, true, repeat),
-    bumpMap: toTex(bumpC, false, repeat),
-    roughnessMap: toTex(roughC, false, repeat)
+    normalMap,
+    roughnessMap: toTex(roughC, false, repeat),
+    aoMap,
+    metalnessMap: metalC ? toTex(metalC, false, repeat) : undefined
   };
 }
 
@@ -96,7 +196,7 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
       return paintNoiseFields(
         S,
         101,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, rough, _metal, rnd, sz) => {
           const cols = 10;
           const rows = 10;
           const cw = sz / cols;
@@ -116,20 +216,19 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
               col.ellipse(cx, cy, cw * 0.54, ch * 0.64, 0, 0, Math.PI * 2);
               col.fill();
 
-              const gBmp = bump.createRadialGradient(cx, cy - ch * 0.15, 1, cx, cy, cw * 0.65);
-              gBmp.addColorStop(0, '#f2f2f2');
-              gBmp.addColorStop(0.7, '#9e9e9e');
-              gBmp.addColorStop(1, '#262626');
-              bump.fillStyle = gBmp;
-              bump.beginPath();
-              bump.ellipse(cx, cy, cw * 0.54, ch * 0.64, 0, 0, Math.PI * 2);
-              bump.fill();
+              const gH = height.createRadialGradient(cx, cy - ch * 0.15, 1, cx, cy, cw * 0.65);
+              gH.addColorStop(0, '#f4f4f4');
+              gH.addColorStop(0.7, '#9e9e9e');
+              gH.addColorStop(1, '#202020');
+              height.fillStyle = gH;
+              height.beginPath();
+              height.ellipse(cx, cy, cw * 0.54, ch * 0.64, 0, 0, Math.PI * 2);
+              height.fill();
 
-              // Centro da escama mais brilhante (menor roughness), frestas foscas
               const gR = rough.createRadialGradient(cx, cy, 2, cx, cy, cw * 0.62);
-              gR.addColorStop(0, '#585858');
+              gR.addColorStop(0, '#505050');
               gR.addColorStop(0.75, '#969696');
-              gR.addColorStop(1, '#e6e6e6');
+              gR.addColorStop(1, '#ececec');
               rough.fillStyle = gR;
               rough.beginPath();
               rough.ellipse(cx, cy, cw * 0.54, ch * 0.64, 0, 0, Math.PI * 2);
@@ -137,18 +236,14 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             }
           }
         },
-        '#909090',
-        '#303030',
-        '#d0d0d0',
-        2.5
+        { baseCol: '#909090', baseHeight: '#2a2a2a', baseRough: '#d4d4d4', repeat: 2.5, normalStrength: 3.4 }
       );
 
     case 'skin':
       return paintNoiseFields(
         S,
         202,
-        (col, bump, rough, rnd, sz) => {
-          // Manchas orgânicas sutis (subsurface mottling)
+        (col, height, rough, _metal, rnd, sz) => {
           for (let i = 0; i < 90; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
@@ -159,8 +254,7 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.arc(x, y, rad, 0, Math.PI * 2);
             col.fill();
           }
-          // Poros e micro-rugas da pele
-          for (let i = 0; i < 1100; i++) {
+          for (let i = 0; i < 1200; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
             const r = 0.7 + rnd() * 1.9;
@@ -170,42 +264,38 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.arc(x, y, r, 0, Math.PI * 2);
             col.fill();
 
-            bump.fillStyle = dark ? 'rgba(45,45,45,0.38)' : 'rgba(220,220,220,0.32)';
-            bump.beginPath();
-            bump.arc(x, y, r, 0, Math.PI * 2);
-            bump.fill();
+            height.fillStyle = dark ? 'rgba(40,40,40,0.42)' : 'rgba(225,225,225,0.34)';
+            height.beginPath();
+            height.arc(x, y, r, 0, Math.PI * 2);
+            height.fill();
 
-            rough.fillStyle = dark ? 'rgba(215,215,215,0.28)' : 'rgba(120,120,120,0.25)';
+            rough.fillStyle = dark ? 'rgba(218,218,218,0.3)' : 'rgba(115,115,115,0.26)';
             rough.beginPath();
             rough.arc(x, y, r * 1.4, 0, Math.PI * 2);
             rough.fill();
           }
-          // Rugas finas
-          for (let i = 0; i < 45; i++) {
+          for (let i = 0; i < 50; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
             const len = 10 + rnd() * 24;
             const ang = (rnd() - 0.5) * 0.7;
-            bump.strokeStyle = 'rgba(45,45,45,0.28)';
-            bump.lineWidth = 1.1;
-            bump.beginPath();
-            bump.moveTo(x, y);
-            bump.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
-            bump.stroke();
+            height.strokeStyle = 'rgba(35,35,35,0.34)';
+            height.lineWidth = 1.1;
+            height.beginPath();
+            height.moveTo(x, y);
+            height.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+            height.stroke();
           }
         },
-        '#e5e5e5',
-        '#808080',
-        '#9c9c9c',
-        2
+        { baseCol: '#e5e5e5', baseHeight: '#808080', baseRough: '#9e9e9e', repeat: 2, normalStrength: 2.4 }
       );
 
     case 'fur':
       return paintNoiseFields(
         S,
         303,
-        (col, bump, rough, rnd, sz) => {
-          for (let i = 0; i < 1600; i++) {
+        (col, height, _rough, _metal, rnd, sz) => {
+          for (let i = 0; i < 1700; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
             const len = 8 + rnd() * 18;
@@ -218,58 +308,50 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.lineTo(x + Math.sin(tilt) * len, y + Math.cos(tilt) * len);
             col.stroke();
 
-            const b = 80 + Math.floor(rnd() * 165);
-            bump.strokeStyle = `rgba(${b},${b},${b},0.55)`;
-            bump.lineWidth = 1.2;
-            bump.beginPath();
-            bump.moveTo(x, y);
-            bump.lineTo(x + Math.sin(tilt) * len, y + Math.cos(tilt) * len);
-            bump.stroke();
+            const b = 75 + Math.floor(rnd() * 175);
+            height.strokeStyle = `rgba(${b},${b},${b},0.6)`;
+            height.lineWidth = 1.2;
+            height.beginPath();
+            height.moveTo(x, y);
+            height.lineTo(x + Math.sin(tilt) * len, y + Math.cos(tilt) * len);
+            height.stroke();
           }
         },
-        '#cfcfcf',
-        '#6a6a6a',
-        '#dcdcdc',
-        3
+        { baseCol: '#cfcfcf', baseHeight: '#686868', baseRough: '#dcdcdc', repeat: 3, normalStrength: 3.0 }
       );
 
     case 'chitin':
       return paintNoiseFields(
         S,
         404,
-        (col, bump, rough, rnd, sz) => {
-          // Estrias de quitina + microporos
+        (col, height, rough, _metal, rnd, sz) => {
           for (let y = 0; y < sz; y += 16) {
             col.fillStyle = 'rgba(110,110,110,0.22)';
             col.fillRect(0, y, sz, 3);
-            bump.fillStyle = 'rgba(40,40,40,0.45)';
-            bump.fillRect(0, y, sz, 3);
-            rough.fillStyle = 'rgba(190,190,190,0.4)';
+            height.fillStyle = 'rgba(35,35,35,0.5)';
+            height.fillRect(0, y, sz, 3);
+            rough.fillStyle = 'rgba(195,195,195,0.45)';
             rough.fillRect(0, y, sz, 3);
           }
-          for (let i = 0; i < 500; i++) {
+          for (let i = 0; i < 520; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
             const r = 0.6 + rnd() * 1.5;
-            bump.fillStyle = rnd() < 0.5 ? 'rgba(30,30,30,0.35)' : 'rgba(235,235,235,0.25)';
-            bump.beginPath();
-            bump.arc(x, y, r, 0, Math.PI * 2);
-            bump.fill();
+            height.fillStyle = rnd() < 0.5 ? 'rgba(28,28,28,0.38)' : 'rgba(235,235,235,0.28)';
+            height.beginPath();
+            height.arc(x, y, r, 0, Math.PI * 2);
+            height.fill();
           }
         },
-        '#ececec',
-        '#8c8c8c',
-        '#5a5a5a',
-        2.5
+        { baseCol: '#ececec', baseHeight: '#8c8c8c', baseRough: '#545454', repeat: 2.5, normalStrength: 2.8 }
       );
 
     case 'metal':
       return paintNoiseFields(
         S,
         505,
-        (col, bump, rough, rnd, sz) => {
-          // Aço escovado e marcas sutis de forja/arranhões
-          for (let i = 0; i < 420; i++) {
+        (col, height, rough, metal, rnd, sz) => {
+          for (let i = 0; i < 450; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
             const len = 14 + rnd() * 48;
@@ -282,33 +364,54 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
             col.stroke();
 
-            const b = rnd() < 0.5 ? 60 : 210;
-            bump.strokeStyle = `rgba(${b},${b},${b},0.25)`;
-            bump.lineWidth = 0.9;
-            bump.beginPath();
-            bump.moveTo(x, y);
-            bump.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
-            bump.stroke();
+            const b = rnd() < 0.5 ? 55 : 215;
+            height.strokeStyle = `rgba(${b},${b},${b},0.26)`;
+            height.lineWidth = 0.9;
+            height.beginPath();
+            height.moveTo(x, y);
+            height.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+            height.stroke();
 
-            const rg = 45 + Math.floor(rnd() * 90);
-            rough.strokeStyle = `rgba(${rg},${rg},${rg},0.3)`;
+            const rg = 40 + Math.floor(rnd() * 88);
+            rough.strokeStyle = `rgba(${rg},${rg},${rg},0.32)`;
             rough.beginPath();
             rough.moveTo(x, y);
             rough.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
             rough.stroke();
           }
+          // Micro-marcas de oxidação / desgaste que reduzem metalicidade localmente
+          if (metal) {
+            for (let i = 0; i < 65; i++) {
+              const x = rnd() * sz;
+              const y = rnd() * sz;
+              const r = 2 + rnd() * 7;
+              metal.fillStyle = 'rgba(130,130,130,0.35)';
+              metal.beginPath();
+              metal.arc(x, y, r, 0, Math.PI * 2);
+              metal.fill();
+              rough.fillStyle = 'rgba(195,195,195,0.32)';
+              rough.beginPath();
+              rough.arc(x, y, r, 0, Math.PI * 2);
+              rough.fill();
+            }
+          }
         },
-        '#e8e8e8',
-        '#808080',
-        '#525252',
-        2
+        {
+          baseCol: '#e8e8e8',
+          baseHeight: '#808080',
+          baseRough: '#4e4e4e',
+          baseMetal: '#f4f4f4',
+          repeat: 2,
+          normalStrength: 2.0,
+          hasMetalMap: true
+        }
       );
 
     case 'stone':
       return paintNoiseFields(
         S,
         606,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, _rough, _metal, rnd, sz) => {
           for (let i = 0; i < 1200; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
@@ -319,44 +422,40 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.arc(x, y, r, 0, Math.PI * 2);
             col.fill();
 
-            bump.fillStyle = `rgba(${v},${v},${v},0.48)`;
-            bump.beginPath();
-            bump.arc(x, y, r, 0, Math.PI * 2);
-            bump.fill();
+            height.fillStyle = `rgba(${v},${v},${v},0.5)`;
+            height.beginPath();
+            height.arc(x, y, r, 0, Math.PI * 2);
+            height.fill();
           }
-          // Rachaduras minerais
           for (let c = 0; c < 18; c++) {
             let x = rnd() * sz;
             let y = rnd() * sz;
-            col.strokeStyle = 'rgba(70,70,70,0.45)';
-            bump.strokeStyle = 'rgba(20,20,20,0.65)';
+            col.strokeStyle = 'rgba(65,65,65,0.48)';
+            height.strokeStyle = 'rgba(15,15,15,0.72)';
             col.lineWidth = 1.2;
-            bump.lineWidth = 1.6;
+            height.lineWidth = 1.7;
             col.beginPath();
-            bump.beginPath();
+            height.beginPath();
             col.moveTo(x, y);
-            bump.moveTo(x, y);
+            height.moveTo(x, y);
             for (let s = 0; s < 5; s++) {
               x += (rnd() - 0.5) * 28;
               y += (rnd() - 0.5) * 28;
               col.lineTo(x, y);
-              bump.lineTo(x, y);
+              height.lineTo(x, y);
             }
             col.stroke();
-            bump.stroke();
+            height.stroke();
           }
         },
-        '#dcdcdc',
-        '#808080',
-        '#e5e5e5',
-        2
+        { baseCol: '#dcdcdc', baseHeight: '#808080', baseRough: '#e6e6e6', repeat: 2, normalStrength: 3.6 }
       );
 
     case 'bone':
       return paintNoiseFields(
         S,
         707,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, _rough, _metal, rnd, sz) => {
           for (let i = 0; i < 380; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
@@ -369,68 +468,59 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.lineTo(x + (rnd() - 0.5) * 3, y + len);
             col.stroke();
 
-            bump.strokeStyle = `rgba(${v},${v},${v},0.3)`;
-            bump.beginPath();
-            bump.moveTo(x, y);
-            bump.lineTo(x + (rnd() - 0.5) * 3, y + len);
-            bump.stroke();
+            height.strokeStyle = `rgba(${v},${v},${v},0.32)`;
+            height.beginPath();
+            height.moveTo(x, y);
+            height.lineTo(x + (rnd() - 0.5) * 3, y + len);
+            height.stroke();
           }
           for (let i = 0; i < 160; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
-            bump.fillStyle = 'rgba(40,40,40,0.28)';
-            bump.fillRect(x, y, 1.5, 1.5);
+            height.fillStyle = 'rgba(35,35,35,0.3)';
+            height.fillRect(x, y, 1.5, 1.5);
           }
         },
-        '#ece8df',
-        '#888888',
-        '#909090',
-        2
+        { baseCol: '#ece8df', baseHeight: '#888888', baseRough: '#8e8e8e', repeat: 2, normalStrength: 2.4 }
       );
 
     case 'wood':
       return paintNoiseFields(
         S,
         808,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, _rough, _metal, rnd, sz) => {
           for (let x = 0; x < sz; x += 3) {
             const wave = Math.sin(x * 0.14) * 25;
             const v = Math.max(130, Math.min(245, Math.floor(195 + wave + (rnd() - 0.5) * 30)));
             col.fillStyle = `rgba(${v},${Math.floor(v * 0.95)},${Math.floor(v * 0.9)},0.45)`;
             col.fillRect(x, 0, 2, sz);
-            bump.fillStyle = `rgba(${v},${v},${v},0.45)`;
-            bump.fillRect(x, 0, 2, sz);
+            height.fillStyle = `rgba(${v},${v},${v},0.48)`;
+            height.fillRect(x, 0, 2, sz);
           }
         },
-        '#d6d0c8',
-        '#7c7c7c',
-        '#d8d8d8',
-        2
+        { baseCol: '#d6d0c8', baseHeight: '#7c7c7c', baseRough: '#dadada', repeat: 2, normalStrength: 3.0 }
       );
 
     case 'cloth':
       return paintNoiseFields(
         S,
         909,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, _rough, _metal, rnd, sz) => {
           for (let i = 0; i < sz; i += 4) {
             const dark = (i / 4) % 2 === 0;
             col.fillStyle = dark ? 'rgba(180,180,180,0.22)' : 'rgba(245,245,245,0.18)';
             col.fillRect(i, 0, 2, sz);
             col.fillRect(0, i, sz, 2);
-            bump.fillStyle = dark ? 'rgba(95,95,95,0.35)' : 'rgba(190,190,190,0.32)';
-            bump.fillRect(i, 0, 2, sz);
-            bump.fillRect(0, i, sz, 2);
+            height.fillStyle = dark ? 'rgba(85,85,85,0.38)' : 'rgba(195,195,195,0.34)';
+            height.fillRect(i, 0, 2, sz);
+            height.fillRect(0, i, sz, 2);
           }
           for (let i = 0; i < 200; i++) {
             col.fillStyle = 'rgba(130,130,130,0.12)';
             col.fillRect(rnd() * sz, rnd() * sz, 3, 3);
           }
         },
-        '#dcdcdc',
-        '#808080',
-        '#dcdcdc',
-        4
+        { baseCol: '#dcdcdc', baseHeight: '#808080', baseRough: '#dcdcdc', repeat: 4, normalStrength: 2.2 }
       );
 
     case 'slime':
@@ -439,7 +529,7 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
       return paintNoiseFields(
         S,
         1010,
-        (col, bump, rough, rnd, sz) => {
+        (col, height, _rough, _metal, rnd, sz) => {
           for (let i = 0; i < 50; i++) {
             const x = rnd() * sz;
             const y = rnd() * sz;
@@ -452,19 +542,22 @@ function buildTextureSet(kind: SurfaceKind): PbrTextureSet {
             col.arc(x, y, r, 0, Math.PI * 2);
             col.fill();
 
-            const gb = bump.createRadialGradient(x, y, 1, x, y, r);
-            gb.addColorStop(0, 'rgba(235,235,235,0.45)');
+            const gb = height.createRadialGradient(x, y, 1, x, y, r);
+            gb.addColorStop(0, 'rgba(235,235,235,0.48)');
             gb.addColorStop(1, 'rgba(128,128,128,0)');
-            bump.fillStyle = gb;
-            bump.beginPath();
-            bump.arc(x, y, r, 0, Math.PI * 2);
-            bump.fill();
+            height.fillStyle = gb;
+            height.beginPath();
+            height.arc(x, y, r, 0, Math.PI * 2);
+            height.fill();
           }
         },
-        '#e8e8e8',
-        '#808080',
-        kind === 'slime' ? '#242424' : '#787878',
-        2
+        {
+          baseCol: '#e8e8e8',
+          baseHeight: '#808080',
+          baseRough: kind === 'slime' ? '#242424' : '#787878',
+          repeat: 2,
+          normalStrength: 2.2
+        }
       );
   }
 }
@@ -479,31 +572,31 @@ export function getPbrTextures(kind: SurfaceKind): PbrTextureSet | null {
   return set;
 }
 
-const BUMP_STRENGTH: Record<SurfaceKind, number> = {
-  skin: 0.012,
-  scales: 0.028,
-  fur: 0.024,
-  chitin: 0.02,
-  stone: 0.036,
-  metal: 0.01,
-  bone: 0.016,
-  wood: 0.026,
-  cloth: 0.015,
-  slime: 0.018,
-  membrane: 0.014
+const NORMAL_SCALE: Record<SurfaceKind, number> = {
+  skin: 0.48,
+  scales: 0.85,
+  fur: 0.72,
+  chitin: 0.65,
+  stone: 0.95,
+  metal: 0.42,
+  bone: 0.55,
+  wood: 0.78,
+  cloth: 0.55,
+  slime: 0.45,
+  membrane: 0.5
 };
 
 const DEFAULT_ROUGHNESS: Record<SurfaceKind, number> = {
-  skin: 0.64,
-  scales: 0.44,
+  skin: 0.62,
+  scales: 0.42,
   fur: 0.88,
   chitin: 0.34,
   stone: 0.88,
-  metal: 0.3,
+  metal: 0.28,
   bone: 0.56,
   wood: 0.82,
   cloth: 0.86,
-  slime: 0.16,
+  slime: 0.14,
   membrane: 0.58
 };
 
@@ -514,25 +607,84 @@ export function createSurfaceMaterial(
 ): THREE.MeshPhysicalMaterial {
   const tex = getPbrTextures(kind);
   const isWet = kind === 'slime' || kind === 'scales' || kind === 'chitin';
+  const hasSheen = kind === 'cloth' || kind === 'fur';
+  const ns = NORMAL_SCALE[kind];
+
   return new THREE.MeshPhysicalMaterial({
     color,
     map: tex?.map ?? null,
-    bumpMap: tex?.bumpMap ?? null,
-    bumpScale: BUMP_STRENGTH[kind],
+    normalMap: tex?.normalMap ?? null,
+    normalScale: new THREE.Vector2(ns, ns),
+    aoMap: tex?.aoMap ?? null,
+    aoMapIntensity: kind === 'scales' || kind === 'stone' ? 0.75 : 0.55,
     roughnessMap: tex?.roughnessMap ?? null,
     roughness: DEFAULT_ROUGHNESS[kind],
-    metalness: kind === 'metal' ? 0.88 : 0.04,
-    clearcoat: kind === 'slime' ? 0.85 : isWet ? 0.28 : 0,
-    clearcoatRoughness: kind === 'slime' ? 0.12 : 0.38,
-    envMapIntensity: kind === 'metal' ? 1.35 : isWet ? 1.1 : 0.85,
+    metalnessMap: tex?.metalnessMap ?? null,
+    metalness: kind === 'metal' ? 0.92 : 0.04,
+    clearcoat: kind === 'slime' ? 0.9 : isWet ? 0.3 : 0,
+    clearcoatRoughness: kind === 'slime' ? 0.1 : 0.36,
+    ior: kind === 'slime' ? 1.42 : 1.5,
+    sheen: hasSheen ? 0.65 : 0,
+    sheenRoughness: kind === 'fur' ? 0.8 : 0.68,
+    sheenColor: new THREE.Color(color).lerp(new THREE.Color('#ffffff'), 0.35),
+    envMapIntensity: kind === 'metal' ? 1.5 : isWet ? 1.15 : 0.9,
     flatShading: false,
     ...overrides
   });
 }
 
 /**
+ * Gera um Environment Map equiretangular de estúdio HDRI (sem depender de arquivo .hdr externo)
+ * com softbox quente superior, cúpula fria celeste e rebatedor inferior para reflexos realistas.
+ */
+export function createStudioEnvironment(renderer: THREE.WebGLRenderer): THREE.Texture {
+  const w = 256;
+  const h = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d')!;
+
+  const sky = ctx.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0.0, '#fff7ed');
+  sky.addColorStop(0.25, '#94a3b8');
+  sky.addColorStop(0.5, '#1e293b');
+  sky.addColorStop(0.75, '#0f172a');
+  sky.addColorStop(1.0, '#451a03');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
+
+  // Softbox principal quente (key light specular)
+  const key = ctx.createRadialGradient(w * 0.68, h * 0.24, 4, w * 0.68, h * 0.24, 46);
+  key.addColorStop(0, 'rgba(255, 250, 235, 1)');
+  key.addColorStop(0.45, 'rgba(255, 235, 200, 0.7)');
+  key.addColorStop(1, 'rgba(255, 220, 170, 0)');
+  ctx.fillStyle = key;
+  ctx.fillRect(0, 0, w, h);
+
+  // Rim light frio azulado oposto
+  const rim = ctx.createRadialGradient(w * 0.22, h * 0.32, 3, w * 0.22, h * 0.32, 42);
+  rim.addColorStop(0, 'rgba(186, 230, 253, 0.95)');
+  rim.addColorStop(0.5, 'rgba(96, 165, 250, 0.5)');
+  rim.addColorStop(1, 'rgba(59, 130, 246, 0)');
+  ctx.fillStyle = rim;
+  ctx.fillRect(0, 0, w, h);
+
+  const equirect = new THREE.CanvasTexture(canvas);
+  equirect.mapping = THREE.EquirectangularReflectionMapping;
+  equirect.colorSpace = THREE.SRGBColorSpace;
+
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  const envRT = pmrem.fromEquirectangular(equirect);
+  equirect.dispose();
+  pmrem.dispose();
+  return envRT.texture;
+}
+
+/**
  * Converte uma geometria indexada (já com normais suaves calculadas) em não-indexada
- * preservando exatamente as normais suaves e gerando UVs triplanares livres de distorção.
+ * preservando exatamente as normais suaves e gerando UVs triplanares (uv + uv1 para aoMap).
  */
 export function finalizeWithTriplanarUVs(indexedSmoothGeo: THREE.BufferGeometry): THREE.BufferGeometry {
   const geo = indexedSmoothGeo.index ? indexedSmoothGeo.toNonIndexed() : indexedSmoothGeo;
@@ -574,6 +726,8 @@ export function finalizeWithTriplanarUVs(indexedSmoothGeo: THREE.BufferGeometry)
     }
   }
 
-  geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  const uvAttr = new THREE.BufferAttribute(uvs, 2);
+  geo.setAttribute('uv', uvAttr);
+  geo.setAttribute('uv1', uvAttr);
   return geo;
 }

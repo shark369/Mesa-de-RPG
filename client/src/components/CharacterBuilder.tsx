@@ -24,6 +24,7 @@ import {
   getSpellSlotsForClass
 } from '../data/dnd5e';
 import { rollDie } from '../utils/dice';
+import { MonsterModelViewer3D } from './MonsterModelViewer3D';
 
 interface CharacterBuilderProps {
   ownerName: string;
@@ -81,6 +82,14 @@ export const CharacterBuilder: React.FC<CharacterBuilderProps> = ({
   const selectedClass = DND_CLASSES.find((c) => c.id === classId) || DND_CLASSES[0];
   const selectedBg = DND_BACKGROUNDS.find((b) => b.id === backgroundId) || DND_BACKGROUNDS[0];
   const selectedDragon = DRAGON_ANCESTRIES.find((d) => d.id === dragonAncestryId) || DRAGON_ANCESTRIES[0];
+
+  const pcModelNameEn = [
+    selectedSubrace ? selectedSubrace.name : selectedRace.name,
+    selectedRace.id === 'dragonborn' ? selectedDragon.dragon : '',
+    selectedClass.name
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const extraAbilityCount =
     (selectedRace.extraAbilityChoices || 0) + (selectedSubrace?.extraAbilityChoices || 0);
@@ -304,7 +313,9 @@ export const CharacterBuilder: React.FC<CharacterBuilderProps> = ({
       currency: { cp: 0, sp: 0, ep: 0, gp: selectedBg.id === 'noble' ? 25 : 15, pp: 0 },
       traits: traitLines,
       personality,
-      notes
+      notes,
+      modelNameEn: pcModelNameEn,
+      modelType: 'humanoid'
     };
 
     onSave(newChar, spawnToken);
@@ -941,6 +952,22 @@ export const CharacterBuilder: React.FC<CharacterBuilderProps> = ({
                     <div className="text-[10px] text-slate-500">{finalAbilities[k]}</div>
                   </div>
                 ))}
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-300">
+                  Pré-visualização do Modelo 3D ({selectedSubrace?.name || selectedRace.name} • {selectedClass.name})
+                </div>
+                <MonsterModelViewer3D
+                  heightClass="h-52"
+                  input={{
+                    slug: `pc:${selectedRace.id}:${selectedSubrace?.id || 'base'}:${selectedClass.id}:${name.trim() || 'heroi'}`,
+                    name: name.trim() || `${selectedRace.name} ${selectedClass.name}`,
+                    nameEn: pcModelNameEn,
+                    type: 'humanoid',
+                    tokenType: isNpc ? 'npc' : 'pc'
+                  }}
+                />
               </div>
 
               <label className="flex items-center gap-2 text-xs text-slate-200 bg-slate-950 p-3 rounded-xl border border-slate-800 cursor-pointer">

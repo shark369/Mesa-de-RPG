@@ -2195,7 +2195,7 @@ function resolveBodySurface(spec: MonsterModelSpec): SurfaceKind {
     case 'rug':
       return 'cloth';
     default:
-      return 'skin';
+      return spec.features.snout === 'lizard' ? 'scales' : 'skin';
   }
 }
 

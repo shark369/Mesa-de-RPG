@@ -364,52 +364,44 @@ export function App() {
     });
   };
 
+  const buildCharTokenPayload = (char: CharacterSheet, x: number, y: number) => ({
+    name: char.name,
+    x,
+    y,
+    size: char.race.toLowerCase().includes('grande') ? 2 : 1,
+    color: char.isNpc ? '#ef4444' : '#3b82f6',
+    avatar: char.avatar || '🛡️',
+    imageUrl: char.imageUrl,
+    hp: char.hp,
+    maxHp: char.maxHp,
+    ac: char.ac,
+    hidden: role === 'dm' && Boolean(char.isSecretNpc),
+    ownerName: char.ownerName || userName,
+    characterId: char.id,
+    type: char.isNpc ? 'npc' : 'pc',
+    conditions: char.conditions || [],
+    modelSlug: char.modelSlug,
+    modelNameEn:
+      char.modelNameEn ||
+      (!char.isNpc ? `${char.subrace || char.race} ${char.className}`.trim() : undefined),
+    modelType: char.modelType || (char.isNpc ? undefined : 'humanoid')
+  });
+
   const handleSaveCharacter = (char: CharacterSheet, spawnToken = false) => {
     socketRef.current?.emit('character:save', char);
     if (spawnToken) {
-      socketRef.current?.emit('token:add', {
-        name: char.name,
-        x: 3 + Math.floor(Math.random() * 4),
-        y: 6 + Math.floor(Math.random() * 4),
-        size: 1,
-        color: char.isNpc ? '#ef4444' : '#3b82f6',
-        avatar: char.avatar || '🛡️',
-        imageUrl: char.imageUrl,
-        hp: char.hp,
-        maxHp: char.maxHp,
-        ac: char.ac,
-        hidden: role === 'dm' && Boolean(char.isSecretNpc),
-        ownerName: char.ownerName || userName,
-        characterId: char.id,
-        type: char.isNpc ? 'npc' : 'pc',
-        conditions: char.conditions || []
-      });
+      socketRef.current?.emit(
+        'token:add',
+        buildCharTokenPayload(char, 3 + Math.floor(Math.random() * 4), 6 + Math.floor(Math.random() * 4))
+      );
     }
   };
 
   const handleSpawnTokenFromChar = (char: CharacterSheet) => {
-    socketRef.current?.emit('token:add', {
-      name: char.name,
-      x: 4 + Math.floor(Math.random() * 5),
-      y: 5 + Math.floor(Math.random() * 5),
-      size: char.race.toLowerCase().includes('grande') ? 2 : 1,
-      color: char.isNpc ? '#ef4444' : '#3b82f6',
-      avatar: char.avatar || '🛡️',
-      imageUrl: char.imageUrl,
-      hp: char.hp,
-      maxHp: char.maxHp,
-      ac: char.ac,
-      hidden: role === 'dm' && Boolean(char.isSecretNpc),
-      ownerName: char.ownerName || userName,
-      characterId: char.id,
-      type: char.isNpc ? 'npc' : 'pc',
-      conditions: char.conditions || [],
-      modelSlug: char.modelSlug,
-      modelNameEn:
-        char.modelNameEn ||
-        (!char.isNpc ? `${char.race} ${char.className}`.trim() : undefined),
-      modelType: char.modelType || (char.isNpc ? undefined : 'humanoid')
-    });
+    socketRef.current?.emit(
+      'token:add',
+      buildCharTokenPayload(char, 4 + Math.floor(Math.random() * 5), 5 + Math.floor(Math.random() * 5))
+    );
   };
 
   const handleAddMonsterFromBook = (

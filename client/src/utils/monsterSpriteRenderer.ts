@@ -5,9 +5,9 @@
 // tabuleiro sem estourar limites de contexto WebGL do navegador.
 // =============================================================================
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { buildMonsterModelSpec, MonsterModelInput, MonsterModelSpec } from './monsterModelSpec';
 import { buildMonsterModel, BuiltMonsterModel } from './monsterModelBuilder';
+import { createStudioEnvironment } from './monsterMaterials';
 
 const SPRITE_SIZE = 320;
 const MAX_CACHED_MODELS = 80;
@@ -35,12 +35,22 @@ class SharedMonsterSpriteRenderer {
   constructor() {
     this.scene = new THREE.Scene();
 
-    // Iluminação de estúdio em 3 pontos com contraste para destacar texturas e relevo
-    const hemi = new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.78);
+    // Iluminação de estúdio em 3 pontos com sombras reais para os tokens do tabuleiro
+    const hemi = new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.68);
     this.scene.add(hemi);
 
-    const keyLight = new THREE.DirectionalLight(0xfff7ed, 2.0);
+    const keyLight = new THREE.DirectionalLight(0xfff7ed, 2.15);
     keyLight.position.set(2.8, 4.5, 3.6);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(1024, 1024);
+    keyLight.shadow.camera.near = 0.5;
+    keyLight.shadow.camera.far = 14;
+    keyLight.shadow.camera.left = -1.8;
+    keyLight.shadow.camera.right = 1.8;
+    keyLight.shadow.camera.top = 2.2;
+    keyLight.shadow.camera.bottom = -0.5;
+    keyLight.shadow.bias = -0.0005;
+    keyLight.shadow.normalBias = 0.02;
     this.scene.add(keyLight);
 
     const rimLight = new THREE.DirectionalLight(0x93c5fd, 1.05);
@@ -50,6 +60,16 @@ class SharedMonsterSpriteRenderer {
     const fillLight = new THREE.DirectionalLight(0xfde68a, 0.3);
     fillLight.position.set(0, -1.5, 2.5);
     this.scene.add(fillLight);
+
+    // Plano receptor invisível para projetar sombra suave no chão do token
+    const shadowFloor = new THREE.Mesh(
+      new THREE.CircleGeometry(1.35, 32),
+      new THREE.ShadowMaterial({ opacity: 0.36 })
+    );
+    shadowFloor.rotation.x = -Math.PI / 2;
+    shadowFloor.position.y = 0.002;
+    shadowFloor.receiveShadow = true;
+    this.scene.add(shadowFloor);
 
     this.camera = new THREE.PerspectiveCamera(34, 1, 0.1, 25);
     this.camera.position.set(0.35, 1.18, 3.35);
@@ -75,12 +95,10 @@ class SharedMonsterSpriteRenderer {
       renderer.setClearColor(0x000000, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.08;
-      const pmrem = new THREE.PMREMGenerator(renderer);
-      const roomEnv = new RoomEnvironment();
-      this.scene.environment = pmrem.fromScene(roomEnv, 0.04).texture;
-      roomEnv.dispose();
-      pmrem.dispose();
+      renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      this.scene.environment = createStudioEnvironment(renderer);
       this.renderer = renderer;
       return renderer;
     } catch {
