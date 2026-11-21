@@ -32,6 +32,7 @@ import {
   Currency,
   InventoryItem,
   Role,
+  RollData,
   RollMode,
   SpellItem,
   TradeOffer
@@ -78,7 +79,9 @@ interface CharacterSheetPanelProps {
   onSaveCharacter: (char: CharacterSheetType) => void;
   onDeleteCharacter: (id: string) => void;
   onSpawnToken: (char: CharacterSheetType) => void;
-  onRoll: (formula: string, mode: RollMode, label: string, isSecret?: boolean) => void;
+  rollMode?: RollMode;
+  onChangeRollMode?: (mode: RollMode) => void;
+  onRoll: (formula: string, mode: RollMode, label: string, isSecret?: boolean) => RollData | null | void;
   onCreateTrade: (payload: {
     direction: 'sell_to_dm' | 'buy_from_dm';
     characterId: string;
@@ -102,13 +105,20 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
   onSaveCharacter,
   onDeleteCharacter,
   onSpawnToken,
+  rollMode,
+  onChangeRollMode,
   onRoll,
   onCreateTrade,
   onRespondTrade
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(characters[0]?.id || null);
   const [subTab, setSubTab] = useState<'combat' | 'skills' | 'spells' | 'gear'>('combat');
-  const [sheetRollMode, setSheetRollMode] = useState<RollMode>('normal');
+  const [localRollMode, setLocalRollMode] = useState<RollMode>('normal');
+  const sheetRollMode = rollMode ?? localRollMode;
+  const setSheetRollMode = (next: RollMode) => {
+    setLocalRollMode(next);
+    onChangeRollMode?.(next);
+  };
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [importError, setImportError] = useState('');
   const [newAttackName, setNewAttackName] = useState('');
@@ -261,15 +271,16 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
     let healed = 0;
     let nextRemaining = remaining;
     if (remaining > 0 && selected.hp < selected.maxHp) {
-      const rollVal = rollDie(dieSize);
-      healed = Math.max(1, rollVal + conMod);
-      nextRemaining = remaining - 1;
-      onRoll(
+      const res = onRoll(
         `1d${dieSize}${formatMod(conMod)}`,
         'normal',
         `Descanso Curto — Dado de Vida (${selected.name})`,
         role === 'dm' && selected.isSecretNpc
       );
+      if (res === null) return;
+      const rollVal = res ? res.rolls[0] : rollDie(dieSize);
+      healed = Math.max(1, rollVal + conMod);
+      nextRemaining = remaining - 1;
     }
 
     // Bruxo recupera todos os espaços de Pacto em Descanso Curto
@@ -311,14 +322,15 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
 
   const handleRollDeathSave = () => {
     if (!selected || !canEdit(selected)) return;
-    const roll = rollDie(20);
     const ds = selected.deathSaves || { successes: 0, failures: 0 };
-    onRoll(
+    const res = onRoll(
       `1d20`,
-      'normal',
-      `Salvaguarda contra a Morte (${selected.name}) [Tirou ${roll}]`,
+      sheetRollMode,
+      `Salvaguarda contra a Morte (${selected.name})`,
       role === 'dm' && selected.isSecretNpc
     );
+    if (res === null) return;
+    const roll = res ? res.rolls[0] : rollDie(20);
 
     if (roll === 20) {
       onSaveCharacter({
@@ -457,17 +469,18 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
     );
     const dieSize = cls?.hitDie || 8;
     const conMod = getAbilityMod(selected.abilities.con);
-    const rolled = hpMode === 'roll' ? rollDie(dieSize) : Math.floor(dieSize / 2) + 1;
-    const hpGain = Math.max(1, rolled + conMod);
-
+    let rolled = Math.floor(dieSize / 2) + 1;
     if (hpMode === 'roll') {
-      onRoll(
+      const res = onRoll(
         `1d${dieSize}${formatMod(conMod)}`,
         'normal',
         `Level Up Nv.${nextLevel} PV (${selected.name})`,
         role === 'dm' && selected.isSecretNpc
       );
+      if (res === null) return;
+      rolled = res ? res.rolls[0] : rollDie(dieSize);
     }
+    const hpGain = Math.max(1, rolled + conMod);
 
     const nextSlots = getSpellSlotsForClass(selected.className, nextLevel);
     const minXp = XP_TABLE[nextLevel - 1] ?? 0;
@@ -791,7 +804,7 @@ export const CharacterSheetPanel: React.FC<CharacterSheetPanelProps> = ({
                   const dexMod = getAbilityMod(selected.abilities.dex);
                   onRoll(
                     `1d20${formatMod(dexMod)}`,
-                    'normal',
+                    sheetRollMode,
                     `Iniciativa (${selected.name})`,
                     role === 'dm' && selected.isSecretNpc
                   );

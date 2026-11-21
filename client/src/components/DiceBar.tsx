@@ -4,6 +4,8 @@ import { Role, RollMode } from '../types/rpg';
 
 interface DiceBarProps {
   role: Role;
+  mode: RollMode;
+  onChangeMode: (mode: RollMode) => void;
   rollQuota?: {
     enabled: boolean;
     maxRolls: number;
@@ -16,10 +18,15 @@ interface DiceBarProps {
 
 const DICE_TYPES = [4, 6, 8, 10, 12, 20, 100];
 
-export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => {
+export const DiceBar: React.FC<DiceBarProps> = ({
+  role,
+  mode,
+  onChangeMode,
+  rollQuota,
+  onRoll
+}) => {
   const [count, setCount] = useState(1);
   const [modifier, setModifier] = useState(0);
-  const [mode, setMode] = useState<RollMode>('normal');
   const [isSecret, setIsSecret] = useState(false);
 
   const isCoolingDown =
@@ -30,9 +37,24 @@ export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => 
 
   const handleQuickRoll = (sides: number) => {
     const modStr = modifier === 0 ? '' : modifier > 0 ? `+${modifier}` : `${modifier}`;
-    const formula = `${count}d${sides}${modStr}`;
-    const effectiveMode = sides === 20 && count === 1 ? mode : 'normal';
-    onRoll(formula, effectiveMode, `Dado Rápido (${formula})`, role === 'dm' ? isSecret : false);
+    // Pela regra de D&D 5e, Vantagem/Desvantagem se aplica a jogadas de 1d20 (rola 2d20 e usa maior/menor).
+    // Se o usuário tiver selecionado Qtd=2 por pensar "2 dados", tratamos como 1d20 com Vant./Desv.
+    const useAdvDis = sides === 20 && mode !== 'normal' && (count === 1 || count === 2);
+    const effectiveMode: RollMode = useAdvDis ? mode : 'normal';
+    const effectiveCount = useAdvDis ? 1 : count;
+    const formula = `${effectiveCount}d${sides}${modStr}`;
+    const modeTag =
+      effectiveMode === 'advantage'
+        ? ' • Vantagem'
+        : effectiveMode === 'disadvantage'
+        ? ' • Desvantagem'
+        : '';
+    onRoll(
+      formula,
+      effectiveMode,
+      `Dado Rápido (${formula}${modeTag})`,
+      role === 'dm' ? isSecret : false
+    );
   };
 
   return (
@@ -44,20 +66,44 @@ export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => 
           <span className="hidden sm:inline">Dados:</span>
         </div>
 
-        {DICE_TYPES.map((sides) => (
-          <button
-            key={sides}
-            disabled={isCoolingDown}
-            onClick={() => handleQuickRoll(sides)}
-            className={`px-2 py-1 rounded-lg font-mono text-xs font-bold border transition cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed ${
-              sides === 20
-                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500 hover:text-slate-950'
-                : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700 hover:border-slate-500'
-            }`}
-          >
-            d{sides}
-          </button>
-        ))}
+        {DICE_TYPES.map((sides) => {
+          const isD20AdvActive = sides === 20 && mode !== 'normal' && (count === 1 || count === 2);
+          const isNonD20Muted = sides !== 20 && mode !== 'normal';
+          return (
+            <button
+              key={sides}
+              disabled={isCoolingDown}
+              onClick={() => handleQuickRoll(sides)}
+              title={
+                isD20AdvActive
+                  ? mode === 'advantage'
+                    ? 'Rolar 2d20 e pegar o maior (Vantagem D&D 5e)'
+                    : 'Rolar 2d20 e pegar o menor (Desvantagem D&D 5e)'
+                  : isNonD20Muted
+                  ? `Rolar d${sides} normal (Vantagem/Desvantagem no D&D 5e só se aplica ao d20)`
+                  : `Rolar d${sides}`
+              }
+              className={`px-2 py-1 rounded-lg font-mono text-xs font-bold border transition cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed ${
+                isD20AdvActive
+                  ? mode === 'advantage'
+                    ? 'bg-emerald-500/25 border-emerald-400 text-emerald-200 ring-1 ring-emerald-400/50 hover:bg-emerald-500 hover:text-slate-950'
+                    : 'bg-rose-500/25 border-rose-400 text-rose-200 ring-1 ring-rose-400/50 hover:bg-rose-500 hover:text-white'
+                  : sides === 20
+                  ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500 hover:text-slate-950'
+                  : isNonD20Muted
+                  ? 'bg-slate-800/40 border-slate-800 text-slate-500 hover:bg-slate-700 hover:text-slate-200'
+                  : 'bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700 hover:border-slate-500'
+              }`}
+            >
+              d{sides}
+              {isD20AdvActive && (
+                <span className="ml-1 text-[9px] font-sans uppercase">
+                  {mode === 'advantage' ? '2↑' : '2↓'}
+                </span>
+              )}
+            </button>
+          );
+        })}
 
         {role !== 'dm' && rollQuota?.enabled && (
           <span
@@ -121,7 +167,7 @@ export const DiceBar: React.FC<DiceBarProps> = ({ role, rollQuota, onRoll }) => 
           {(['normal', 'advantage', 'disadvantage'] as RollMode[]).map((m) => (
             <button
               key={m}
-              onClick={() => setMode(m)}
+              onClick={() => onChangeMode(m)}
               className={`px-2 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
                 mode === m
                   ? m === 'advantage'

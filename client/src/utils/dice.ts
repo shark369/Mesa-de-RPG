@@ -67,14 +67,23 @@ export function executeRollFormula(
   const formula = rawFormula.replace(/\s+/g, '').toLowerCase();
   if (!formula) return null;
 
-  // Caso especial: rolagem simples de 1d20 com vantagem/desvantagem
-  const singleD20Match = formula.match(/^1?d20([+-]\d+)?$/);
-  if (singleD20Match && (mode === 'advantage' || mode === 'disadvantage')) {
+  // Suporte a notação 2d20kh1 (vantagem) e 2d20kl1 (desvantagem)
+  let effectiveMode = mode;
+  let normalizedFormula = formula;
+  const keepMatch = normalizedFormula.match(/^2d20k([hl])1([+-]\d+)?$/);
+  if (keepMatch) {
+    effectiveMode = keepMatch[1] === 'h' ? 'advantage' : 'disadvantage';
+    normalizedFormula = `1d20${keepMatch[2] || ''}`;
+  }
+
+  // Caso especial: rolagem simples de 1d20 com vantagem/desvantagem (D&D 5e: rola 2d20, mantém maior/menor)
+  const singleD20Match = normalizedFormula.match(/^1?d20([+-]\d+)?$/);
+  if (singleD20Match && (effectiveMode === 'advantage' || effectiveMode === 'disadvantage')) {
     const mod = singleD20Match[1] ? parseInt(singleD20Match[1], 10) : 0;
     const r1 = rollDie(20);
     const r2 = rollDie(20);
-    const kept = mode === 'advantage' ? Math.max(r1, r2) : Math.min(r1, r2);
-    const discarded = mode === 'advantage' ? Math.min(r1, r2) : Math.max(r1, r2);
+    const kept = effectiveMode === 'advantage' ? Math.max(r1, r2) : Math.min(r1, r2);
+    const discarded = effectiveMode === 'advantage' ? Math.min(r1, r2) : Math.max(r1, r2);
 
     return {
       formula: `1d20${mod >= 0 ? (mod === 0 ? '' : `+${mod}`) : mod}`,
@@ -82,7 +91,7 @@ export function executeRollFormula(
       discarded: [discarded],
       modifier: mod,
       total: kept + mod,
-      mode,
+      mode: effectiveMode,
       label,
       isCrit: kept === 20,
       isFumble: kept === 1
@@ -91,12 +100,12 @@ export function executeRollFormula(
 
   // Parser geral de termos separados por + ou -
   const tokenRegex = /([+-]?)(\d*d\d+|\d+)/g;
-  const matches = [...formula.matchAll(tokenRegex)];
+  const matches = [...normalizedFormula.matchAll(tokenRegex)];
   if (matches.length === 0) return null;
 
   // Garante que a string inteira era composta por termos válidos
   const reconstructed = matches.map((m) => m[0]).join('');
-  if (reconstructed !== formula) return null;
+  if (reconstructed !== normalizedFormula) return null;
 
   const rolls: number[] = [];
   let modifier = 0;
@@ -132,7 +141,7 @@ export function executeRollFormula(
   const isFumble = hasSingleD20 && totalDiceCount === 1 && rolls[0] === 1;
 
   return {
-    formula,
+    formula: normalizedFormula,
     rolls,
     modifier,
     total: diceSum + modifier,

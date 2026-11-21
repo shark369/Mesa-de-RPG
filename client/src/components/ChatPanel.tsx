@@ -35,10 +35,18 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    // Suporte a comando /r ou /roll
+    // Suporte a comando /r ou /roll (ex: "/r 1d20+5", "/r 1d20 adv", "/r 1d20 desv", "/r 2d20kh1")
     if (trimmed.startsWith('/r ') || trimmed.startsWith('/roll ')) {
-      const expr = trimmed.replace(/^\/(r|roll)\s+/, '');
-      onRollFormula(expr, 'normal', `Comando ${expr}`, role === 'dm' ? secretChat : false);
+      const raw = trimmed.replace(/^\/(r|roll)\s+/, '').trim();
+      let cmdMode: RollMode = 'normal';
+      let expr = raw;
+      const modeSuffix = raw.match(/\s+(adv|vant|vantagem|dis|desv|desvantagem)$/i);
+      if (modeSuffix) {
+        const kw = modeSuffix[1].toLowerCase();
+        cmdMode = kw.startsWith('a') || kw.startsWith('v') ? 'advantage' : 'disadvantage';
+        expr = raw.slice(0, modeSuffix.index).trim();
+      }
+      onRollFormula(expr, cmdMode, `Comando ${raw}`, role === 'dm' ? secretChat : false);
       setInput('');
       return;
     }

@@ -67,6 +67,7 @@ export function App() {
     () => new URLSearchParams(window.location.search).get('room')?.toUpperCase() || ''
   );
   const [diceToasts, setDiceToasts] = useState<DiceToastItem[]>([]);
+  const [rollMode, setRollMode] = useState<RollMode>('normal');
   const [myRollTimestamps, setMyRollTimestamps] = useState<number[]>([]);
   const [nowMs, setNowMs] = useState(() => Date.now());
 
@@ -175,7 +176,7 @@ export function App() {
           additions.forEach((item) => {
             window.setTimeout(() => {
               setDiceToasts((prev) => prev.filter((t) => t.id !== item.id));
-            }, 4200);
+            }, 5200);
           });
         }
       }
@@ -314,7 +315,7 @@ export function App() {
     mode: RollMode = 'normal',
     label?: string,
     isSecret = false
-  ) => {
+  ): RollData | null => {
     const rollLimitCfg = roomState?.rollLimit || { enabled: true, maxRolls: 2, windowSeconds: 40 };
     if (role !== 'dm' && rollLimitCfg.enabled) {
       const now = Date.now();
@@ -326,7 +327,7 @@ export function App() {
           `Limite de rolagens atingido (${rollLimitCfg.maxRolls} a cada ${rollLimitCfg.windowSeconds}s). Aguarde ${waitSec}s.`
         );
         window.setTimeout(() => setActionError(''), 3500);
-        return;
+        return null;
       }
       setNowMs(now);
       setMyRollTimestamps([...active, now]);
@@ -340,7 +341,7 @@ export function App() {
         text: `⚠️ Fórmula de dado inválida: "${formula}"`,
         isSecret: true
       });
-      return;
+      return null;
     }
 
     socketRef.current?.emit('chat:message', {
@@ -350,6 +351,7 @@ export function App() {
       isSecret: role === 'dm' ? isSecret : false,
       rollData
     });
+    return rollData;
   };
 
   const handleSendMessage = (text: string, isSecret: boolean, recipient?: string) => {
@@ -671,6 +673,8 @@ export function App() {
 
           <DiceBar
             role={role}
+            mode={rollMode}
+            onChangeMode={setRollMode}
             rollQuota={(() => {
               const cfg = roomState.rollLimit || { enabled: true, maxRolls: 2, windowSeconds: 40 };
               const windowMs = Math.max(5, cfg.windowSeconds) * 1000;
@@ -766,6 +770,8 @@ export function App() {
                 onSaveCharacter={(char) => handleSaveCharacter(char, false)}
                 onDeleteCharacter={(id) => socketRef.current?.emit('character:delete', { id })}
                 onSpawnToken={handleSpawnTokenFromChar}
+                rollMode={rollMode}
+                onChangeRollMode={setRollMode}
                 onRoll={handleRoll}
                 onCreateTrade={(payload) => socketRef.current?.emit('trade:create', payload)}
                 onRespondTrade={(tradeId, accept) =>
