@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RotateCw, Pause, Play, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import {
   Archetype,
@@ -151,7 +152,9 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.14;
+    renderer.toneMappingExposure = 1.08;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setClearColor(0x000000, 0);
 
     container.innerHTML = '';
@@ -162,32 +165,50 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
 
     const scene = new THREE.Scene();
 
-    // Iluminação 3 pontos + preenchimento suave
-    scene.add(new THREE.HemisphereLight(0xf8fafc, 0x1e293b, 1.35));
-    const key = new THREE.DirectionalLight(0xfffbeb, 1.55);
-    key.position.set(3, 5, 4);
+    // Environment map PBR (faz metais, olhos úmidos, escamas e quitina refletirem luz real)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const roomEnv = new RoomEnvironment();
+    const envRT = pmrem.fromScene(roomEnv, 0.04);
+    scene.environment = envRT.texture;
+    roomEnv.dispose();
+    pmrem.dispose();
+
+    // Iluminação dramática com sombras reais para destacar musculatura, poros e armaduras
+    scene.add(new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.7));
+    const key = new THREE.DirectionalLight(0xfff7ed, 2.1);
+    key.position.set(2.8, 4.8, 3.8);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.camera.near = 0.5;
+    key.shadow.camera.far = 14;
+    key.shadow.camera.left = -2;
+    key.shadow.camera.right = 2;
+    key.shadow.camera.top = 2.4;
+    key.shadow.camera.bottom = -0.5;
+    key.shadow.bias = -0.0005;
     scene.add(key);
 
-    const rim = new THREE.DirectionalLight(0x60a5fa, 0.9);
-    rim.position.set(-3.5, 2.5, -3);
+    const rim = new THREE.DirectionalLight(0x60a5fa, 1.15);
+    rim.position.set(-3.5, 2.6, -3.2);
     scene.add(rim);
 
-    const fill = new THREE.DirectionalLight(0xfde68a, 0.35);
+    const fill = new THREE.DirectionalLight(0xfde68a, 0.3);
     fill.position.set(0, -1.2, 2.5);
     scene.add(fill);
 
     // Base circular de miniatura RPG
-    const plinthGeo = new THREE.CylinderGeometry(0.86, 0.94, 0.12, 28);
+    const plinthGeo = new THREE.CylinderGeometry(0.86, 0.94, 0.12, 64, 2);
     const plinthMat = new THREE.MeshStandardMaterial({
       color: 0x1e293b,
-      roughness: 0.65,
-      metalness: 0.25
+      roughness: 0.55,
+      metalness: 0.3
     });
     const plinth = new THREE.Mesh(plinthGeo, plinthMat);
     plinth.position.y = -0.06;
+    plinth.receiveShadow = true;
     scene.add(plinth);
 
-    const ringGeo = new THREE.TorusGeometry(0.88, 0.025, 8, 32);
+    const ringGeo = new THREE.TorusGeometry(0.88, 0.025, 16, 64);
     const ringMat = new THREE.MeshStandardMaterial({
       color: 0xf59e0b,
       roughness: 0.35,
@@ -264,6 +285,7 @@ export const MonsterModelViewer3D: React.FC<MonsterModelViewer3DProps> = ({
       plinthMat.dispose();
       ringGeo.dispose();
       ringMat.dispose();
+      envRT.dispose();
       renderer.dispose();
     };
   }, [spec]);

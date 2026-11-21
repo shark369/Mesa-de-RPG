@@ -5,10 +5,11 @@
 // tabuleiro sem estourar limites de contexto WebGL do navegador.
 // =============================================================================
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { buildMonsterModelSpec, MonsterModelInput, MonsterModelSpec } from './monsterModelSpec';
 import { buildMonsterModel, BuiltMonsterModel } from './monsterModelBuilder';
 
-const SPRITE_SIZE = 288;
+const SPRITE_SIZE = 320;
 const MAX_CACHED_MODELS = 80;
 const FRAME_INTERVAL_MS = 55; // ~18 FPS suave para idle (asas, chamas, flutuação)
 
@@ -34,19 +35,19 @@ class SharedMonsterSpriteRenderer {
   constructor() {
     this.scene = new THREE.Scene();
 
-    // Iluminação de estúdio em 3 pontos para destacar faces low-poly
-    const hemi = new THREE.HemisphereLight(0xf8fafc, 0x1e293b, 1.35);
+    // Iluminação de estúdio em 3 pontos com contraste para destacar texturas e relevo
+    const hemi = new THREE.HemisphereLight(0xf1f5f9, 0x0f172a, 0.78);
     this.scene.add(hemi);
 
-    const keyLight = new THREE.DirectionalLight(0xfffbeb, 1.45);
+    const keyLight = new THREE.DirectionalLight(0xfff7ed, 2.0);
     keyLight.position.set(2.8, 4.5, 3.6);
     this.scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x93c5fd, 0.75);
+    const rimLight = new THREE.DirectionalLight(0x93c5fd, 1.05);
     rimLight.position.set(-3.2, 2.2, -2.8);
     this.scene.add(rimLight);
 
-    const fillLight = new THREE.DirectionalLight(0xfde68a, 0.35);
+    const fillLight = new THREE.DirectionalLight(0xfde68a, 0.3);
     fillLight.position.set(0, -1.5, 2.5);
     this.scene.add(fillLight);
 
@@ -74,7 +75,12 @@ class SharedMonsterSpriteRenderer {
       renderer.setClearColor(0x000000, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.12;
+      renderer.toneMappingExposure = 1.08;
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const roomEnv = new RoomEnvironment();
+      this.scene.environment = pmrem.fromScene(roomEnv, 0.04).texture;
+      roomEnv.dispose();
+      pmrem.dispose();
       this.renderer = renderer;
       return renderer;
     } catch {
